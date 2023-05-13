@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto:wght@300&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: white;
+}
+
+.main-background {
+  background-image: url("./assets/images/background.jpg");
+  background-size: 100% 100%;
+}
+
+.shadow-button {
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.shadow-text {
+  text-shadow: #ffff 1px 0 20px;
+}
+
+.customSection-background {
+  background-color: #000000;
+  background-image: url("https://www.transparenttextures.com/patterns/cartographer.png");
+
+}
+
+.circle-background {
+  background-color: #97DEFF;
+  background-image: url("https://www.transparenttextures.com/patterns/egg-shell.png");
+}
+
+
+.tloo {
+  background-color: rgb(237, 237, 237);
+  background-image: url("https://www.transparenttextures.com/patterns/textured-stripes.png");
+}
+
+@media screen and (max-width: 767px) {
+
+
+
+  .questions-background-mobile {
+    background-image: linear-gradient(190deg,
+        rgba(255, 255, 255, 0.9) 60%, transparent 60.3%),
+      url("./assets/images/co.jpg");
+    background-size: 100% 100%;
+  }
+
+  .card-opinions {
+    height: 280px;
+    width: 15rem;
+    background-color: white;
+    padding-top: 20px;
+    font-size: 15px;
+    text-align: center;
+    border-radius: 20px;
+    margin-top: 80px;
+  }
+
+  .swiper {
+    height: 400px;
+    max-width: 70%;
+    margin: 0 auto;
+  }
+
+}
+
+
+@media screen and (min-width: 768px) {
+
+  .questions-background {
+    background-image: linear-gradient(100deg,
+        rgba(255, 255, 255, 0.9) 56%, transparent 56.3%),
+      url("./assets/images/questionsBackground.jpg");
+    background-size: 100% 100%;
+  }
+
+  .up-down-aniamation2 {
+    animation: example 4s ease-in-out infinite;
+  }
+
+  .card-opinions {
+    height: 300px;
+    width: 15rem;
+    background-color: white;
+    padding-top: 20px;
+    text-align: center;
+    border-radius: 20px;
+    margin-top: 80px;
+  }
+
+  .swiper {
+    height: 400px;
+    max-width: 70%;
+    margin: 0 auto;
+  }
+
+}
+
+@media screen and (min-width: 1024px) {
+
+  .card-opinions {
+    height: 250px;
+    width: 23rem;
+    background-color: white;
+    padding-top: 20px;
+    text-align: center;
+    border-radius: 20px;
+    margin-top: 80px;
+  }
+
+  .swiper {
+    height: 400px;
+    max-width: 70%;
+    margin: 0 auto;
+  }
+
+}
+
+@media screen and (min-width: 1210px) {
+
+  .swiper {
+    height: 400px;
+    max-width: 80rem;
+    margin: 0 auto;
+  }
+
+}
+
+.swiper-slide {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #000000 !important;
+}
+
+.up-down-aniamation {
+  animation: example 3s ease-in-out infinite;
+}
+
+
+.scale-animation {
+  animation: example1 3s ease-in-out infinite;
+}
+
+@keyframes example {
+  50% {
+    transform: translateY(20px);
+  }
+}
+
+@keyframes example1 {
+  50% {
+    transform: scale(1.075);
+  }
+}
