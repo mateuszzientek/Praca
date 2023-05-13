@@ -7,12 +7,12 @@ import OpinionSection from "./components/OpinionSection";
 import OwnPhotoSecion from "./components/OwnPhotoSection";
 import QuestionsSection from "./components/QuestionsSection";
 import Footer from "./components/Footer";
-import { ThemeProvider } from "./components/ThemeContext";
+import { ThemeContextProvider } from "./components/ThemeContext";
 
 function App() {
   return (
-    <div>
-      <ThemeProvider>
+    <ThemeContextProvider>
+      <div>
         <div className="main-background">
           <Navbar />
           <MainHome />
@@ -23,8 +23,8 @@ function App() {
         <OwnPhotoSecion />
         <QuestionsSection />
         <Footer />
-      </ThemeProvider>
-    </div>
+      </div>
+    </ThemeContextProvider>
   );
 }
 
