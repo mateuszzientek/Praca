@@ -8,7 +8,7 @@ import nike from '../assets/images/nike.jpg';
 function HeadLineCards() {
     return (
 
-        <div>
+        <div className='bg-white dark:bg-black'>
 
 
             <h2 className='flex justify-center text-4xl sm:text-5xl xl:text-6xl font-roboto mt-20 '>Explore Our Brands</h2>
