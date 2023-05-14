@@ -11,7 +11,7 @@ function HeadLineCards() {
         <div className='bg-white dark:bg-[#101010]'>
 
 
-            <h2 className='flex justify-center text-4xl text-black dark:text-white sm:text-5xl xl:text-6xl font-roboto pt-20 '>Explore Our Brands</h2>
+            <h2 className='flex justify-center text-4xl text-black dark:text-white sm:text-5xl xl:text-7xl font-roboto pt-20 '>Explore Our Brands</h2>
 
             {/* div for cards*/}
 

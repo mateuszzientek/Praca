@@ -1,14 +1,17 @@
-import React from "react";
-
+import React, { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
 function QuestionsSection() {
+
+    const { theme, setTheme } = useContext(ThemeContext);
+
     return (
-        <div className="flex justify-center text-center h-[75rem] md:h-[50rem] questions-background-mobile questions-background">
+        <div className={`flex justify-center text-center h-[75rem] md:h-[50rem]   ${theme === 'dark' ? "questions-background-black questions-background-mobile-black" : "questions-background questions-background-mobile"}`}>
 
             {/* main text */}
 
-            <div className="flex flex-col items-center md:mr-[40rem] md:ml-[20rem] lg:ml-[13rem] xl:ml-[8rem] pt-20 font-roboto font-bold text-black/70">
-                <p className="text-5xl md:text-5xl xl:text-7xl">Questions? Write!</p>
+            <div className="flex flex-col items-center md:mr-[40rem] md:ml-[20rem] lg:ml-[13rem] xl:ml-[8rem] pt-20 font-roboto font-bold text-black/70 dark:text-white">
+                <p className="text-5xl md:text-5xl xl:text-7xl ">Questions? Write!</p>
                 <p className="mt-10 text-lg md:text-xl lg:text-2xl xl:text-3xl w-[30rem] md:w-[23rem] lg:w-[32rem] xl:w-[40rem] mx-auto">If you have any questions, feel free to write to us! We will respond to them as quickly as we can!</p>
 
                 <div className="flex justify-center space-x-10 mt-10 items-center">

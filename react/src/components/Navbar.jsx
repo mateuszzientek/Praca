@@ -27,17 +27,20 @@ const Navbar = () => {
 
             {/* pages */}
 
-            <div className='hidden lg:flex  mx-auto font-roboto text-xl '>
+            <div className='hidden xl:flex  mx-auto font-roboto text-xl '>
                 <HeroLink text="Home" />
                 <HeroLink text="Shop" />
                 <HeroLink text="Custom" />
                 <HeroLink text="Contact" />
             </div>
 
-            <ToogleDarkButton />
             {/* right side navbar */}
 
             <div className='flex items-center '>
+
+                {/* dark mode switcher */}
+
+                <ToogleDarkButton />
 
                 {/* search input */}
 
@@ -57,16 +60,17 @@ const Navbar = () => {
                 {/* cart icon */}
 
                 <RoundIcon icon={<BsCart2 size={20} />} />
+
+                {/* switcher -show mobile menu */}
+
+                <div onClick={() => setNav(!nav)} className='block xl:hidden cursor-pointer ml-2 sm:ml-8'>
+                    <AiOutlineMenu size={25} color={theme === 'dark' ? "white" : "black"} />
+                </div>
+
             </div>
 
 
             {/* mobile phone*/}
-
-            {/* menu icon */}
-
-            <div onClick={() => setNav(!nav)} className='block lg:hidden cursor-pointer'>
-                <AiOutlineMenu size={20} color={theme === 'dark' ? "white" : "black"} />
-            </div>
 
             {/* overlay */}
             {nav ? <div className='bg-black/80 fixed w-full h-screen z-10 top-0 left-0'></div> : ''}
