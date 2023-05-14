@@ -4,17 +4,17 @@ import img1 from '../assets/images/custom1.jpg';
 
 function OwnPhotoSecion() {
     return (
-        <div className="flex flex-col xl:flex-row justify-center items-center bg-white  mt-28 mb-28  space-x-3">
+        <div className="flex flex-col xl:flex-row justify-center items-center bg-white dark:bg-black/90  pt-28 pb-28  space-x-3">
 
             {/* main text */}
 
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:mx-0 xl:w-[26rem] space-y-3 font-roboto ">
                 <div className="mb-6 text-center xl:text-left">
                     <div className="flex space-x-2 xl:space-x-0 xl:block justify-center">
-                        <p className=""> Enjoy<span className="font-bold text-[hsl(199,100%,57%)]"> 10% </span>discount</p>
-                        <p className="xl:mt-2 lowercase xl:normal-case"> On your next order!</p>
+                        <p className="text-black dark:text-white"> Enjoy<span className="font-bold text-[hsl(199,100%,57%)]"> 10% </span>discount</p>
+                        <p className="text-black dark:text-white xl:mt-2 lowercase xl:normal-case"> On your next order!</p>
                     </div>
-                    <p className="pt-6 text-base sm:text-lg md:text-2xl mx-auto w-[25rem] sm:w-[30rem]  md:w-[35rem] lg:w-[45rem] xl:w-auto xl:pr-12 "> Share your style with us by sending a photo of you wearing the shoes purchased from us to our email
+                    <p className="text-black dark:text-white pt-6 text-base sm:text-lg md:text-2xl mx-auto w-[25rem] sm:w-[30rem]  md:w-[35rem] lg:w-[45rem] xl:w-auto xl:pr-12 "> Share your style with us by sending a photo of you wearing the shoes purchased from us to our email
                         address, and we'll reward you with a discount on your next purchase.</p>
                 </div>
 

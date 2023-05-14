@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import RatingStars from './RatingStars';
+import { ThemeContext } from './ThemeContext';
 import { Swiper, SwiperSlide } from "swiper/react";
 import comments from '../comments';
 
@@ -12,6 +13,9 @@ import "swiper/css/navigation";
 import { Pagination, Navigation, Autoplay } from "swiper";
 
 function SlideOpinions() {
+
+    const { theme, setTheme } = useContext(ThemeContext);
+
     return (
         <Swiper
             slidesPerView={1}
@@ -41,7 +45,7 @@ function SlideOpinions() {
         >
             {comments.map((comment) => (
                 <SwiperSlide key={comment.id}>
-                    <div className="card-opinions">
+                    <div className="card-opinions" style={{ backgroundColor: theme === 'dark' ? "#e6e6e6" : "white" }}>
                         <img src={require('../assets/images/avatars/' + comment.avatar + '.png')} alt="Avatar" className="w-32 h-32 mr-auto ml-auto mt-[-6rem] mb-6 "></img>
                         <RatingStars rating={comment.rating} />
                         <p className="sm:text-base md:text-lg px-8 mb-8">{comment.text}</p>

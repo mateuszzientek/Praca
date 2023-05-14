@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from './ThemeContext';
 import CircleOpinion from './CircleOpinion';
 import SlideOpinions from './SlideOpinions';
 
 function OpinionSection() {
+
+    const { theme, setTheme } = useContext(ThemeContext);
+
     return (
-        <div className='h-[65rem] tloo font-roboto '>
+        <div className={`h-[65rem] ${theme === 'dark' ? "opinion-black-background" : "opinion-white-background"} opinion-white-background font-roboto `}>
 
             {/* main text */}
 
             <div>
-                <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center pt-28 mb-6'>Why You Should Choose Us?</h2>
-                <div className='bg-black h-[0.3rem] w-[20rem] md:w-[25rem] lg:w-[32rem] m-auto rounded-full'></div>
+                <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center pt-28 mb-6 text-black dark:text-white'>Why You Should Choose Us?</h2>
+                <div className='bg-black dark:bg-white h-[0.3rem] w-[20rem] md:w-[25rem] lg:w-[32rem] m-auto rounded-full'></div>
             </div>
 
             {/* circle opinion*/}

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from './ThemeContext';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import custom from '../assets/images/custom.jpg';
 import custom1 from '../assets/images/custom1.jpg';
 
 function CustomSection() {
+
+    const { theme, setTheme } = useContext(ThemeContext);
+
     return (
 
         <div className='customSection-background'>
@@ -12,7 +16,7 @@ function CustomSection() {
             {/* wave*/}
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 180">
-                <path fill="#ffffff" fill-opacity="1" d="M0,160L80,138.7C160,117,320,75,480,80C640,85,800,139,960,160C1120,181,1280,171,1360,165.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+                <path fill={theme === 'dark' ? "#101010" : "#fff"} fill-opacity="1" d="M0,160L80,138.7C160,117,320,75,480,80C640,85,800,139,960,160C1120,181,1280,171,1360,165.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
             </svg>
 
 

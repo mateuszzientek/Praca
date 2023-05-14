@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import RoundIcon from "./RoundIcon";
 import MobileLink from "./MobileLink";
 import HeroLink from "./HeroLink";
+import { ThemeContext } from './ThemeContext';
 import ToogleDarkButton from './ToogleDarkButton';
 import { AiOutlineSearch, AiOutlineHeart, AiOutlineClose, AiOutlineMenu, AiFillHome, AiTwotoneShop, AiFillHeart } from 'react-icons/ai';
 import { IoPersonOutline } from 'react-icons/io5';
@@ -9,9 +10,11 @@ import { BsCart2, BsFillCartFill, BsBookFill, BsFillPersonFill } from "react-ico
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import logo from '../assets/images/logo.png';
+import logo2 from '../assets/images/logo2.png';
 
 const Navbar = () => {
 
+    const { theme, setTheme } = useContext(ThemeContext);
     const [nav, setNav] = useState(false);
 
 
@@ -20,7 +23,7 @@ const Navbar = () => {
 
             {/* logo */}
 
-            <img src={logo} alt="Logo firmy" className='h-16 w-48 -rotate-6' />
+            <img src={theme === 'dark' ? logo2 : logo} alt="Logo firmy" className='h-16 w-48 -rotate-6' />
 
             {/* pages */}
 
@@ -62,7 +65,7 @@ const Navbar = () => {
             {/* menu icon */}
 
             <div onClick={() => setNav(!nav)} className='block lg:hidden cursor-pointer'>
-                <AiOutlineMenu size={20} />
+                <AiOutlineMenu size={20} color={theme === 'dark' ? "white" : "black"} />
             </div>
 
             {/* overlay */}
@@ -70,8 +73,8 @@ const Navbar = () => {
 
             {/* Side drawer menu */}
 
-            <div className={nav ? 'fixed top-0 left-0 w-[19rem] h-screen bg-white z-10 duration-500' : 'fixed top-0 left-[-100%] w-[19rem] h-screen bg-white z-10 duration-500'}>
-                <AiOutlineClose onClick={() => setNav(!nav)} size={25} className='absolute right-4 top-6 cursor-pointer' />
+            <div className={nav ? 'fixed top-0 left-0 w-[19rem] h-screen bg-white dark:bg-black z-10 duration-500' : 'fixed top-0 left-[-100%] w-[19rem] h-screen bg-white z-10 duration-500'}>
+                <AiOutlineClose onClick={() => setNav(!nav)} size={25} color={theme === 'dark' ? "white" : "black"} className='absolute right-4 top-6 cursor-pointer' />
 
                 <h2 className='text-2xl pl-4 pt-5 text-[#3ab4f2]'>Sneakers <span className='text-[#0078aa] font-bold'>Zone</span></h2>
 
@@ -79,7 +82,7 @@ const Navbar = () => {
                     <MobileLink text="Home" icon={<AiFillHome size={25} className='mr-4' />} />
                     <MobileLink text="Shop" icon={<AiTwotoneShop size={25} className='mr-4' />} />
                     <MobileLink text="Custom" icon={<FaPencilAlt size={25} className='mr-4' />} />
-                    <a href='' className='text-xl py-4 flex border-b border-black hover:font-bold transform hover:scale-105 hover:ease-out duration-100'> <RiContactsBook2Fill size={25} className='mr-4' /> Contact</a>
+                    <a href='' className='text-xl py-4 flex border-b border-black dark:border-white hover:font-bold transform hover:scale-105 hover:ease-out duration-100 text-black dark:text-white'> <RiContactsBook2Fill size={25} className='mr-4' /> Contact</a>
                     <MobileLink text="Favorite" icon={<AiFillHeart size={25} className='mr-4' />} />
                     <MobileLink text="Cart" icon={<BsFillCartFill size={25} className='mr-4' />} />
                     <MobileLink text="Orders" icon={<BsBookFill size={25} className='mr-4' />} />

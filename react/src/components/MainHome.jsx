@@ -33,22 +33,22 @@ const MainHome = () => {
 
                     <div className='font-roboto text-black/80 '>
 
-                        <h2 className='hidden md:block pb-4 pt-8  sm:text-2xl  md:text-3xl lg:text-4xl xl:text-6xl'>Discover New Level </h2>
-                        <h2 className='hidden md:block pb-2 md:text-3xl lg:text-4xl xl:text-6xl '>Of Street Style</h2>
+                        <h2 className='hidden md:block pb-4 pt-8  sm:text-2xl  md:text-3xl lg:text-4xl xl:text-6xl text-black dark:text-white'>Discover New Level </h2>
+                        <h2 className='hidden md:block pb-2 md:text-3xl lg:text-4xl xl:text-6xl text-black dark:text-white '>Of Street Style</h2>
 
                         {/* mobile text*/}
-                        <h2 className='flex justify-center md:hidden pb-2 pt-8 text-3xl'>Find Your dream</h2>
-                        <h2 className='items-center flex justify-center md:hidden pb-2 text-3xl'>Models Of <span className='pl-3 text-4xl font-extrabold text-[#0078aa]' >Sneakers!</span></h2>
+                        <h2 className='flex justify-center md:hidden pb-2 pt-8 text-3xl text-black dark:text-white'>Find Your dream</h2>
+                        <h2 className='items-center flex justify-center md:hidden pb-2 text-3xl text-black dark:text-white'>Models Of <span className='pl-3 text-4xl font-extrabold text-[#0078aa]' >Sneakers!</span></h2>
 
 
                         <div className='flex items-center'>
-                            <h2 className='hidden md:flex md:text-3xl lg:text-4xl xl:text-6xl md:pr-4 '> With Our </h2>
+                            <h2 className='hidden md:flex md:text-3xl lg:text-4xl xl:text-6xl md:pr-4 text-black dark:text-white '> With Our </h2>
                             <h2 className='hidden md:flex text-[#0078aa] font-bold md:text-4xl lg:text-5xl xl:text-7xl md:pb-2 xl:pb-0'> Sneakers!</h2>
                         </div>
                     </div>
 
 
-                    <div className=' text-black/60 lg:text-lg xl:text-xl font-roboto-bold pt-5 w-60 md:w-[18rem] lg::w-[24rem] xl:w-[35rem]'>
+                    <div className=' text-black/60 lg:text-lg xl:text-xl font-roboto-bold pt-5 w-60 md:w-[18rem] lg::w-[24rem] xl:w-[35rem] text-black dark:text-white'>
                         <span className='hidden md:inline'> Get to know our latest technology that will allow you to create your dream shoes.</span>
                         <span className='hidden xl:inline'> In our store, we will take you into the unknown world of Sneakers.</span>
 
@@ -69,12 +69,12 @@ const MainHome = () => {
 
                         {/* Second button*/}
 
-                        <div className='flex items-center rounded-3xl px-4 md:px-5 lg:px-2 xl:px-4 py-2 md:py-3 shadow-lg border-2 border-black/50 hover:bg-[#97DEFF] hover:border-[#97DEFF] hover:shadow-inner cursor-pointer'>
-                            <button type="button" className='md:text-xs lg:text-sm xl:text-lg flex md:block lg:flex'>
+                        <div className='flex items-center rounded-3xl px-4 md:px-5 lg:px-2 xl:px-4 py-2 md:py-3 shadow-lg border-2 border-black/50 dark:border-white hover:bg-[#97DEFF] hover:border-[#97DEFF] hover:shadow-inner cursor-pointer'>
+                            <button type="button" className='text-black dark:text-white md:text-xs lg:text-sm xl:text-lg flex md:block lg:flex'>
                                 <h1 className='pr-2 md:pr-0 lg:pr-2'>View</h1>
                                 <h1 className=''> Products</h1>
                             </button>
-                            <BsArrowRightShort size={25} className='block md:hidden lg:block' />
+                            <BsArrowRightShort size={25} color={theme === 'dark' ? "white" : "black"} className='block md:hidden lg:block' />
                         </div>
                     </div>
 
@@ -84,9 +84,9 @@ const MainHome = () => {
 
                         <ShopInfo icon={<HiOutlinePaintBrush size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={"Custom"} text2={"Design"} />
 
-                        <ShopInfo icon={<HiOutlinePaintBrush size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={"Fast"} text2={"Delivery"} />
+                        <ShopInfo icon={<TbTruckDelivery size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={"Fast"} text2={"Delivery"} />
 
-                        <ShopInfo icon={<HiOutlinePaintBrush size={25} color={"#0078aa"} className='pr-1' />} border={"border-none"} text1={"Lowest"} text2={"Price"} />
+                        <ShopInfo icon={<TbCoins size={25} color={"#0078aa"} className='pr-1' />} border={"border-none"} text1={"Lowest"} text2={"Price"} />
 
                     </div>
 
@@ -110,7 +110,7 @@ const MainHome = () => {
 
             </div >
             <svg className='zdjecie' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 180">
-                <path fill={theme === 'dark' ? "#fffff" : "#fff"} fill-opacity="1" d="M0,96L80,90.7C160,85,320,75,480,90.7C640,107,800,149,960,149.3C1120,149,1280,107,1360,85.3L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+                <path fill={theme === 'dark' ? "#101010" : "#fff"} fill-opacity="1" d="M0,96L80,90.7C160,85,320,75,480,90.7C640,107,800,149,960,149.3C1120,149,1280,107,1360,85.3L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
             </svg>
         </div>
 

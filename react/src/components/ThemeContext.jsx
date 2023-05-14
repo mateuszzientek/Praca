@@ -15,6 +15,7 @@ export const ThemeContextProvider = ({ children }) => {
         const handleChange = () => {
             const newTheme = mediaQuery.matches ? 'dark' : 'light';
             setTheme(newTheme);
+            localStorage.setItem('theme', newTheme); // zapisz wartość w localStorage
         };
         mediaQuery.addEventListener('change', handleChange);
         return () => mediaQuery.removeEventListener('change', handleChange);

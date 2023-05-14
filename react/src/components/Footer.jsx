@@ -22,7 +22,7 @@ function Footer(props) {
                     </div>
 
                     <div className='flex items-center space-x-2'>
-                        <img src={logo} className='h-[6rem] w-[12rem]' />
+                        <img src={logo} className='h-[6rem] w-[15rem]' />
                     </div>
 
                     <div className='flex text-2xl space-x-4 text-white '>

@@ -8,14 +8,14 @@ import nike from '../assets/images/nike.jpg';
 function HeadLineCards() {
     return (
 
-        <div className='bg-white dark:bg-black'>
+        <div className='bg-white dark:bg-[#101010]'>
 
 
-            <h2 className='flex justify-center text-4xl sm:text-5xl xl:text-6xl font-roboto mt-20 '>Explore Our Brands</h2>
+            <h2 className='flex justify-center text-4xl text-black dark:text-white sm:text-5xl xl:text-6xl font-roboto pt-20 '>Explore Our Brands</h2>
 
             {/* div for cards*/}
 
-            <div className='flex flex-col lg:flex-row justify-center items-center mt-12 xl:mt-20 mb-8'>
+            <div className='flex flex-col lg:flex-row justify-center items-center mt-12 xl:mt-20'>
 
                 {/* Nike card*/}
 

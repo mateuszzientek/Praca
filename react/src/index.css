@@ -3,12 +3,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background-color: ${backgroundColor};
+}
+
 body {
   background-color: white;
 }
 
 .main-background {
   background-image: url("./assets/images/background.jpg");
+  background-size: 100% 100%;
+}
+
+.main-background-black {
+  background-image: url("./assets/images/tlo-black.png");
   background-size: 100% 100%;
 }
 
@@ -31,10 +40,14 @@ body {
   background-image: url("https://www.transparenttextures.com/patterns/egg-shell.png");
 }
 
-
-.tloo {
+.opinion-white-background {
   background-color: rgb(237, 237, 237);
   background-image: url("https://www.transparenttextures.com/patterns/textured-stripes.png");
+}
+
+.opinion-black-background {
+  background-color: rgb(39, 39, 39);
+  background-image: url("https://www.transparenttextures.com/patterns/low-contrast-linen.png");
 }
 
 @media screen and (max-width: 767px) {
@@ -104,7 +117,7 @@ body {
   .card-opinions {
     height: 250px;
     width: 23rem;
-    background-color: white;
+    background-color: var(--background-color);
     padding-top: 20px;
     text-align: center;
     border-radius: 20px;

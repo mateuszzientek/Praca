@@ -7,23 +7,22 @@ import OpinionSection from "./components/OpinionSection";
 import OwnPhotoSecion from "./components/OwnPhotoSection";
 import QuestionsSection from "./components/QuestionsSection";
 import Footer from "./components/Footer";
+import BackgroundMain from "./components/BackgroundMain";
 import { ThemeContextProvider } from "./components/ThemeContext";
 
 function App() {
   return (
     <ThemeContextProvider>
-      <div>
-        <div className="main-background">
-          <Navbar />
-          <MainHome />
-        </div>
-        <HeadLineCards />
-        <CustomSection />
-        <OpinionSection />
-        <OwnPhotoSecion />
-        <QuestionsSection />
-        <Footer />
-      </div>
+      <BackgroundMain>
+        <Navbar />
+        <MainHome />
+      </BackgroundMain>
+      <HeadLineCards />
+      <CustomSection />
+      <OpinionSection />
+      <OwnPhotoSecion />
+      <QuestionsSection />
+      <Footer />
     </ThemeContextProvider>
   );
 }

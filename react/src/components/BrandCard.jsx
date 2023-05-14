@@ -4,9 +4,9 @@ import { BsArrowRightShort } from "react-icons/bs";
 
 function BrandCard(props) {
     return (
-        <div className='h-[22rem] w-60 lg:h-[28rem] lg:w-72 md:mx-5 xl:mx-10 2xl:mx-14 bg-white rounded-3xl shadow-2xl mb-8 transform hover:scale-110 hover:transition ease-out duration-300' >
+        <div className='h-[22rem] w-60 lg:h-[28rem] lg:w-72 md:mx-5 xl:mx-10 2xl:mx-14 bg-white dark:bg-[#d5d5d5] rounded-3xl shadow-2xl mb-8 transform hover:scale-110 hover:transition ease-out duration-300' >
 
-            <div className='h-[9rem] lg:h-[12rem] rounded-t-3xl shadow-xl '>
+            <div className='h-[9rem] lg:h-[12rem] rounded-t-3xl shadow-xl  '>
                 <LazyLoadImage
                     src={props.brand}
                     alt={props.alt}
