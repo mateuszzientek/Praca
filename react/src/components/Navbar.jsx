@@ -63,7 +63,7 @@ const Navbar = () => {
 
                 {/* switcher -show mobile menu */}
 
-                <div onClick={() => setNav(!nav)} className='block xl:hidden cursor-pointer ml-2 sm:ml-8'>
+                <div onClick={() => setNav(!nav)} className='block xl:hidden cursor-pointer ml-4 sm:ml-8'>
                     <AiOutlineMenu size={25} color={theme === 'dark' ? "white" : "black"} />
                 </div>
 

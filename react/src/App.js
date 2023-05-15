@@ -8,11 +8,13 @@ import OwnPhotoSecion from "./components/OwnPhotoSection";
 import QuestionsSection from "./components/QuestionsSection";
 import Footer from "./components/Footer";
 import BackgroundMain from "./components/BackgroundMain";
+import Newslatter from "./components/Newslatter";
 import { ThemeContextProvider } from "./components/ThemeContext";
 
 function App() {
   return (
     <ThemeContextProvider>
+      <Newslatter />
       <BackgroundMain>
         <Navbar />
         <MainHome />

@@ -12,7 +12,7 @@ function ToggleDarkButton() {
     };
 
     return (
-        <button onClick={handleClick} className='flex justify-center items-center bg-[white]  rounded-full w-[2.5rem] h-[2.5rem] mr-4 shadow-xl'>
+        <button onClick={handleClick} className='flex justify-center items-center bg-[white]  rounded-full w-[2.5rem] h-[2.5rem] mx-4 shadow-xl'>
             {theme === 'dark' ? <BsSun size={20} /> : <BsMoon size={20} />}
         </button>
     );
