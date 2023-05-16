@@ -22,7 +22,7 @@ function SlideOpinions() {
         <Swiper
             slidesPerView={1}
             loop={true}
-            loopedSlidesLimit={false}
+            loopedSlides={false}
             autoplay={{
                 delay: 4000,
                 disableOnInteraction: false
@@ -53,7 +53,6 @@ function SlideOpinions() {
                         <p className="sm:text-base md:text-lg px-8 mb-8">{comment.text}</p>
                         <p className="sm:text-base md:text-lg font-bold">{comment.name}</p>
                     </div>
-                    {console.log(backgroundColor)}
                 </SwiperSlide>
             ))
             }

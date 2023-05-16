@@ -16,7 +16,7 @@ function CustomSection() {
             {/* wave*/}
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 180">
-                <path fill={theme === 'dark' ? "#101010" : "#fff"} fill-opacity="1" d="M0,160L80,138.7C160,117,320,75,480,80C640,85,800,139,960,160C1120,181,1280,171,1360,165.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+                <path fill={theme === 'dark' ? "#101010" : "#fff"} fillOpacity="1" d="M0,160L80,138.7C160,117,320,75,480,80C640,85,800,139,960,160C1120,181,1280,171,1360,165.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
             </svg>
 
 
@@ -52,12 +52,14 @@ function CustomSection() {
                     </div>
 
                     <div >
-                        <h2 className=' text-white font-roboto-bold text-base md:text-xl xl:text-2xl w-[24rem] md:w-[28rem] xl:w-[27rem] mt-8 text-center lg:text-left'>
-                            <h2 className='mb-4 xl:mb-9 text-2xl md:text-3xl shadow-text lg:text-left  '>Dream shoes possible now!</h2>
+
+                        <div className=' text-white font-roboto-bold text-base md:text-xl xl:text-2xl w-[24rem] md:w-[28rem] xl:w-[27rem] mt-8 text-center lg:text-left'>
+                            <p className='mb-4 xl:mb-9 text-2xl md:text-3xl shadow-text lg:text-left  '>Dream shoes possible now!</p>
                             With our creator, you can easily design personalized shoes for yourself.
                             You will have the option to change the color, add your
                             favorite inscriptions or inserts. Only your imagination limits you,
-                            so let's get creative!</h2>
+                            so let's get creative!
+                        </div>
                     </div>
 
                     <div className='flex justify-center lg:justify-start'>
