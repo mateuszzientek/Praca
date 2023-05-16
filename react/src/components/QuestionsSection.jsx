@@ -10,17 +10,17 @@ function QuestionsSection() {
 
             {/* main text */}
 
-            <div className="flex flex-col items-center md:mr-[40rem] md:ml-[20rem] lg:ml-[13rem] xl:ml-[8rem] pt-20 font-roboto font-bold text-black/70 dark:text-white">
+            <div className="flex flex-col items-center  md:mr-[40rem]  md:ml-[20rem] lg:ml-[13rem] xl:ml-[8rem] pt-20 font-roboto font-bold text-black/70 dark:text-white">
                 <p className="text-5xl md:text-5xl xl:text-7xl ">Questions? Write!</p>
-                <p className="mt-10 text-lg md:text-xl lg:text-2xl xl:text-3xl w-[30rem] md:w-[23rem] lg:w-[32rem] xl:w-[40rem] mx-auto">If you have any questions, feel free to write to us! We will respond to them as quickly as we can!</p>
+                <p className="mt-10 text-lg md:text-xl lg:text-2xl xl:text-3xl w-[25rem] sm:w-[30rem] md:w-[23rem] lg:w-[32rem] xl:w-[40rem] mx-auto">If you have any questions, feel free to write to us! We will respond to them as quickly as we can!</p>
 
-                <div className="flex justify-center space-x-10 mt-10 items-center">
+                <div className="flex justify-center space-x-10 mt-10 items-center ">
 
                     {/* name and surname buttons */}
 
-                    <input className='px-3 w-[13rem] md:w-[10rem] lg:w-[13rem] h-[3rem] rounded-full shadow-button focus:outline-none focus:border-2 border-black/60' type="text" placeholder='Name' />
+                    <input className='px-3 w-[10rem] sm:w-[13rem] md:w-[10rem] lg:w-[13rem] h-[3rem] rounded-full shadow-button focus:outline-none focus:border-2 border-black/60' type="text" placeholder='Name' />
 
-                    <input className='px-3 w-[13rem] md:w-[10rem] lg:w-[13rem] h-[3rem] rounded-full shadow-button focus:outline-none focus:border-2 border-black/60' type="text" placeholder='Surname' />
+                    <input className='px-3 w-[10rem] sm:w-[13rem] md:w-[10rem] lg:w-[13rem] h-[3rem] rounded-full shadow-button focus:outline-none focus:border-2 border-black/60' type="text" placeholder='Surname' />
 
                 </div>
 
