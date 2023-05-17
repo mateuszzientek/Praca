@@ -1,21 +1,23 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import img from '../assets/images/custom.jpg';
 import img1 from '../assets/images/custom1.jpg';
 
 function OwnPhotoSecion() {
+    const { t } = useTranslation()
+
     return (
         <div className="flex flex-col xl:flex-row justify-center items-center bg-white dark:bg-black/90  pt-28 pb-28  space-x-3">
 
             {/* main text */}
 
-            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:mx-0 xl:w-[26rem] space-y-3 font-roboto ">
+            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:mx-0 xl:w-[28rem] space-y-3 font-roboto ">
                 <div className="mb-6 text-center xl:text-left">
                     <div className="flex space-x-2 xl:space-x-0 xl:block justify-center">
-                        <p className="text-black dark:text-white"> Enjoy<span className="font-bold text-[hsl(199,100%,57%)]"> 10% </span>discount</p>
-                        <p className="text-black dark:text-white xl:mt-2 lowercase xl:normal-case"> On your next order!</p>
+                        <p className="text-black dark:text-white"> {t('ownphotosection.text1')}<span className="font-bold text-[hsl(199,100%,57%)]"> 10% </span>{t('ownphotosection.text2')}</p>
+                        <p className="text-black dark:text-white xl:mt-2 lowercase xl:normal-case"> {t('ownphotosection.text3')}</p>
                     </div>
-                    <p className="text-black dark:text-white pt-6 text-base sm:text-lg md:text-2xl mx-auto w-[25rem] sm:w-[30rem]  md:w-[35rem] lg:w-[45rem] xl:w-auto xl:pr-12 "> Share your style with us by sending a photo of you wearing the shoes purchased from us to our email
-                        address, and we'll reward you with a discount on your next purchase.</p>
+                    <p className="text-black dark:text-white pt-6 text-base sm:text-lg md:text-2xl mx-auto w-[25rem] sm:w-[30rem]  md:w-[35rem] lg:w-[45rem] xl:w-auto xl:pr-12 "> {t('ownphotosection.text4')}</p>
                 </div>
 
                 {/* below text image */}

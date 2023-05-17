@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from "react-i18next";
 import { BsFacebook, BsInstagram } from 'react-icons/bs'
 import { AiFillTwitterCircle } from 'react-icons/ai'
 import logo from '../assets/images/logo2.png';
@@ -7,6 +8,7 @@ import logo from '../assets/images/logo2.png';
 function Footer(props) {
 
     let iconStyles = { color: "white" };
+    const { t } = useTranslation()
 
     return (
         <div>
@@ -29,8 +31,8 @@ function Footer(props) {
 
                     {/* return/ delivery */}
                     <div className='flex text-2xl space-x-4 text-white '>
-                        <p className='cursor-pointer hover:border-b-2 '>Delivery</p>
-                        <p className='cursor-pointer hover:border-b-2 '>Return</p>
+                        <p className='cursor-pointer hover:border-b-2 '>{t('footer.delivery')}</p>
+                        <p className='cursor-pointer hover:border-b-2 ' > {t('footer.return')}</p>
 
                     </div>
 
@@ -40,7 +42,7 @@ function Footer(props) {
 
             {/* all rights reserved */}
             <div className='flex justify-center items-center bg-black/95 h-[3rem] '>
-                <p className='text-white/80 text-xl'>© SneakersZone. All rights reserved. </p>
+                <p className='text-white/80 text-xl'>© SneakersZone. {t('footer.rights')} </p>
             </div>
         </div>
     );

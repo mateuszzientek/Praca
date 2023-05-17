@@ -12,9 +12,6 @@ module.exports = {
     },
 
     extend: {
-      backgroundImage: {
-        skatepark: "src('/images/tlo1.jpg')",
-      },
       rotate: {
         17: "17deg",
         20: "20deg",

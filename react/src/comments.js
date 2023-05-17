@@ -1,8 +1,14 @@
+import i18n from "i18next";
+
+i18n.on("languageChanged", function (lng) {
+  console.log(i18n.t("navbar.home"));
+});
+
 const comments = [
   {
     id: 1,
-    text: "Love these shoes! So stylish and comfortable.",
-    name: "Olivia H.",
+    text: i18n.t("navbar.home"),
+    name: "Olivia sH.",
     avatar: "avatar1",
     rating: 5,
   },
@@ -63,5 +69,21 @@ const comments = [
     rating: 5,
   },
 ];
+
+const updateCommentText = () => {
+  comments.forEach((comment) => {
+    switch (comment.id) {
+      case 1:
+        comment.text = i18n.t("navbar.home");
+        break;
+      case 2:
+        comment.text = i18n.t("navbar.home");
+        break;
+      // Dodaj odpowiednie przypadki dla innych komentarzy
+    }
+  });
+};
+
+i18n.on("languageChanged", updateCommentText);
 
 export default comments;

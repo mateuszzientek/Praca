@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from './ThemeContext';
+import { useTranslation } from "react-i18next";
 import { AiOutlineClose } from 'react-icons/ai';
 import { BsSend } from 'react-icons/bs';
 import photo from '../assets/images/newslatter.png';
@@ -9,6 +10,7 @@ function Newslatter(props) {
 
     const { theme, setTheme } = useContext(ThemeContext);
     const [showNewslatter, setShowNewslatter] = useState(false);
+    const { t } = useTranslation()
 
     {/* show up newslatter */ }
 
@@ -37,14 +39,14 @@ function Newslatter(props) {
                             <img src={theme === 'dark' ? photo_black : photo} className='w-[5rem] h-[5rem] lg:w-[10rem] lg:h-[10rem] mt-10' />
 
                             {/* main text */}
-                            <p className='text-4xl md:text-5xl lg:text-6xl mt-8 font-bold text-[#0078aa]'>GET 10% OFF!</p>
+                            <p className='text-4xl md:text-5xl lg:text-6xl mt-8 font-bold text-[#0078aa]'>{t('newslatter.main')}</p>
 
                             {/* second text */}
-                            <p className='text-lg lg:text-2xl mt-6 text-center px-10'>Subscribe to our newsletter and get a 10% discount on your next purchase. Sign up today and stay up to date with the latest news and updates! </p>
+                            <p className='text-lg lg:text-2xl mt-6 text-center px-10'>{t('newslatter.text')} </p>
                             <div className='flex relative items-center '>
 
                                 {/* input for email */}
-                                <input className='bg-[hsl(198,100%,91%)] w-[20rem] md:w-[30rem] h-[4rem] lg:w-[35rem] lg:h-[5rem] mt-6 rounded-full px-3 shadow-2xl focus:outline-none text-xl text-black focus:border-2 border-black/60 focus:bg-[hsl(198,100%,84%)] hover:bg-[hsl(198,100%,84%)]' type='email' placeholder='Enter your email'>
+                                <input className='bg-[hsl(198,100%,91%)] w-[20rem] md:w-[30rem] h-[4rem] lg:w-[35rem] lg:h-[5rem] mt-6 rounded-full px-3 shadow-2xl focus:outline-none text-xl text-black focus:border-2 border-black/60 focus:bg-[hsl(198,100%,84%)] hover:bg-[hsl(198,100%,84%)]' type='email' placeholder={t('newslatter.input')}>
 
                                 </input>
 

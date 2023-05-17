@@ -1,0 +1,84 @@
+{
+    "navbar":{
+        "home": "Główna",
+        "shop": "Sklep",
+        "custom": "Projektuj",
+        "contact": "Kontakt",
+        "favorite": "Ulubione",
+        "cart": "Koszyk",
+        "orders": "Zamówienia",
+        "profile": "Mój Profil"
+    },
+    "home":{
+        "main1": "Odkryj Nowy Poziom",
+        "main2": "Stylu Ulicznego",
+        "main3": "Z Naszymi",
+        "main4": "Butami!",
+        "mobile1": "Znajdź Swoje Wymarzone",
+        "mobile2": "Modele",
+        "mobile3": "Butów!",
+        "text1": "Poznaj naszą najnowszą technologię, która pozwoli Ci stworzyć swoje wymarzone buty.",
+        "text2": "W naszym sklepie zabierzemy Cię w nieznany świat Sneakersów.",
+        "button1": "Stwórz",
+        "button2": "Buty",
+        "button3": "Zobacz",
+        "button4": "Produkty",
+        "info1": "Własne",
+        "info2": "Projekty",
+        "info3": "Szybka",
+        "info4": "Wysyłka",
+        "info5": "Najniższe",
+        "info6": "Ceny"
+     },
+     "headlineCards":{
+        "main": "Odkryj Nasze Marki",
+        "text-nike": "Buty Nike są popularnym wyborem dla tych, którzy cenią sobie wygodę oraz styl. Nike oferuje szeroki wybór butów przeznaczonych do różnych dyscyplin sportowych oraz aktywności codziennych.",
+        "text-adidas": "Buty Adidas są znane z ikonicznego stylu, jakości oraz innowacyjnej technologii. Adidas oferuje szeroki wybór butów dedykowanych różnym dyscyplinom sportowym oraz aktywnościom codziennym.",
+        "text-newbalance": "Buty New Balance są znane z wygody, trwałości oraz innowacyjnego designu. New Balance oferuje szeroki wybór butów dedykowanych różnym dyscyplinom sportowym oraz aktywnościom codziennym."
+    },
+    "customSection":{
+        "main": "Dodaj Coś Od Siebie!",
+        "text1": "Buty marzeń? Teraz możliwe!",
+        "text2": "Dzięki naszemu kreatorowi łatwo zaprojektujesz personalizowane buty dla siebie. Będziesz miał możliwość zmiany koloru, dodania ulubionych napisów lub wstawek. Tylko Twoja wyobraźnia cie ogranicza, więc daj upust kreatywności!",
+        "button": " Zobacz więcej!"
+    },
+    "opinionSection":{
+        "main": "Dlaczego Powinieneś Wybrać Nas?",
+        "info1": "Sprzedaży",
+        "info2": "Klientów",
+        "info3": "Projektów butów",
+        "info4": "Opinii" 
+
+    },
+    "ownphotosection":{
+        "text1": "Zdobądź",
+        "text2": "rabatu",
+        "text3": "Na kolejne zakupy!",
+        "text4": "Podziel się z nami zdjęciem, na którym nosisz zakupione u nas buty, wysyłając je na nasz adres e-mail. W zamian otrzymasz rabat na przyszłe zakupy!"
+    },
+    "questionSection": {
+        "main": "Pytania? Pisz!",
+        "text": "Jeśli masz jakiekolwiek pytania, śmiało napisz do nas! Postaramy się udzielić odpowiedzi tak szybko, jak to możliwe!",
+        "name": "Imię",
+        "surname": "Nazwisko",
+        "email": "Twój Email",
+        "question": "Jakie masz pytanie?",
+        "button": "Wyślij!"
+    },
+    "footer": {
+        "delivery": "Dostawa",
+        "return": "Zwrot",
+        "rights": "Wszelkie prawa zastrzeżone."
+    },
+    "newslatter": {
+        "main": "ZYSKAJ 10% RABATU!",
+        "text": "Zapisz się do naszego newslattera i otrzymaj 10% rabatu na kolejne zakupy. Zarejestruj się jeszcze dziś i bądź na bieżąco!",
+        "input": "Podaj swój email"
+    },
+    "komentarze":{
+        "com1": "siema"
+    }
+}
+   
+    
+    

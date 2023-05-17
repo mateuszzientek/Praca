@@ -188,3 +188,8 @@ body {
     transform: scale(1.075);
   }
 }
+
+button:disabled,
+button[disabled] {
+  color: #666666;
+}

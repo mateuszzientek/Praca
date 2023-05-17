@@ -1,21 +1,31 @@
 import React, { useState, useContext } from 'react';
+import { useTranslation } from "react-i18next";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
 import RoundIcon from "./RoundIcon";
 import MobileLink from "./MobileLink";
 import HeroLink from "./HeroLink";
 import { ThemeContext } from './ThemeContext';
 import ToogleDarkButton from './ToogleDarkButton';
-import { AiOutlineSearch, AiOutlineHeart, AiOutlineClose, AiOutlineMenu, AiFillHome, AiTwotoneShop, AiFillHeart } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineHeart, AiOutlineClose, AiOutlineMenu, AiFillHome, AiTwotoneShop, AiFillHeart, AiFillCaretDown } from 'react-icons/ai';
 import { IoPersonOutline } from 'react-icons/io5';
 import { BsCart2, BsFillCartFill, BsBookFill, BsFillPersonFill } from "react-icons/bs";
 import { RiContactsBook2Fill } from "react-icons/ri";
+import { GiWorld } from "react-icons/gi";
 import { FaPencilAlt } from "react-icons/fa";
 import logo from '../assets/images/logo.png';
 import logo2 from '../assets/images/logo2.png';
+import languages from '../languages';
+import i18next from 'i18next';
 
 const Navbar = () => {
 
     const { theme, setTheme } = useContext(ThemeContext);
     const [nav, setNav] = useState(false);
+    const [dropdown, setDropdown] = useState(false);
+
+    const currentCode = localStorage.getItem('i18nextLng')
+
+    const { t } = useTranslation()
 
 
     return (
@@ -23,15 +33,15 @@ const Navbar = () => {
 
             {/* logo */}
 
-            <img src={theme === 'dark' ? logo2 : logo} alt="Logo firmy" className='h-16 w-48 -rotate-6' />
+            <img src={theme === 'dark' ? logo2 : logo} alt="Logo firmy" className='dark:h-20 h-16 w-48 -rotate-6' />
 
             {/* pages */}
 
             <div className='hidden xl:flex  mx-auto font-roboto text-xl '>
-                <HeroLink text="Home" />
-                <HeroLink text="Shop" />
-                <HeroLink text="Custom" />
-                <HeroLink text="Contact" />
+                <HeroLink text={t('navbar.home')} />
+                <HeroLink text={t('navbar.shop')} />
+                <HeroLink text={t('navbar.custom')} />
+                <HeroLink text={t('navbar.contact')} />
             </div>
 
             {/* right side navbar */}
@@ -61,13 +71,37 @@ const Navbar = () => {
 
                 <RoundIcon icon={<BsCart2 size={20} />} />
 
-                {/* switcher -show mobile menu */}
+                {/* button for language */}
+                <div onClick={() => setDropdown(!dropdown)} className='relative flex justify-center items-center rounded-full ml-4 '>
+                    <div className='hover:scale-110 ease-in-out duration-300 cursor-pointer '>
+                        <GiWorld color={theme === 'dark' ? "white" : "black"} size={35} className='opacity-80' />
+                        <AiFillCaretDown color={theme === 'dark' ? "white" : "black"} className="absolute left-8 top-0 opacity-80 " size={20} />
+                    </div>
+                    {dropdown ? <div className='absolute top-12 right-0 min-w-full w-max  bg-white shadow-button mt-1 rounded z-10 '>
+                        <ul className='text-left '>
+                            {languages.map(({ code, name, country_code }) => (
+                                <li key={country_code} className='pr-6 pl-3 py-[0.5rem] hover:bg-black/10'>
 
+                                    <button
+                                        onClick={() => i18next.changeLanguage(code)}
+                                        disabled={code === currentCode}>
+                                        <span className={`fi fi-${country_code} mr-2`} ></span>
+                                        {name}
+                                    </button>
+
+                                </li>
+                            ))}
+                        </ul>
+                    </div> : ""}
+                </div>
+
+
+                {/* switcher -show mobile menu */}
                 <div onClick={() => setNav(!nav)} className='block xl:hidden cursor-pointer ml-4 sm:ml-8'>
                     <AiOutlineMenu size={25} color={theme === 'dark' ? "white" : "black"} />
                 </div>
 
-            </div>
+            </div >
 
 
             {/* mobile phone*/}
@@ -83,19 +117,19 @@ const Navbar = () => {
                 <h2 className='text-2xl pl-4 pt-5 text-[#3ab4f2]'>Sneakers <span className='text-[#0078aa] font-bold'>Zone</span></h2>
 
                 <div className='flex flex-col p-4 text-gray-800'>
-                    <MobileLink text="Home" icon={<AiFillHome size={25} className='mr-4' />} />
-                    <MobileLink text="Shop" icon={<AiTwotoneShop size={25} className='mr-4' />} />
-                    <MobileLink text="Custom" icon={<FaPencilAlt size={25} className='mr-4' />} />
-                    <a href='' className='text-xl py-4 flex border-b border-black dark:border-white hover:font-bold transform hover:scale-105 hover:ease-out duration-100 text-black dark:text-white'> <RiContactsBook2Fill size={25} className='mr-4' /> Contact</a>
-                    <MobileLink text="Favorite" icon={<AiFillHeart size={25} className='mr-4' />} />
-                    <MobileLink text="Cart" icon={<BsFillCartFill size={25} className='mr-4' />} />
-                    <MobileLink text="Orders" icon={<BsBookFill size={25} className='mr-4' />} />
-                    <MobileLink text="My Profile" icon={<BsFillPersonFill size={25} className='mr-4' />} />
+                    <MobileLink text={t('navbar.home')} icon={<AiFillHome size={25} className='mr-4' />} />
+                    <MobileLink text={t('navbar.shop')} icon={<AiTwotoneShop size={25} className='mr-4' />} />
+                    <MobileLink text={t('navbar.custom')} icon={<FaPencilAlt size={25} className='mr-4' />} />
+                    <a href='' className='text-xl py-4 flex border-b border-black dark:border-white hover:font-bold transform hover:scale-105 hover:ease-out duration-100 text-black dark:text-white'> <RiContactsBook2Fill size={25} className='mr-4' /> {t('navbar.contact')}</a>
+                    <MobileLink text={t('navbar.favorite')} icon={<AiFillHeart size={25} className='mr-4' />} />
+                    <MobileLink text={t('navbar.cart')} icon={<BsFillCartFill size={25} className='mr-4' />} />
+                    <MobileLink text={t('navbar.orders')} icon={<BsBookFill size={25} className='mr-4' />} />
+                    <MobileLink text={t('navbar.profile')} icon={<BsFillPersonFill size={25} className='mr-4' />} />
                 </div>
 
             </div>
 
-        </div>
+        </div >
     )
 }
 

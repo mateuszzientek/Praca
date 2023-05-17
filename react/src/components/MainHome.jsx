@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import ScrollToTop from "react-scroll-up";
+import { useTranslation } from "react-i18next";
 import ShopInfo from './ShopInfo';
 import { ThemeContext } from './ThemeContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -16,6 +17,7 @@ import blazers from '../assets/images/blazers.png';
 const MainHome = () => {
 
     const { theme, setTheme } = useContext(ThemeContext);
+    const { t } = useTranslation()
 
     return (
 
@@ -33,24 +35,24 @@ const MainHome = () => {
 
                     <div className='font-roboto text-black/80 '>
 
-                        <h2 className='hidden md:block pb-4 pt-8  sm:text-2xl  md:text-3xl lg:text-4xl xl:text-6xl text-black dark:text-white'>Discover New Level </h2>
-                        <h2 className='hidden md:block pb-2 md:text-3xl lg:text-4xl xl:text-6xl text-black dark:text-white '>Of Street Style</h2>
+                        <h2 className='hidden md:block pb-4 pt-8  sm:text-2xl  md:text-3xl lg:text-4xl xl:text-6xl text-black dark:text-white'>{t('home.main1')}</h2>
+                        <h2 className='hidden md:block pb-2 md:text-3xl lg:text-4xl xl:text-6xl text-black dark:text-white '>{t('home.main2')}</h2>
 
                         {/* mobile text*/}
-                        <h2 className='flex justify-center md:hidden pb-2 pt-8 text-3xl text-black dark:text-white'>Find Your dream</h2>
-                        <h2 className='items-center flex justify-center md:hidden pb-2 text-3xl text-black dark:text-white'>Models Of <span className='pl-3 text-4xl font-extrabold text-[#0078aa]' >Sneakers!</span></h2>
+                        <h2 className='flex justify-center md:hidden pb-2 pt-8 text-3xl text-black dark:text-white'>{t('home.mobile1')}</h2>
+                        <h2 className='items-center flex justify-center md:hidden pb-2 text-3xl text-black dark:text-white'>{t('home.mobile2')} <span className='pl-3 text-4xl font-extrabold text-[#0078aa]' >{t('home.mobile3')}</span></h2>
 
 
                         <div className='flex items-center'>
-                            <h2 className='hidden md:flex md:text-3xl lg:text-4xl xl:text-6xl md:pr-4 text-black dark:text-white '> With Our </h2>
-                            <h2 className='hidden md:flex text-[#0078aa] font-bold md:text-4xl lg:text-5xl xl:text-7xl md:pb-2 xl:pb-0'> Sneakers!</h2>
+                            <h2 className='hidden md:flex md:text-3xl lg:text-4xl xl:text-6xl md:pr-4 text-black dark:text-white '> {t('home.main3')} </h2>
+                            <h2 className='hidden md:flex text-[#0078aa] font-bold md:text-4xl lg:text-5xl xl:text-7xl md:pb-2 xl:pb-0'> {t('home.main4')}</h2>
                         </div>
                     </div>
 
 
                     <div className=' text-black/60 lg:text-lg xl:text-xl font-roboto-bold pt-5 w-60 md:w-[18rem] lg::w-[24rem] xl:w-[35rem] text-black dark:text-white'>
-                        <span className='hidden md:inline'> Get to know our latest technology that will allow you to create your dream shoes.</span>
-                        <span className='hidden xl:inline'> In our store, we will take you into the unknown world of Sneakers.</span>
+                        <span className='hidden md:inline'> {t('home.text1')}</span>
+                        <span className='hidden xl:inline'> {t('home.text2')}</span>
 
                     </div>
 
@@ -62,8 +64,8 @@ const MainHome = () => {
 
                         <div className='mr-4 md:mr-8 flex items-center bg-[#97DEFF] rounded-3xl px-3  md:px-5  lg:px-2 xl:px-4 shadow-lg hover:bg-[#59c9fd] hover:shadow-inner cursor-pointer'>
                             <button type="button" className='md:text-xs lg:text-sm xl:text-lg flex md:block lg:flex '>
-                                <h1 className='pr-2 md:pr-0 lg:pr-2'>Design</h1>
-                                <h1 className=''> Shoes</h1>
+                                <h1 className='pr-2 md:pr-0 lg:pr-2'>{t('home.button1')}</h1>
+                                <h1 className=''> {t('home.button2')}</h1>
                             </button>
                         </div>
 
@@ -71,8 +73,8 @@ const MainHome = () => {
 
                         <div className='flex items-center rounded-3xl px-4 md:px-5 lg:px-2 xl:px-4 py-2 md:py-3 shadow-lg border-2 border-black/50 dark:border-white hover:bg-[#97DEFF] hover:border-[#97DEFF] hover:shadow-inner cursor-pointer'>
                             <button type="button" className='text-black dark:text-white md:text-xs lg:text-sm xl:text-lg flex md:block lg:flex'>
-                                <h1 className='pr-2 md:pr-0 lg:pr-2'>View</h1>
-                                <h1 className=''> Products</h1>
+                                <h1 className='pr-2 md:pr-0 lg:pr-2'>{t('home.button3')}</h1>
+                                <h1 className=''> {t('home.button4')}</h1>
                             </button>
                             <BsArrowRightShort size={25} color={theme === 'dark' ? "white" : "black"} className='block md:hidden lg:block' />
                         </div>
@@ -82,11 +84,11 @@ const MainHome = () => {
 
                     <div className=' flex justify-center md:justify-start  mt-12 lg:mt-20 text-black/80 font-roboto-bold'>
 
-                        <ShopInfo icon={<HiOutlinePaintBrush size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={"Custom"} text2={"Design"} />
+                        <ShopInfo icon={<HiOutlinePaintBrush size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={t('home.info1')} text2={t('home.info2')} />
 
-                        <ShopInfo icon={<TbTruckDelivery size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={"Fast"} text2={"Delivery"} />
+                        <ShopInfo icon={<TbTruckDelivery size={25} color={"#0078aa"} className='pr-1' />} border={"border-r"} text1={t('home.info3')} text2={t('home.info4')} />
 
-                        <ShopInfo icon={<TbCoins size={25} color={"#0078aa"} className='pr-1' />} border={"border-none"} text1={"Lowest"} text2={"Price"} />
+                        <ShopInfo icon={<TbCoins size={25} color={"#0078aa"} className='pr-1' />} border={"border-none"} text1={t('home.info5')} text2={t('home.info6')} />
 
                     </div>
 

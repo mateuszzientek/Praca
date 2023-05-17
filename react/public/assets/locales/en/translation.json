@@ -1,0 +1,82 @@
+{
+    "navbar":{
+        "home": "Home",
+        "shop": "Shop",
+        "custom": "Design",
+        "contact": "Contact",
+        "favorite": "Favorite",
+        "cart": "Cart",
+        "orders": "Orders",
+        "profile": "My Profile"
+    },
+    "home":{
+       "main1": "Discover New Level",
+       "main2": "Of Street Style",
+       "main3": "With Our",
+       "main4": "Sneakers!",
+       "mobile1": "Find Your dream",
+       "mobile2": "Models Of",
+       "mobile3": "Sneakers!",
+       "text1": "Get to know our latest technology that will allow you to create your dream shoes.",
+       "text2": "In our store, we will take you into the unknown world of Sneakers.",
+       "button1": "Design",
+       "button2": "Shoes",
+       "button3": "View",
+       "button4": "Products",
+       "info1": "Custom",
+       "info2": "Design",
+       "info3": "Fast",
+       "info4": "Delivery",
+       "info5": "Lowest",
+       "info6": "Price"
+    },
+    "headlineCards":{
+        "main": "Explore Our Brands",
+        "text-nike": "Nike shoes are a popular choice for those who value comfort, style, and innovative technology. Nike offers a wide range of shoes for different sports and activities, as well as for everyday wear.",
+        "text-adidas": "Adidas shoes are known for their iconic style, quality, and innovative technology. Adidas offers a wide range of shoes for different sports and activities, as well as for everyday wear.",
+        "text-newbalance": "New Balance shoes are renowned for their comfort, durability, and innovative design. New Balance offers a wide range of shoes for various sports and activities, as well as for everyday wear."
+    },
+    "customSection":{
+        "main": "ADD SOMETHING OF YOUR OWN!",
+        "text1": "Dream shoes possible now!",
+        "text2": " With our creator, you can easily design personalized shoes for yourself.You will have the option to change the color, add your favorite inscriptions or inserts. Only your imagination limits you,so let's get creative!",
+        "button": " See more!"
+    },
+    "opinionSection":{
+        "main": "Why You Should Choose Us?",
+        "info1": "Sales ",
+        "info2": "Customers ",
+        "info3": "Created Projects ",
+        "info4": "Positive Reviews" 
+
+    },
+    "ownphotosection":{
+        "text1": "Enjoy",
+        "text2": "discount",
+        "text3": "On your next order!",
+        "text4": "Share your style with us by sending a photo of you wearing the shoes purchased from us to our email address, and we'll reward you with a discount on your next purchase."
+    },
+    "questionSection": {
+        "main": "Questions? Write!",
+        "text": "If you have any questions, feel free to write to us! We will respond to them as quickly as we can!",
+        "name": "Name",
+        "surname": "Surname",
+        "email": "Your Email",
+        "question": "What is your question?",
+        "button": "Send!"
+
+    },
+    "footer": {
+        "delivery": "Delivery",
+        "return": "Return",
+        "rights": "All rights reserved."
+    },
+    "newslatter": {
+        "main": "GET 10% OFF!",
+        "text": "Subscribe to our newsletter and get a 10% discount on your next purchase. Sign up today and stay up to date with the latest news and updates!",
+        "input": "Enter your email"
+    },
+    "komentarze":{
+        "com1": "siema"
+    }
+}

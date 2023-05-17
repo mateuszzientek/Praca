@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from "react-i18next";
 import BrandCard from "./BrandCard";
 import adidas from '../assets/images/adidas.jpg';
 import newBalance from '../assets/images/NewBalance.jpg';
@@ -6,12 +7,14 @@ import nike from '../assets/images/nike.jpg';
 
 
 function HeadLineCards() {
+    const { t } = useTranslation()
+
     return (
 
         <div className='bg-white dark:bg-[#101010]'>
 
 
-            <h2 className='flex justify-center text-4xl text-black dark:text-white sm:text-5xl xl:text-7xl font-roboto pt-20 '>Explore Our Brands</h2>
+            <h2 className='flex justify-center text-4xl text-black dark:text-white sm:text-5xl xl:text-7xl font-roboto pt-20 '>{t('headlineCards.main')}</h2>
 
             {/* div for cards*/}
 
@@ -21,14 +24,14 @@ function HeadLineCards() {
 
                 <div className='flex flex-col md:flex-row'>
                     <BrandCard
-                        text="Nike shoes are a popular choice for those who value comfort, style, and innovative technology. Nike offers a wide range of shoes for different sports and activities, as well as for everyday wear."
+                        text={t('headlineCards.text-nike')}
                         brand={nike}
                         alt="Logo Nike" />
 
                     {/* Adidas card*/}
 
                     <BrandCard
-                        text="Adidas shoes are known for their iconic style, quality, and innovative technology. Adidas offers a wide range of shoes for different sports and activities, as well as for everyday wear."
+                        text={t('headlineCards.text-adidas')}
                         brand={adidas}
                         alt="Logo Adidas" />
 
@@ -36,7 +39,7 @@ function HeadLineCards() {
                 </div>
                 <div className='flex'>
                     <BrandCard
-                        text="New Balance shoes are renowned for their comfort, durability, and innovative design. New Balance offers a wide range of shoes for various sports and activities, as well as for everyday wear."
+                        text={t('headlineCards.text-newbalance')}
                         brand={newBalance}
                         alt="Logo New balance" />
                 </div>

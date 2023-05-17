@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from './ThemeContext';
+import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import custom from '../assets/images/custom.jpg';
 import custom1 from '../assets/images/custom1.jpg';
@@ -7,6 +8,7 @@ import custom1 from '../assets/images/custom1.jpg';
 function CustomSection() {
 
     const { theme, setTheme } = useContext(ThemeContext);
+    const { t } = useTranslation()
 
     return (
 
@@ -23,7 +25,7 @@ function CustomSection() {
             {/* main text*/}
 
             <div className='flex justify-center mt-20'>
-                <h2 className=' text-white font-roboto-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl'>ADD SOMETHING OF YOUR OWN!</h2>
+                <h2 className=' text-white font-roboto-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl'>{t('customSection.main')}</h2>
 
             </div>
 
@@ -54,17 +56,14 @@ function CustomSection() {
                     <div >
 
                         <div className=' text-white font-roboto-bold text-base md:text-xl xl:text-2xl w-[24rem] md:w-[28rem] xl:w-[27rem] mt-8 text-center lg:text-left'>
-                            <p className='mb-4 xl:mb-9 text-2xl md:text-3xl shadow-text lg:text-left  '>Dream shoes possible now!</p>
-                            With our creator, you can easily design personalized shoes for yourself.
-                            You will have the option to change the color, add your
-                            favorite inscriptions or inserts. Only your imagination limits you,
-                            so let's get creative!
+                            <p className='mb-4 xl:mb-9 text-2xl md:text-3xl shadow-text lg:text-left  '>{t('customSection.text1')}</p>
+                            {t('customSection.text2')}
                         </div>
                     </div>
 
                     <div className='flex justify-center lg:justify-start'>
                         <button type="button" className='text-xl xl:text-2xl rounded-3xl bg-white text-center mt-8 xl:mt-12 sm:w-36 xl:w-44 p-2 transform hover:scale-110 transition ease-out duration-300'>
-                            <p className='text-black' >See more!</p>
+                            <p className='text-black' >{t('customSection.button')}</p>
                         </button>
                     </div>
 

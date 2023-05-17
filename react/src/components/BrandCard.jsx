@@ -19,11 +19,11 @@ function BrandCard(props) {
             </div>
 
             <div>
-                <h2 className='text-sm xl:text-base font-roboto text-center mt-2 xl:mt-6 px-6'>{props.text}</h2>
+                <h2 className='text-sm lg:text-base font-roboto text-center mt-2 lg:mt-6 px-6'>{props.text}</h2>
             </div>
 
-            <div className='flex items-center justify-center mt-3 xl:mt-6 cursor-pointer'>
-                <a href="" className='text-base xl:text-xl flex justify-center hover:border-b-2 border-black'>
+            <div className='flex items-center justify-center mt-3 xl:mt-6 '>
+                <a href="" className='text-base xl:text-xl flex justify-center hover:border-b-2 border-black cursor-pointer'>
                     See more
                     <BsArrowRightShort size={30} className='pt-1 ' /></a>
 
