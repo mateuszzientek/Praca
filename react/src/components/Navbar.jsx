@@ -13,7 +13,7 @@ import { RiContactsBook2Fill } from "react-icons/ri";
 import { GiWorld } from "react-icons/gi";
 import { FaPencilAlt } from "react-icons/fa";
 import logo from '../assets/images/logo.png';
-import logo2 from '../assets/images/logo2.png';
+import logo2 from '../assets/images/logo-black.png';
 import languages from '../languages';
 import i18next from 'i18next';
 
@@ -29,7 +29,7 @@ const Navbar = () => {
 
 
     return (
-        <div className='flex justify-between items-center h-40 max-w-[100rem] px-20 mx-auto pt-1' >
+        <div className='flex justify-between items-center h-40 max-w-[100rem] px-10  md:px-20 mx-auto pt-1' >
 
             {/* logo */}
 
@@ -72,26 +72,25 @@ const Navbar = () => {
                 <RoundIcon icon={<BsCart2 size={20} />} />
 
                 {/* button for language */}
-                <div onClick={() => setDropdown(!dropdown)} className='relative flex justify-center items-center rounded-full ml-4 '>
+                <div onClick={() => setDropdown(!dropdown)} className='relative flex justify-center items-center rounded-full ml-4 mr-4 sm:mr-0'>
                     <div className='hover:scale-110 ease-in-out duration-300 cursor-pointer '>
                         <GiWorld color={theme === 'dark' ? "white" : "black"} size={35} className='opacity-80' />
                         <AiFillCaretDown color={theme === 'dark' ? "white" : "black"} className="absolute left-8 top-0 opacity-80 " size={20} />
                     </div>
                     {dropdown ? <div className='absolute top-12 right-0 min-w-full w-max  bg-white shadow-button mt-1 rounded z-10 '>
-                        <ul className='text-left '>
+                        <div className='flex flex-col  '>
                             {languages.map(({ code, name, country_code }) => (
-                                <li key={country_code} className='pr-6 pl-3 py-[0.5rem] hover:bg-black/10'>
+                                <button
+                                    key={country_code}
+                                    onClick={() => i18next.changeLanguage(code)}
+                                    disabled={code === currentCode}
+                                    className='flex justify-start items-center pr-6 pl-3 py-[0.5rem]  hover:bg-black/10'>
 
-                                    <button
-                                        onClick={() => i18next.changeLanguage(code)}
-                                        disabled={code === currentCode}>
-                                        <span className={`fi fi-${country_code} mr-2`} ></span>
-                                        {name}
-                                    </button>
-
-                                </li>
+                                    <span className={`fi fi-${country_code} mr-2`} ></span>
+                                    {name}
+                                </button>
                             ))}
-                        </ul>
+                        </div>
                     </div> : ""}
                 </div>
 

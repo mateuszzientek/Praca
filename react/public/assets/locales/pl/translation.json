@@ -75,8 +75,16 @@
         "text": "Zapisz się do naszego newslattera i otrzymaj 10% rabatu na kolejne zakupy. Zarejestruj się jeszcze dziś i bądź na bieżąco!",
         "input": "Podaj swój email"
     },
-    "komentarze":{
-        "com1": "siema"
+    "comments":{
+        "1": "Bardzo polecam ten sklep, ekspresowa wysyłka i miły kontakt! ",
+        "2": "Bogaty wybór i szybka wysyłka. Polecam wszystkim!",
+        "3": "Bardzo polecam ten sklep. Wspaniałe ceny i jakość.",
+        "4": "Moje nowe ulubione miejsce do kupowania butów, duży wybór!",
+        "5": "Łatwe zamawianie i szybka dostawa. Jestem bardzo zadowolony!",
+        "6": "Buty, które kupiłem, są niesamowite. Wysoka jakość i idealne dopasowanie.",
+        "7": "Obsługa klienta w tym sklepie jest doskonała. Bardzo pomocna!",
+        "8": "Te buty są doskonałe do biegania. Gorąco polecam!",
+        "9": "Szybka i łatwa transakcja. Z pewnością wrócę tutaj jeszcze ;)"
     }
 }
    

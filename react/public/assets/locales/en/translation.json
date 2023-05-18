@@ -76,7 +76,15 @@
         "text": "Subscribe to our newsletter and get a 10% discount on your next purchase. Sign up today and stay up to date with the latest news and updates!",
         "input": "Enter your email"
     },
-    "komentarze":{
-        "com1": "siema"
+    "comments":{
+        "1": "I'm extremely happy with my online shoe purchase!",
+        "2": "Great selection and fast shipping. Recommend everyone!",
+        "3": "Highly recommend this store. Great prices and quality.",
+        "4": "My new favorite place to buy shoes. So many options!",
+        "5": "Easy ordering and quick delivery. Very satisfied!",
+        "6": "The shoes I bought are amazing. Great quality and fit perfectly.",
+        "7": "The customer service at this store is excellent. So helpful!",
+        "8": "These sneakers are perfect for running. Highly recommend!",
+        "9": "Fast and easy transaction. Will definitely be back."
     }
 }
