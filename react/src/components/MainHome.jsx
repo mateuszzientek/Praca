@@ -1,15 +1,16 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import ScrollToTop from "react-scroll-up";
 import { useTranslation } from "react-i18next";
 import ShopInfo from './ShopInfo';
 import { ThemeContext } from './ThemeContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { TbTruckDelivery, TbCoins, TbTruckReturn } from "react-icons/tb";
 import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { BsArrowRightShort } from "react-icons/bs";
-import blazer from '../assets/images/blazer.png';
 import blazers from '../assets/images/blazers.png';
+import blazer from '../assets/images/blazer.png';
 
 
 
@@ -96,16 +97,26 @@ const MainHome = () => {
 
                 {/* Blazer image*/}
 
-                <div className='hidden md:flex opacity-80 up-down-aniamation  '>
+                <div className='hidden md:flex opacity-80 up-down-aniamation'>
 
-                    <img src={blazer} alt="Photo of Blazer Mid" className='md:h-[22rem] lg:h-[28rem] xl:h-[35rem]' />
-
+                    <LazyLoadImage
+                        alt="Photos of blazer"
+                        className='md:h-[22rem] lg:h-[28rem] xl:h-[35rem] md:w-[22rem] lg:w-[28rem] xl:w-[35rem]'
+                        src={blazer}
+                        effect="blur"
+                        placeholderSrc={blazer}// use normal <img> attributes as props
+                    />
                 </div>
 
                 {/* Mobile shoes image*/}
 
                 <div className='flex md:hidden justify-center mt-14 opacity-90 scale-animation'>
-                    <img src={blazers} alt="Photo of Blazers Mid" className='h-28 ' />
+                    <LazyLoadImage
+                        src={blazers}
+                        alt="Photo of Blazers Mid"
+                        effect="blur"
+                        placeholderSrc={blazers}
+                        className='h-28 ' />
                 </div>
 
                 {/* wave*/}

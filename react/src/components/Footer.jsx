@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTranslation } from "react-i18next";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BsFacebook, BsInstagram } from 'react-icons/bs'
 import { AiFillTwitterCircle } from 'react-icons/ai'
 import logo from '../assets/images/logo2.png';
@@ -26,7 +28,12 @@ function Footer(props) {
 
                     {/* logo */}
                     <div className='flex items-center space-x-2'>
-                        <img src={logo} className='h-[5rem] w-[13rem]' />
+                        <LazyLoadImage
+                            alt="Logo SneakerZone"
+                            effect="blur"
+                            placeholderSrc={logo}
+                            src={logo}
+                            className='h-[5rem] w-[13rem]' />
                     </div>
 
                     {/* return/ delivery */}

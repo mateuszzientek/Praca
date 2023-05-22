@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { ThemeContext } from './ThemeContext';
 import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import custom from '../assets/images/custom.jpg';
 import custom1 from '../assets/images/custom1.jpg';
 
@@ -35,20 +36,22 @@ function CustomSection() {
             <div className='flex justify-center lg:space-x-8 pb-28 lg:pb-44  '>
 
                 <div className='hidden lg:block mt-20 shadow-white up-down-aniamation '>
+
                     <LazyLoadImage
                         src={custom}
-                        alt="Zdjecie customowanych butow"
-                        effect="opacity"
+                        alt="Custom shoes"
+                        effect="blur"
                         placeholderSrc={custom}
                         className='rounded-3xl lg:h-[31rem] xl:h-[37rem] ' />
+
                 </div>
 
                 <div >
                     <div className='mt-10 lg:mt-20 flex justify-center up-down-aniamation2'>
                         <LazyLoadImage
                             src={custom1}
-                            alt="Zdjecie customowanych butow"
-                            effect="opacity"
+                            alt="Custom shoes"
+                            effect="blur"
                             placeholderSrc={custom1}
                             className='rounded-3xl h-[11rem] md:h-[13rem]' />
                     </div>

@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useTranslation } from "react-i18next";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import RoundIcon from "./RoundIcon";
 import MobileLink from "./MobileLink";
@@ -33,7 +35,12 @@ const Navbar = () => {
 
             {/* logo */}
 
-            <img src={theme === 'dark' ? logo2 : logo} alt="Logo firmy" className='dark:h-20 h-16 w-48 -rotate-6' />
+            <LazyLoadImage
+                src={theme === 'dark' ? logo2 : logo}
+                alt="Logo firmy"
+                className='dark:h-20 h-16 w-48 -rotate-6'
+                effect="blur"
+                placeholderSrc={theme === 'dark' ? logo2 : logo} />
 
             {/* pages */}
 

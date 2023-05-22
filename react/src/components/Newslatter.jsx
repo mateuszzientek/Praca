@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from './ThemeContext';
 import { useTranslation } from "react-i18next";
 import { AiOutlineClose } from 'react-icons/ai';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BsSend } from 'react-icons/bs';
 import photo from '../assets/images/newslatter.png';
 import photo_black from '../assets/images/newslatter-black.png';
@@ -36,7 +38,12 @@ function Newslatter(props) {
                         <div className='flex flex-col items-center justify-center font-roboto text-black dark:text-white'>
 
                             {/* iamge */}
-                            <img src={theme === 'dark' ? photo_black : photo} className='w-[5rem] h-[5rem] lg:w-[10rem] lg:h-[10rem] mt-10' />
+                            <LazyLoadImage
+                                src={theme === 'dark' ? photo_black : photo}
+                                alt="Newslatter"
+                                effect="blur"
+                                placeholderSrc={theme === 'dark' ? photo_black : photo}
+                                className='w-[5rem] h-[5rem] lg:w-[10rem] lg:h-[10rem] mt-10' />
 
                             {/* main text */}
                             <p className='text-4xl md:text-5xl lg:text-6xl mt-8 font-bold text-[#0078aa]'>{t('newslatter.main')}</p>

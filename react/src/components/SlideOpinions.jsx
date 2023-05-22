@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import RatingStars from './RatingStars';
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { ThemeContext } from './ThemeContext';
 import { Swiper, SwiperSlide } from "swiper/react";
 import comments from '../comments';
@@ -48,7 +50,14 @@ function SlideOpinions() {
             {comments.map((comment) => (
                 <SwiperSlide key={comment.id}>
                     <div className="card-opinions" style={{ backgroundColor }}>
-                        <img src={require('../assets/images/avatars/' + comment.avatar + '.png')} alt="Avatar" className="w-32 h-32 mr-auto ml-auto mt-[-6rem] mb-6 "></img>
+
+                        <LazyLoadImage
+                            src={require('../assets/images/avatars/' + comment.avatar + '.png')}
+                            alt="Avatar" className="w-32 h-32 mr-auto ml-auto mt-[-6rem] mb-6 "
+                            effect="blur"
+                            placeholderSrc={require('../assets/images/avatars/' + comment.avatar + '.png')}
+                        />
+
                         <RatingStars rating={comment.rating} />
                         <p className="sm:text-base md:text-lg px-8 mb-8">{comment.text}</p>
                         <p className="sm:text-base md:text-lg font-bold">{comment.name}</p>

@@ -1,5 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import img from '../assets/images/custom.jpg';
 import img1 from '../assets/images/custom1.jpg';
 
@@ -22,7 +24,12 @@ function OwnPhotoSecion() {
 
                 {/* below text image */}
 
-                <img src={img1} alt="zdjecie" className="hidden xl:block h-[13rem] w-[100%] rounded-2xl"></img>
+                <LazyLoadImage
+                    src={img1}
+                    alt="zdjecie"
+                    effect="blur"
+                    placeholderSrc={img1}
+                    className="hidden xl:block h-[13rem] w-[100%] rounded-2xl" />
 
             </div>
 
@@ -30,21 +37,63 @@ function OwnPhotoSecion() {
 
             <div className="flex space-x-3 justify-center w-[25rem] h-[20rem] sm:w-[30rem] sm:h-[25rem] md:w-[40rem] md:h-[32rem] lg:w-auto">
                 <div className=" space-y-3">
-                    <img src={img} alt="zdjecie" className="h-[62%] w-[15rem] rounded-2xl  "></img>
-                    <img src={img} alt="zdjecie" className="h-[36%] w-[15rem] rounded-2xl "></img>
+                    <div>
+                        <LazyLoadImage
+                            src={img}
+                            alt="zdjecie"
+                            effect="blur"
+                            placeholderSrc={img}
+                            className="h-[16rem] w-[15rem] rounded-2xl  " />
+                    </div>
+                    <div>
+                        <LazyLoadImage
+                            src={img}
+                            effect="blur"
+                            alt="zdjecie"
+                            className="h-[16rem] w-[15rem] rounded-2xl " />
+                    </div>
                 </div>
 
                 {/* right grid (right column) images */}
 
                 <div className="space-y-3 ">
-                    <img src={img1} alt="zdjecie" className="h-[40%] w-[31rem] rounded-2xl "></img>
+
+                    <LazyLoadImage
+                        src={img1}
+                        alt="zdjecie"
+                        effect="blur"
+                        placeholderSrc={img1}
+                        className="h-[40%] w-[31rem] rounded-2xl " />
+
                     <div className="flex space-x-3 h-[11.6rem] sm:h-[14.5rem] md:h-[18.5rem]">
-                        <div className="">
-                            <img src={img} alt="zdjecie" className="h-[100.5%] w-[15.2rem] rounded-2xl  "></img>
+                        <div>
+
+                            <LazyLoadImage
+                                src={img}
+                                alt="zdjecie"
+                                effect="blur"
+                                placeholderSrc={img}
+                                className="h-[19rem] w-[15.2rem] rounded-2xl  " />
+
                         </div>
                         <div className="space-y-3">
-                            <img src={img} alt="zdjecie" className="h-[48%] w-[15rem] rounded-2xl "></img>
-                            <img src={img} alt="zdjecie" className="h-[48%] w-[15rem] rounded-2xl  "></img>
+
+                            <div>
+                                <LazyLoadImage
+                                    src={img}
+                                    alt="zdjecie"
+                                    effect="blur"
+                                    placeholderSrc={img}
+                                    className="h-[9rem] w-[15rem] rounded-2xl " />
+                            </div>
+                            <div>
+                                <LazyLoadImage
+                                    src={img}
+                                    alt="zdjecie"
+                                    effect="blur"
+                                    placeholderSrc={img}
+                                    className="h-[9rem] w-[15rem] rounded-2xl  " />
+                            </div>
                         </div>
                     </div>
                 </div>

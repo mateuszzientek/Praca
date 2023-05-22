@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ThemeContext } from './ThemeContext';
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BsArrowRightShort } from "react-icons/bs";
 
 function BrandCard(props) {
@@ -13,7 +14,7 @@ function BrandCard(props) {
                 <LazyLoadImage
                     src={props.brand}
                     alt={props.alt}
-                    effect="opacity"
+                    effect="blur"
                     placeholderSrc={props.brand}
                     className='rounded-t-3xl h-[9rem] w-60 lg:h-[12rem] lg:w-72' />
             </div>
