@@ -85,6 +85,11 @@
         "7": "Obsługa klienta w tym sklepie jest doskonała. Bardzo pomocna!",
         "8": "Te buty są doskonałe do biegania. Gorąco polecam!",
         "9": "Szybka i łatwa transakcja. Z pewnością wrócę tutaj jeszcze ;)"
+    },
+    "pagenotfound":{
+        "main": "NIC tutaj nie ma...",
+        "text": "...być może strona, której szukasz, nie została znaleziona lub nigdy nie istniała.",
+        "button": "Powrót do Głównej"
     }
 }
    

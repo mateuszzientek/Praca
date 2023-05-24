@@ -86,5 +86,10 @@
         "7": "The customer service at this store is excellent. So helpful!",
         "8": "These sneakers are perfect for running. Highly recommend!",
         "9": "Fast and easy transaction. Will definitely be back."
+    },
+    "pagenotfound":{
+        "main": "There is NOTHING here...",
+        "text": "...maybe the page you're looking for is not found or never existed.",
+        "button": "Back to Home"
     }
 }
