@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../elements/ThemeContext';
 import { useTranslation } from "react-i18next";
-import CircleOpinion from './CircleOpinion';
-import SlideOpinions from './SlideOpinions';
+import CircleOpinion from '../elements/CircleOpinion';
+import SlideOpinions from '../elements/SlideOpinions';
 
 function OpinionSection() {
 

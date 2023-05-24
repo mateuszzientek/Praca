@@ -4,7 +4,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { ThemeContext } from './ThemeContext';
 import { Swiper, SwiperSlide } from "swiper/react";
-import comments from '../comments';
+import comments from '../../comments';
 
 // Import Swiper styles
 import "swiper/css";
@@ -52,10 +52,10 @@ function SlideOpinions() {
                     <div className="card-opinions" style={{ backgroundColor }}>
 
                         <LazyLoadImage
-                            src={require('../assets/images/avatars/' + comment.avatar + '.png')}
+                            src={require('../../assets/images/avatars/' + comment.avatar + '.png')}
                             alt="Avatar" className="w-32 h-32 mr-auto ml-auto mt-[-6rem] mb-6 "
                             effect="blur"
-                            placeholderSrc={require('../assets/images/avatars/' + comment.avatar + '.png')}
+                            placeholderSrc={require('../../assets/images/avatars/' + comment.avatar + '.png')}
                         />
 
                         <RatingStars rating={comment.rating} />

@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../elements/ThemeContext';
 import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import custom from '../assets/images/custom.jpg';
-import custom1 from '../assets/images/custom1.jpg';
+import custom from '../../assets/images/custom.jpg';
+import custom1 from '../../assets/images/custom1.jpg';
 
 function CustomSection() {
 

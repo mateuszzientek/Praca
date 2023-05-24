@@ -2,8 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import img from '../assets/images/custom.jpg';
-import img1 from '../assets/images/custom1.jpg';
+import img from '../../assets/images/custom.jpg';
+import img1 from '../../assets/images/custom1.jpg';
 
 function OwnPhotoSecion() {
     const { t } = useTranslation()
@@ -13,7 +13,7 @@ function OwnPhotoSecion() {
 
             {/* main text */}
 
-            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:mx-0 xl:w-[28rem] space-y-3 font-roboto ">
+            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:mx-0 xl:w-[28rem] xl-h-[33rem] font-roboto ">
                 <div className="mb-6 text-center xl:text-left">
                     <div className="flex space-x-2 xl:space-x-0 xl:block justify-center">
                         <p className="text-black dark:text-white"> {t('ownphotosection.text1')}<span className="font-bold text-[hsl(199,100%,57%)]"> 10% </span>{t('ownphotosection.text2')}</p>
@@ -29,28 +29,28 @@ function OwnPhotoSecion() {
                     alt="zdjecie"
                     effect="blur"
                     placeholderSrc={img1}
-                    className="hidden xl:block h-[13rem] w-[100%] rounded-2xl" />
+                    className="hidden xl:block h-[13.5rem] w-[100%] rounded-2xl" />
 
             </div>
 
             {/* right grid (left column) images */}
 
-            <div className="flex space-x-3 justify-center w-[25rem] h-[20rem] sm:w-[30rem] sm:h-[25rem] md:w-[40rem] md:h-[32rem] lg:w-auto">
+            <div className="flex space-x-3 justify-center w-[25rem] sm:w-[30rem] md:w-[40rem] [33rem] lg:w-auto">
                 <div className=" space-y-3">
-                    <div>
+                    <div >
                         <LazyLoadImage
                             src={img}
                             alt="zdjecie"
                             effect="blur"
                             placeholderSrc={img}
-                            className="h-[16rem] w-[15rem] rounded-2xl  " />
+                            className="h-[12rem] md:h-[16rem] w-[15rem] rounded-2xl  " />
                     </div>
                     <div>
                         <LazyLoadImage
                             src={img}
                             effect="blur"
                             alt="zdjecie"
-                            className="h-[16rem] w-[15rem] rounded-2xl " />
+                            className="h-[12rem] md:h-[16rem] w-[15rem] rounded-2xl " />
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@ function OwnPhotoSecion() {
                         alt="zdjecie"
                         effect="blur"
                         placeholderSrc={img1}
-                        className="h-[40%] w-[31rem] rounded-2xl " />
+                        className="h-[10rem] md:h-[13rem] w-[31rem] rounded-2xl " />
 
                     <div className="flex space-x-3 h-[11.6rem] sm:h-[14.5rem] md:h-[18.5rem]">
                         <div>
@@ -73,7 +73,7 @@ function OwnPhotoSecion() {
                                 alt="zdjecie"
                                 effect="blur"
                                 placeholderSrc={img}
-                                className="h-[19rem] w-[15.2rem] rounded-2xl  " />
+                                className="h-[14rem] md:h-[19rem] w-[15.2rem] rounded-2xl  " />
 
                         </div>
                         <div className="space-y-3">
@@ -84,7 +84,7 @@ function OwnPhotoSecion() {
                                     alt="zdjecie"
                                     effect="blur"
                                     placeholderSrc={img}
-                                    className="h-[9rem] w-[15rem] rounded-2xl " />
+                                    className="h-[6.5rem] md:h-[9rem] w-[15rem] rounded-2xl " />
                             </div>
                             <div>
                                 <LazyLoadImage
@@ -92,7 +92,7 @@ function OwnPhotoSecion() {
                                     alt="zdjecie"
                                     effect="blur"
                                     placeholderSrc={img}
-                                    className="h-[9rem] w-[15rem] rounded-2xl  " />
+                                    className="h-[6.5rem] md:h-[9rem] w-[15rem] rounded-2xl  " />
                             </div>
                         </div>
                     </div>

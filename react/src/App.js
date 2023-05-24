@@ -1,30 +1,32 @@
-import React from "react";
-import Navbar from "./components/Navbar";
-import MainHome from "./components/MainHome";
-import HeadLineCards from "./components/HeadLineCards";
-import CustomSection from "./components/CustomSection";
-import OpinionSection from "./components/OpinionSection";
-import OwnPhotoSecion from "./components/OwnPhotoSection";
-import QuestionsSection from "./components/QuestionsSection";
-import Footer from "./components/Footer";
-import BackgroundMain from "./components/BackgroundMain";
-import Newslatter from "./components/Newslatter";
-import { ThemeContextProvider } from "./components/ThemeContext";
+import React, { lazy, Suspense } from "react";
+import Home from "./components/pages/Home";
+import { Route, Routes } from "react-router-dom";
+import { ThemeContextProvider } from "./components/elements/ThemeContext";
+import LoadingAnimation from "./components/elements/LoadingAnimation";
+const Contact = lazy(() => import("./components/pages/Contact"));
 
 function App() {
   return (
     <ThemeContextProvider>
-      <Newslatter />
-      <BackgroundMain>
-        <Navbar />
-        <MainHome />
-      </BackgroundMain>
-      <HeadLineCards />
-      <CustomSection />
-      <OpinionSection />
-      <OwnPhotoSecion />
-      <QuestionsSection />
-      <Footer />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/contact"
+          element={
+            <Suspense fallback={<LoadingAnimation />}>
+              <Contact />
+            </Suspense>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback="Loading...">
+              <Home />
+            </Suspense>
+          }
+        />
+      </Routes>
     </ThemeContextProvider>
   );
 }

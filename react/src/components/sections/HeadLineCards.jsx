@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import BrandCard from "./BrandCard";
-import adidas from '../assets/images/adidas.jpg';
-import newBalance from '../assets/images/NewBalance.jpg';
-import nike from '../assets/images/nike.jpg';
+import BrandCard from "../elements/BrandCard";
+import adidas from '../../assets/images/adidas.jpg';
+import newBalance from '../../assets/images/NewBalance.jpg';
+import nike from '../../assets/images/nike.jpg';
 
 
 function HeadLineCards() {

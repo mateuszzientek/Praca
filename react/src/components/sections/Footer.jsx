@@ -4,7 +4,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BsFacebook, BsInstagram } from 'react-icons/bs'
 import { AiFillTwitterCircle } from 'react-icons/ai'
-import logo from '../assets/images/logo2.png';
+import logo from '../../assets/images/logo2.png';
 
 
 function Footer(props) {
@@ -38,8 +38,14 @@ function Footer(props) {
 
                     {/* return/ delivery */}
                     <div className='flex text-2xl space-x-4 text-white '>
-                        <p className='cursor-pointer hover:border-b-2 '>{t('footer.delivery')}</p>
-                        <p className='cursor-pointer hover:border-b-2 ' > {t('footer.return')}</p>
+                        <div className='cursor-pointer group transition duration-300 '>
+                            <a>{t('footer.delivery')}</a>
+                            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-white"></span>
+                        </div>
+                        <div className='cursor-pointer group transition duration-300'>
+                            <a > {t('footer.return')}</a>
+                            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-white"></span>
+                        </div>
 
                     </div>
 

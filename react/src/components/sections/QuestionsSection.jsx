@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
 
 function QuestionsSection() {

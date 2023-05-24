@@ -5,8 +5,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BsSend } from 'react-icons/bs';
-import photo from '../assets/images/newslatter.png';
-import photo_black from '../assets/images/newslatter-black.png';
+import photo from '../../assets/images/newslatter.png';
+import photo_black from '../../assets/images/newslatter-black.png';
 
 function Newslatter(props) {
 
@@ -20,7 +20,7 @@ function Newslatter(props) {
 
         const timer = setTimeout(() => {
             setShowNewslatter(true);
-        }, 5000);
+        }, 10000);
 
         return () => clearTimeout(timer);
     }, [])

@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
 import ScrollToTop from "react-scroll-up";
 import { useTranslation } from "react-i18next";
-import ShopInfo from './ShopInfo';
-import { ThemeContext } from './ThemeContext';
+import ShopInfo from '../elements/ShopInfo';
+import { ThemeContext } from '../elements/ThemeContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { TbTruckDelivery, TbCoins, TbTruckReturn } from "react-icons/tb";
 import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { BsArrowRightShort } from "react-icons/bs";
-import blazers from '../assets/images/blazers.png';
-import blazer from '../assets/images/blazer.png';
+import blazers from '../../assets/images/blazers.png';
+import blazer from '../../assets/images/blazer.png';
 
 
 
@@ -72,8 +72,8 @@ const MainHome = () => {
 
                         {/* Second button*/}
 
-                        <div className='flex items-center rounded-3xl px-4 md:px-5 lg:px-2 xl:px-4 py-2 md:py-3 shadow-lg border-2 border-black/50 dark:border-white hover:bg-[#97DEFF] hover:border-[#97DEFF] hover:shadow-inner cursor-pointer'>
-                            <button type="button" className='text-black dark:text-white md:text-xs lg:text-sm xl:text-lg flex md:block lg:flex'>
+                        <div className='flex items-center rounded-3xl px-4 md:px-5 lg:px-2 xl:px-4 py-2 md:py-3 shadow-lg border-2 border-black/50 dark:border-white hover:bg-[#97DEFF] hover:dark:bg-[#59c9fd] hover:border-[#97DEFF] hover:shadow-inner cursor-pointer'>
+                            <button type="button" className='text-black dark:text-white  md:text-xs lg:text-sm xl:text-lg flex md:block lg:flex'>
                                 <h1 className='pr-2 md:pr-0 lg:pr-2'>{t('home.button3')}</h1>
                                 <h1 className=''> {t('home.button4')}</h1>
                             </button>

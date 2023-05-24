@@ -3,20 +3,20 @@ import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import RoundIcon from "./RoundIcon";
-import MobileLink from "./MobileLink";
-import HeroLink from "./HeroLink";
-import { ThemeContext } from './ThemeContext';
-import ToogleDarkButton from './ToogleDarkButton';
+import RoundIcon from "../elements/RoundIcon";
+import MobileLink from "../elements/MobileLink";
+import HeroLink from "../elements/HeroLink";
+import { ThemeContext } from '../elements/ThemeContext';
+import ToogleDarkButton from '../elements/ToogleDarkButton';
 import { AiOutlineSearch, AiOutlineHeart, AiOutlineClose, AiOutlineMenu, AiFillHome, AiTwotoneShop, AiFillHeart, AiFillCaretDown } from 'react-icons/ai';
 import { IoPersonOutline } from 'react-icons/io5';
 import { BsCart2, BsFillCartFill, BsBookFill, BsFillPersonFill } from "react-icons/bs";
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { GiWorld } from "react-icons/gi";
 import { FaPencilAlt } from "react-icons/fa";
-import logo from '../assets/images/logo.png';
-import logo2 from '../assets/images/logo-black.png';
-import languages from '../languages';
+import logo from '../../assets/images/logo.png';
+import logo2 from '../../assets/images/logo-black.png';
+import languages from '../../languages';
 import i18next from 'i18next';
 
 const Navbar = () => {
@@ -31,7 +31,7 @@ const Navbar = () => {
 
 
     return (
-        <div className='flex justify-between items-center h-40 max-w-[100rem] px-10  md:px-20 mx-auto pt-1' >
+        <div className='flex justify-between items-center h-40 max-w-[100rem] px-10  md:px-20 mx-auto pt-1 bg-transparent' >
 
             {/* logo */}
 
@@ -45,10 +45,10 @@ const Navbar = () => {
             {/* pages */}
 
             <div className='hidden xl:flex  mx-auto font-roboto text-xl '>
-                <HeroLink text={t('navbar.home')} />
-                <HeroLink text={t('navbar.shop')} />
-                <HeroLink text={t('navbar.custom')} />
-                <HeroLink text={t('navbar.contact')} />
+                <HeroLink text={t('navbar.home')} link="/" />
+                <HeroLink text={t('navbar.shop')} link="/abra" />
+                <HeroLink text={t('navbar.custom')} link="/cfd" />
+                <HeroLink text={t('navbar.contact')} link="/contact" />
             </div>
 
             {/* right side navbar */}
@@ -122,11 +122,12 @@ const Navbar = () => {
 
                 <h2 className='text-2xl pl-4 pt-5 text-[#3ab4f2]'>Sneakers <span className='text-[#0078aa] font-bold'>Zone</span></h2>
 
-                <div className='flex flex-col p-4 text-gray-800'>
+                <div className='flex flex-col py-4 text-gray-800'>
                     <MobileLink text={t('navbar.home')} icon={<AiFillHome size={25} className='mr-4' />} />
                     <MobileLink text={t('navbar.shop')} icon={<AiTwotoneShop size={25} className='mr-4' />} />
                     <MobileLink text={t('navbar.custom')} icon={<FaPencilAlt size={25} className='mr-4' />} />
-                    <a href='' className='text-xl py-4 flex border-b border-black dark:border-white hover:font-bold transform hover:scale-105 hover:ease-out duration-100 text-black dark:text-white'> <RiContactsBook2Fill size={25} className='mr-4' /> {t('navbar.contact')}</a>
+                    <MobileLink text={t('navbar.contact')} icon={<RiContactsBook2Fill size={25} className='mr-4' />} />
+                    <div className="border-b border-black"></div>
                     <MobileLink text={t('navbar.favorite')} icon={<AiFillHeart size={25} className='mr-4' />} />
                     <MobileLink text={t('navbar.cart')} icon={<BsFillCartFill size={25} className='mr-4' />} />
                     <MobileLink text={t('navbar.orders')} icon={<BsBookFill size={25} className='mr-4' />} />
