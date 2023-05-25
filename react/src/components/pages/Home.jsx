@@ -18,7 +18,7 @@ function Home(props) {
         <>
             <Newslatter />
             <BackgroundMain>
-                <Navbar />
+                <Navbar height="h-40" darkBackground="dark:bg-transparent" background="bg-transparent" shadow="shadow-none" />
                 <MainHome />
             </BackgroundMain>
             <HeadLineCards />

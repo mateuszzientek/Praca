@@ -93,5 +93,10 @@
         "button": "Back to Home"
     },
     "darkmode": "Dark Mode",
-    "language": "Language"
+    "language": "Language",
+    "contact":{
+        "main": "Contact Us",
+        "text1": "Have a question or need assistance?",
+        "text2": "We are here to help you with everything you need."
+    }
 }

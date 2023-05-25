@@ -92,7 +92,12 @@
         "button": "Powrót do Głównej"
     },
     "darkmode": "Tryb Ciemny",
-    "language": "Język"
+    "language": "Język",
+    "contact":{
+        "main": "Napisz do Nas",
+        "text1": "Masz pytanie lub potrzebujesz pomocy?",
+        "text2": "Jesteśmy tutaj, aby pomóc Ci we wszystkim, czego potrzebujesz."
+    }
 }
    
     
