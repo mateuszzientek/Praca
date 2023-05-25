@@ -8,19 +8,19 @@ function BrandCard(props) {
     const { theme, setTheme } = useContext(ThemeContext);
 
     return (
-        <div className={`h-[22rem] w-60 lg:h-[28rem] lg:w-72 md:mx-5 xl:mx-10 2xl:mx-14 bg-white dark:bg-[#d5d5d5] rounded-3xl ${theme === 'dark' ? "shadow-card" : "shadow-button"} mb-8 transform hover:scale-110 hover:transition ease-out duration-300`} >
+        <div className={`h-[23rem] w-60 xl:h-[28rem] xl:w-72 md:mx-5 xl:mx-10 2xl:mx-14 bg-white dark:bg-[#d5d5d5] rounded-3xl ${theme === 'dark' ? "shadow-card" : "shadow-button"} mb-8 transform hover:scale-110 hover:transition ease-out duration-300`} >
 
-            <div className='h-[9rem] lg:h-[12rem] rounded-t-3xl shadow-xl  '>
+            <div className='h-[9rem] xl:h-[12rem] rounded-t-3xl shadow-xl  '>
                 <LazyLoadImage
                     src={props.brand}
                     alt={props.alt}
                     effect="blur"
                     placeholderSrc={props.brand}
-                    className='rounded-t-3xl h-[9rem] w-60 lg:h-[12rem] lg:w-72' />
+                    className='rounded-t-3xl h-[9rem] w-60 xl:h-[12rem] xl:w-72' />
             </div>
 
             <div>
-                <h2 className='text-sm lg:text-base font-roboto text-center mt-2 lg:mt-6 px-6'>{props.text}</h2>
+                <h2 className='text-sm xl:text-base font-roboto text-center mt-2 lg:mt-6 px-6'>{props.text}</h2>
             </div>
 
             <div className='flex items-center justify-center mt-3 xl:mt-6 '>

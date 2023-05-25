@@ -23,7 +23,7 @@ const MainHome = () => {
     return (
 
         <div>
-            <ScrollToTop showUnder={800} duration={700} >
+            <ScrollToTop showUnder={800} duration={700} style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: '9999' }}>
                 <div className='bg-[#97DEFF] rounded-full p-2 shadow-button transform hover:scale-125 hover:bg-[#48c5fe] transition ease-out duration-300'>
                     <AiOutlineArrowUp size={25} />
                 </div>
@@ -32,7 +32,7 @@ const MainHome = () => {
 
                 {/* main header*/}
 
-                <div className='w-[70vw] md:w-[45vw] '>
+                <div className='w-[80vw] md:w-[45vw] '>
 
                     <div className='font-roboto text-black/80 '>
 

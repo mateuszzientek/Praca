@@ -90,7 +90,9 @@
         "main": "NIC tutaj nie ma...",
         "text": "...być może strona, której szukasz, nie została znaleziona lub nigdy nie istniała.",
         "button": "Powrót do Głównej"
-    }
+    },
+    "darkmode": "Tryb Ciemny",
+    "language": "Język"
 }
    
     

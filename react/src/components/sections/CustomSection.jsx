@@ -65,7 +65,7 @@ function CustomSection() {
                     </div>
 
                     <div className='flex justify-center lg:justify-start'>
-                        <button type="button" className='text-xl xl:text-2xl rounded-3xl bg-white text-center mt-8 xl:mt-12 sm:w-36 xl:w-44 p-2 transform hover:scale-110 transition ease-out duration-300'>
+                        <button type="button" className='text-xl xl:text-2xl rounded-3xl bg-white text-center mt-8 xl:mt-12 w-auto py-3 px-4 transform hover:scale-110 transition ease-out duration-300'>
                             <p className='text-black' >{t('customSection.button')}</p>
                         </button>
                     </div>
