@@ -1,16 +1,15 @@
 import React, { useContext } from 'react';
-import ScrollToTop from "react-scroll-up";
 import { useTranslation } from "react-i18next";
 import ShopInfo from '../elements/ShopInfo';
 import { ThemeContext } from '../elements/ThemeContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { AiOutlineArrowUp } from "react-icons/ai";
 import { TbTruckDelivery, TbCoins, TbTruckReturn } from "react-icons/tb";
 import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { BsArrowRightShort } from "react-icons/bs";
 import blazers from '../../assets/images/blazers.png';
 import blazer from '../../assets/images/blazer.png';
+import ContactCircle from '../elements/ContactCircle';
 
 
 
@@ -23,11 +22,6 @@ const MainHome = () => {
     return (
 
         <div>
-            <ScrollToTop showUnder={800} duration={700} style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: '9999' }}>
-                <div className='bg-[#97DEFF] rounded-full p-2 shadow-button transform hover:scale-125 hover:bg-[#48c5fe] transition ease-out duration-300'>
-                    <AiOutlineArrowUp size={25} />
-                </div>
-            </ScrollToTop>
             <div className='flex flex-col md:flex-row md:justify-center items-center md:items-start  h-[35rem] max-w-[100rem] px-20 mx-auto '>
 
                 {/* main header*/}

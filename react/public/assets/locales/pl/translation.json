@@ -96,7 +96,14 @@
     "contact":{
         "main": "Napisz do Nas",
         "text1": "Masz pytanie lub potrzebujesz pomocy?",
-        "text2": "Jesteśmy tutaj, aby pomóc Ci we wszystkim, czego potrzebujesz."
+        "text2": "Jesteśmy tutaj, aby pomóc Ci we wszystkim, czego potrzebujesz.",
+        "address": "Adres",
+        "phone": "Telefon",
+        "hours-main": "Godziny otwarcia",
+        "mon-sat": "Pon–Sob:",
+        "sun": "Ndz:",
+        "hours1": "9:30–17:45",
+        "hours2": "11:00–16:00"
     }
 }
    
