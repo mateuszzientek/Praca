@@ -15,7 +15,7 @@ function Footer(props) {
     return (
         <div>
 
-            <div className='flex justify-center  bg-black/90 md:h-36 py-6'>
+            <div className='flex justify-center  bg-black/90 md:h-28 py-6'>
 
                 <div className='flex flex-col md:flex-row justify-between items-center md:w-[90%] lg:w-[80%] 2xl:w-[90rem] space-y-3  '>
 

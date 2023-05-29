@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import Home from "./components/pages/Home";
 import { Route, Routes } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
+import Footer from "./components/sections/Footer";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
 import LoadingAnimation from "./components/elements/LoadingAnimation";
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
@@ -30,6 +31,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer />
     </ThemeContextProvider>
   );
 }

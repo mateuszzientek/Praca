@@ -26,7 +26,6 @@ function Home(props) {
             <OpinionSection />
             <OwnPhotoSecion />
             <QuestionsSection />
-            <Footer />
         </>
     );
 }

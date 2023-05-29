@@ -1,14 +1,44 @@
-import React from 'react';
-import ScrollToTop from "react-scroll-up";
+import React, { useEffect, useState } from 'react';
 import { AiOutlineArrowUp } from "react-icons/ai";
+import { animateScroll as scroll } from 'react-scroll';
 
 function ButtonToUp(props) {
+    const [backToTopButton, setbackToTopButton] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 800) {
+                setbackToTopButton(true);
+            } else {
+                setbackToTopButton(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
+    const scrollUp = () => {
+        scroll.scrollToTop({
+            smooth: true,
+            duration: 500
+        });
+    };
+
     return (
-        <ScrollToTop showUnder={800} duration={700} style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: '9999' }}>
-            <div className='bg-[#97DEFF] rounded-full p-2 shadow-button transform hover:scale-125 hover:bg-[#48c5fe] transition ease-out duration-300'>
-                <AiOutlineArrowUp size={25} />
-            </div>
-        </ScrollToTop>
+        <>
+            {backToTopButton && (
+                <button
+                    onClick={scrollUp}
+                    className={`bg-[#97DEFF] fixed bottom-[30px] right-[30px] z-10 rounded-full p-2 shadow-button transform hover:scale-125  hover:bg-[#48c5fe] transition ease-out duration-300`}
+                >
+                    <AiOutlineArrowUp size={25} />
+                </button>
+            )}
+        </>
     );
 }
 

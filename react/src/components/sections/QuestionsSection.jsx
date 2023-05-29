@@ -30,7 +30,7 @@ function QuestionsSection() {
 
                 <input className='px-3 w-[20rem] md:w-[17rem] lg:w-[20rem] h-[3rem] rounded-full shadow-button focus:outline-none mt-10 focus:border-2 border-black/60' type=" email" placeholder={t('questionSection.email')} />
 
-                {/* body email input */}
+                {/* body text input */}
 
                 <textarea className="p-2 mt-10 shadow-button rounded-2xl focus:outline-none focus:border-2 border-black/60 w-[25rem] md:w-[18rem] lg:w-[25rem] h-[7rem]" placeholder={t('questionSection.question')}></textarea>
 

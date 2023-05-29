@@ -16,7 +16,7 @@ function PageNotFound(props) {
 
             <LazyLoadImage
                 alt="404 Page not found"
-                className='w-[30rem] h-[20rem] lg:w-[40rem] lg:h-[30rem] '
+                className='w-[30rem] h-[20rem] lg:w-[36rem] lg:h-[25rem] '
                 src={zdjecie}
                 effect="blur"
                 placeholderSrc={zdjecie} />
