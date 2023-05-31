@@ -105,6 +105,17 @@
         "hours1": "9:30–17:45",
         "hours2": "11:00–16:00",
         "map": "Znajdziesz nas tutaj!"
+    },
+    "profile":{
+        "signin": "Zaloguj się",
+        "myprofile": "Moje konto",
+        "orders": "Zamówienia",
+        "projects": "Moje projekty",
+        "help": "Pomoc i kontakt",
+        "signout": "Wyloguj się",
+        "signup": "Jesteś nowym klientem?",
+        "continue": "Przejdź dalej",
+        "hello": "Cześć,"
     }
 }
    

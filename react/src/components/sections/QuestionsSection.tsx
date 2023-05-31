@@ -12,9 +12,9 @@ function QuestionsSection() {
 
             {/* main text */}
 
-            <div className="flex flex-col items-center  md:mr-[40rem]  md:ml-[20rem] lg:ml-[13rem] xl:ml-[8rem] pt-20 font-roboto font-bold dark:text-white">
-                <p className="text-5xl md:text-5xl xl:text-7xl text-black/70 ">{t('questionSection.main')}</p>
-                <p className=" text-black/50 mt-10 text-lg md:text-xl lg:text-2xl xl:text-3xl w-[25rem] sm:w-[30rem] md:w-[23rem] lg:w-[32rem] xl:w-[40rem] mx-auto">{t('questionSection.text')}</p>
+            <div className="flex flex-col items-center  md:mr-[40rem]  md:ml-[20rem] lg:ml-[13rem] xl:ml-[8rem] pt-20 font-roboto font-bold">
+                <p className="text-5xl md:text-5xl xl:text-7xl text-black/70 dark:text-white">{t('questionSection.main')}</p>
+                <p className=" text-black/50 mt-10 dark:text-white/70 text-lg md:text-xl lg:text-2xl xl:text-3xl w-[25rem] sm:w-[30rem] md:w-[23rem] lg:w-[32rem] xl:w-[40rem] mx-auto">{t('questionSection.text')}</p>
 
                 <div className="flex justify-center space-x-10 mt-10 items-center ">
 

@@ -107,5 +107,16 @@
         "hours2": "11am–4pm",
         "map": "You can find us here!"
 
+    },
+    "profile":{
+        "signin": "Sign in",
+        "myprofile": "My profile",
+        "orders": "Orders",
+        "projects": "My projects",
+        "help": "Help and contact",
+        "signout": "Sign out",
+        "signup": "Are you a new client?",
+        "continue": "Continue",
+        "hello": "Hello,"
     }
 }

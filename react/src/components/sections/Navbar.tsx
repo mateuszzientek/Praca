@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
+import zdjecie from "../../assets/images/xha.jpg"
 import ToogleButton from '../elements/ToogleButton';
 import RoundIcon from "../elements/RoundIcon";
 import MobileLink from "../elements/MobileLink";
@@ -19,6 +20,8 @@ import logo from '../../assets/images/logo.png';
 import logo2 from '../../assets/images/logo-black.png';
 import languages from '../../languages';
 import i18next from 'i18next';
+import ProfileLink from '../elements/ProfileLink';
+
 
 interface NavbarProps {
     background?: string;
@@ -26,9 +29,9 @@ interface NavbarProps {
     shadow?: string;
     extra?: string;
     height?: string;
-  }
-  
-  const Navbar: React.FC<NavbarProps> = (props) => {
+}
+
+const Navbar: React.FC<NavbarProps> = (props) => {
 
     const { theme, setTheme } = useContext(ThemeContext);
     const [nav, setNav] = useState(false);
@@ -104,15 +107,45 @@ interface NavbarProps {
                     <RoundIcon icon={<AiOutlineHeart size={20} />} />
 
                     {/* person icon */}
+                    <div className='group relative'>
+                        <RoundIcon icon={<IoPersonOutline size={20} />} />
 
-                    <RoundIcon icon={<IoPersonOutline size={20} />} />
+                        <div className='hidden group-hover:flex flex-col items-start space-y-4 absolute top-16 right-0 w-auto p-4 h-auto bg-white dark:bg-[#e2e2e2] shadow-button mt-1 rounded z-10 animate-fade-in '>
+
+                            <button className='w-full h-[3rem] rounded bg-black/90 hover:scale-105 transition ease-in-out duration-300 hover:bg-black/70'>
+                                <p className='text-lg text-white px-4 whitespace-nowrap'>{t('profile.signin')}</p>
+                            </button>
+
+                            <p className='text-base whitespace-nowrap '><span className='text-[#0078aa] cursor-pointer hover:border-b-2 border-[#0078aa]  '>{t('profile.signup')}</span> {t('profile.continue')}</p>
+
+                            <div className="border-b border-black/50 w-full"></div>
+
+                            <ProfileLink text={t('profile.myprofile')} link="/abra" />
+                            <ProfileLink text={t('profile.orders')} link="/abra" />
+                            <ProfileLink text={t('profile.projects')} link="/abra" />
+                            <ProfileLink text={t('profile.help')} link="/contact" />
+                            <ProfileLink text={t('profile.signout')} link="/abra" />
+
+
+                            <div className='hidden flex items-center space-x-2 pr-8'>
+                                <p className='text-lg whitespace-nowrap'>{t('profile.hello')} Mateusz</p>
+                                <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
 
                     {/* cart icon */}
 
                     <RoundIcon icon={<BsCart2 size={20} />} />
 
                     {/* button for language */}
-                    <div onClick={() => setDropdown(!dropdown)} className='relative hidden lg:flex justify-center items-center rounded-full ml-4 mr-4 sm:mr-0'>
+                    <div onClick={() => setDropdown(!dropdown)} className='relative hidden lg:flex justify-center items-center rounded-full mx-4 sm:mr-0'>
                         <div className='hover:scale-110 ease-in-out duration-300 cursor-pointer '>
                             <GiWorld color={theme === 'dark' ? "white" : "black"} size={35} className='opacity-80' />
                             <AiFillCaretDown color={theme === 'dark' ? "white" : "black"} className="absolute left-8 top-0 opacity-80 " size={20} />

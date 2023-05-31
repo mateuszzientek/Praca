@@ -1,14 +1,17 @@
 import React, { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
 import Footer from "./components/sections/Footer";
 import Home from "./components/pages/Home";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
 import LoadingAnimation from "./components/elements/LoadingAnimation";
+const Login = lazy(() => import("./components/pages/Login"))
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));
 
 const App: React.FC = () => {
+  const location = useLocation();
+
   return (
     <ThemeContextProvider>
       <ButtonToUp />
@@ -23,6 +26,14 @@ const App: React.FC = () => {
           }
         />
         <Route
+          path="/login"
+          element={
+            <Suspense fallback={<LoadingAnimation />}>
+              <Login />
+            </Suspense>
+          }
+        />
+        <Route
           path="*"
           element={
             <Suspense fallback={<LoadingAnimation />}>
@@ -31,7 +42,7 @@ const App: React.FC = () => {
           }
         />
       </Routes>
-      <Footer />
+      {location.pathname !== "/login" && <Footer />}
     </ThemeContextProvider>
   );
 };
