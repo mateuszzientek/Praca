@@ -1,14 +1,14 @@
 import React, { lazy, Suspense } from "react";
-import Home from "./components/pages/Home";
 import { Route, Routes } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
 import Footer from "./components/sections/Footer";
+import Home from "./components/pages/Home";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
 import LoadingAnimation from "./components/elements/LoadingAnimation";
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeContextProvider>
       <ButtonToUp />
@@ -25,7 +25,7 @@ function App() {
         <Route
           path="*"
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingAnimation />}>
               <PageNotFound />
             </Suspense>
           }
@@ -34,6 +34,6 @@ function App() {
       <Footer />
     </ThemeContextProvider>
   );
-}
+};
 
 export default App;

@@ -8,7 +8,8 @@ import { BsSend } from 'react-icons/bs';
 import photo from '../../assets/images/newslatter.png';
 import photo_black from '../../assets/images/newslatter-black.png';
 
-function Newslatter(props) {
+
+function Newslatter() {
 
     const { theme, setTheme } = useContext(ThemeContext);
     const [showNewslatter, setShowNewslatter] = useState(false);
@@ -53,7 +54,7 @@ function Newslatter(props) {
                             <div className='flex relative items-center '>
 
                                 {/* input for email */}
-                                <input className='bg-[hsl(198,100%,91%)] w-[20rem] md:w-[30rem] h-[4rem] lg:w-[35rem] lg:h-[5rem] mt-6 rounded-full px-3 shadow-2xl focus:outline-none text-xl text-black focus:border-2 border-black/60 focus:bg-[hsl(198,100%,84%)] hover:bg-[hsl(198,100%,84%)]' type='email' placeholder={t('newslatter.input')}>
+                                <input className='bg-[hsl(198,100%,91%)] w-[20rem] md:w-[30rem] h-[4rem] lg:w-[35rem] lg:h-[5rem] mt-6 rounded-full px-3 shadow-2xl focus:outline-none text-xl text-black focus:border-2 border-black/60 focus:bg-[hsl(198,100%,84%)] hover:bg-[hsl(198,100%,84%)]' type='email' placeholder={t('newslatter.input') as string}>
 
                                 </input>
 

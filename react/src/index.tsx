@@ -1,5 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from 'react-dom/client';
+import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
@@ -9,7 +10,7 @@ import HttpApi from "i18next-http-backend";
 import App from "./App";
 import "./index.css";
 
-i18n
+(i18n as any)
   .use(initReactI18next)
   .use(LanguageDetector)
   .use(HttpApi)
@@ -34,7 +35,7 @@ i18n
     },
   });
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
     <BrowserRouter>

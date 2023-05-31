@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { animateScroll as scroll } from 'react-scroll';
 
-function ButtonToUp(props) {
+function ButtonToUp() {
     const [backToTopButton, setbackToTopButton] = useState(false);
 
     useEffect(() => {

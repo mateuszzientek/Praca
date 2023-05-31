@@ -11,7 +11,7 @@ import BackgroundMain from "../elements/BackgroundMain";
 import Newslatter from "../elements/Newslatter";
 import { ThemeContextProvider } from "../elements/ThemeContext";
 
-function Home(props) {
+function Home() {
 
 
     return (

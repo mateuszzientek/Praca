@@ -7,7 +7,7 @@ import { AiFillTwitterCircle } from 'react-icons/ai'
 import logo from '../../assets/images/logo2.png';
 
 
-function Footer(props) {
+function Footer() {
 
     let iconStyles = { color: "white" };
     const { t } = useTranslation()

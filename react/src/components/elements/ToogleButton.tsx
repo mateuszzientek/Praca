@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { ThemeContext } from './ThemeContext';
 
-function ToogleButton(props) {
+function ToogleButton() {
     const [isSelected, setIsSelected] = useState(false);
 
     const { theme, setTheme } = useContext(ThemeContext);

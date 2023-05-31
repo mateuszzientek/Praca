@@ -1,7 +1,7 @@
 import React from 'react';
 import BounceLoader from "react-spinners/BounceLoader";
 
-function LoadingAnimation(props) {
+function LoadingAnimation() {
     return (
         <div className='flex justify-center w-screen h-screen items-center bg-white dark:bg-[#4f4f4f] '>
             <div>

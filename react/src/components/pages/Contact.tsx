@@ -13,9 +13,7 @@ import ContactCircle from '../elements/ContactCircle';
 
 
 
-function Contact(props) {
-
-
+function Contact() {
 
 
     const { theme, setTheme } = useContext(ThemeContext);
@@ -60,15 +58,15 @@ function Contact(props) {
 
                 </div >
 
-                <div className='flex flex-col lg:flex-row justify-center items-center space-y-16 lg:space-y-0 lg:space-x-60   bg-white dark:bg-black/80 mt-[-1rem] pt-20 '>
+                <div className='witam flex flex-col lg:flex-row justify-center items-center space-y-16 lg:space-y-0 lg:space-x-60   bg-white dark:bg-black/80 mt-[-1rem] pt-20 '>
 
                     <div className='items-center space-y-12 '>
 
-                        <ContactCircle mainText={t('contact.address')} text="Biała 3, 00-895 Warszawa" icon={<TfiLocationPin size={35} color={theme === "dark" ? "black" : "white"} />} />
+                        <ContactCircle mainText={t('contact.address')} text="Biała 3, 00-895 Warszawa" icon={<TfiLocationPin size={35} color={theme === "dark" ? "black" : "white"} /> } text2="" />
 
-                        <ContactCircle mainText={t('contact.phone')} text="+48 509 976 345" icon={<BsTelephone size={35} color={theme === "dark" ? "black" : "white"} />} />
+                        <ContactCircle mainText={t('contact.phone')} text="+48 509 976 345" icon={<BsTelephone size={35} color={theme === "dark" ? "black" : "white"} /> } text2=""/>
 
-                        <ContactCircle mainText={"Email"} text="sneakerzone@gmail.com" icon={<BsEnvelope size={35} color={theme === "dark" ? "black" : "white"} />} />
+                        <ContactCircle mainText={"Email"} text="sneakerzone@gmail.com" icon={<BsEnvelope size={35} color={theme === "dark" ? "black" : "white"} /> } text2=""/>
 
                         <ContactCircle mainText={t('contact.hours-main')} text={<><span className='font-bold'>{t('contact.mon-sat')}</span> {t('contact.hours1')} </>} text2={<><span className='font-bold'>{t('contact.sun')}</span> {t('contact.hours2')}</>} icon={<AiOutlineClockCircle size={35} color={theme === "dark" ? "black" : "white"} />} />
 
@@ -77,10 +75,10 @@ function Contact(props) {
 
                     <div className='flex flex-col space-y-6 items-center'>
 
-                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.name')} />
-                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.surname')} />
-                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="email" placeholder={t('questionSection.email')} />
-                        <textarea className="p-3  focus:outline-none focus:border-2 border-black/60 w-[22rem] h-[8rem] bg-[#e6e6e6]  " placeholder={t('questionSection.question')}></textarea>
+                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.name') as string} />
+                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.surname') as string} />
+                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="email" placeholder={t('questionSection.email') as string} />
+                        <textarea className="p-3  focus:outline-none focus:border-2 border-black/60 w-[22rem] h-[8rem] bg-[#e6e6e6]  " placeholder={t('questionSection.question') as string}></textarea>
 
                         <button type="button" className='text-2xl rounded-full bg-[#97DEFF] w-[22rem] h-[3rem] transform hover:scale-105 transition ease-out duration-300 '>
                             <p className='text-black/80' >{t('questionSection.button')}</p>
@@ -99,7 +97,7 @@ function Contact(props) {
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1221.6238326657467!2d20.990019069435892!3d52.23888501683926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecd054d7f9cd3%3A0x1f84f4e991f81c7f!2zQmlhxYJhIDM!5e0!3m2!1sen!2spl!4v1685305076456!5m2!1sen!2spl"
                         className='w-[70%] h-[20rem] lg:h-[30rem] lg:w-[40rem] 2xl:w-[50rem] '
                         loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
+                        referrerPolicy="no-referrer-when-downgrade">
                     </iframe>
 
                 </div>

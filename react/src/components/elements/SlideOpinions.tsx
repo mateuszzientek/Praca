@@ -24,7 +24,7 @@ function SlideOpinions() {
         <Swiper
             slidesPerView={1}
             loop={true}
-            loopedSlides={false}
+            loopedSlides={0}
             autoplay={{
                 delay: 4000,
                 disableOnInteraction: false

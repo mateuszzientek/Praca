@@ -7,7 +7,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 
-function PageNotFound(props) {
+function PageNotFound() {
 
     const navigate = useNavigate();
     const { t } = useTranslation()

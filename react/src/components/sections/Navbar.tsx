@@ -20,7 +20,15 @@ import logo2 from '../../assets/images/logo-black.png';
 import languages from '../../languages';
 import i18next from 'i18next';
 
-const Navbar = (props) => {
+interface NavbarProps {
+    background?: string;
+    darkBackground?: string;
+    shadow?: string;
+    extra?: string;
+    height?: string;
+  }
+  
+  const Navbar: React.FC<NavbarProps> = (props) => {
 
     const { theme, setTheme } = useContext(ThemeContext);
     const [nav, setNav] = useState(false);
@@ -114,7 +122,7 @@ const Navbar = (props) => {
                                 {languages.map(({ code, name, country_code }) => (
                                     <button
                                         key={country_code}
-                                        onClick={() => i18next.changeLanguage(code)}
+                                        onClick={() => (i18next as any).changeLanguage(code)}
                                         disabled={code === currentCode}
                                         className='flex justify-start items-center pr-6 pl-3 py-[0.5rem]  hover:bg-black/10'>
 
@@ -169,12 +177,12 @@ const Navbar = (props) => {
                                 <AiFillCaretRight color={theme === 'dark' ? "white" : "black"} size={25} /></p>
                             {dropdown ? (
                                 languages.map(({ code, name, country_code }) => {
-                                    if (code !== i18next.language) {
+                                    if (code !== (i18next as any).language) {
                                         return (
                                             <button
                                                 key={country_code}
                                                 onClick={() => {
-                                                    i18next.changeLanguage(code)
+                                                    (i18next as any).changeLanguage(code)
                                                     setDropdown(!dropdown)
                                                 }}
                                             >
