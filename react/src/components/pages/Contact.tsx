@@ -62,11 +62,11 @@ function Contact() {
 
                     <div className='items-center space-y-12 '>
 
-                        <ContactCircle mainText={t('contact.address')} text="Biała 3, 00-895 Warszawa" icon={<TfiLocationPin size={35} color={theme === "dark" ? "black" : "white"} /> } text2="" />
+                        <ContactCircle mainText={t('contact.address')} text="Biała 3, 00-895 Warszawa" icon={<TfiLocationPin size={35} color={theme === "dark" ? "black" : "white"} />} text2="" />
 
-                        <ContactCircle mainText={t('contact.phone')} text="+48 509 976 345" icon={<BsTelephone size={35} color={theme === "dark" ? "black" : "white"} /> } text2=""/>
+                        <ContactCircle mainText={t('contact.phone')} text="+48 509 976 345" icon={<BsTelephone size={35} color={theme === "dark" ? "black" : "white"} />} text2="" />
 
-                        <ContactCircle mainText={"Email"} text="sneakerzone@gmail.com" icon={<BsEnvelope size={35} color={theme === "dark" ? "black" : "white"} /> } text2=""/>
+                        <ContactCircle mainText={"Email"} text="sneakerzone@gmail.com" icon={<BsEnvelope size={35} color={theme === "dark" ? "black" : "white"} />} text2="" />
 
                         <ContactCircle mainText={t('contact.hours-main')} text={<><span className='font-bold'>{t('contact.mon-sat')}</span> {t('contact.hours1')} </>} text2={<><span className='font-bold'>{t('contact.sun')}</span> {t('contact.hours2')}</>} icon={<AiOutlineClockCircle size={35} color={theme === "dark" ? "black" : "white"} />} />
 

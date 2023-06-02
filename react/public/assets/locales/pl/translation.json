@@ -116,6 +116,25 @@
         "signup": "Jesteś nowym klientem?",
         "continue": "Przejdź dalej",
         "hello": "Cześć,"
+    },
+    "login": {
+        "textregister": "Miło Cię poznać!",
+        "textlogin": "Miło Cię znowu widzieć!",
+        "signin": "Zaloguj się",
+        "signup": "Zarejestruj się",
+        "name": "Imię*",
+        "email": "Adres e-mail*",
+        "password": "Hasło*",
+        "text": "Tak, proszę o przesyłanie ofert, informacji o nowych trendach i specjalnych zaproszeń na wyprzedaże i wydarzenia.",
+        "create": "Załóż konto",
+        "forgot": "Nie pamiętam hasła",
+        "text2": "lub zaloguj się za pomocą",
+        "text3": "lub kontynuuj z",
+        "text4": "Klikając przycisk Załóż konto, akceptujesz nasz",
+        "text5": "Regulamin",
+        "text6": "oraz potwierdzasz zapoznanie się z",
+        "text7": "Polityką prywatności"
+
     }
 }
    

@@ -118,5 +118,23 @@
         "signup": "Are you a new client?",
         "continue": "Continue",
         "hello": "Hello,"
+    },
+    "login": {
+        "textregister": "Nice to meet you!",
+        "textlogin": "Nice to see you again!",
+        "signin": "Sign in",
+        "signup": "Sign up",
+        "name": "Name*",
+        "email": "E-mail*",
+        "password": "Password*",
+        "text": "Sure! Please subscribe me to receive offers, information about new trends, and special invitations to sales and events.",
+        "create": "Create account",
+        "forgot": "I forgot my password",
+        "text2": "or log in with",
+        "text3": "or continue with",
+        "text4": "By clicking the Create account button, you accept our",
+        "text5": "Terms and Conditions",
+        "text6": "and you confirm that you have read and understood",
+        "text7": "Privacy Policy"
     }
 }

@@ -7,6 +7,11 @@
   --background-color: ${backgroundColor};
 }
 
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
 body {
   background-color: white;
   overflow-x: hidden;
@@ -218,4 +223,36 @@ button[disabled] {
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
+}
+
+.animate-fade-in-long {
+  animation: fade-in 0.9s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(-10%);
+  }
+}
+
+.slide-out {
+  animation: slideOut 0.2s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.2s ease-in-out;
 }
