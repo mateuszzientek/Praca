@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import RatingStars from './RatingStars';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -18,7 +18,20 @@ function SlideOpinions() {
 
     const { theme, setTheme } = useContext(ThemeContext);
 
-    const backgroundColor = theme === 'dark' ? "#e6e6e6" : "white"
+
+    useEffect(() => {
+        const cardElements = document.getElementsByClassName('card-opinions');
+
+        for (let i = 0; i < cardElements.length; i++) {
+            const cardElement = cardElements[i] as HTMLElement;
+
+            if (theme === 'dark') {
+                cardElement.style.backgroundColor = '#dedede';
+            } else {
+                cardElement.style.backgroundColor = 'white';
+            }
+        }
+    }, [theme]);
 
     return (
         <Swiper
@@ -49,7 +62,7 @@ function SlideOpinions() {
         >
             {comments.map((comment) => (
                 <SwiperSlide key={comment.id}>
-                    <div className="card-opinions" style={{ backgroundColor }}>
+                    <div className="card-opinions" >
 
                         <LazyLoadImage
                             src={require('../../assets/images/avatars/' + comment.avatar + '.png')}
