@@ -3,18 +3,18 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 5000;
 const mongoose = require("mongoose");
+require("dotenv").config();
+
+const link_database = process.env.DATABASE_LINK;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose
-  .connect(
-    "mongodb+srv://SneakersZone:Praca123@sneakerszone.if0bmkj.mongodb.net/shop",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(link_database, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("Connected to MongoDB Atlas");
   })

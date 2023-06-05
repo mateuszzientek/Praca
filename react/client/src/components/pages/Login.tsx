@@ -11,10 +11,8 @@ import zdjecie from '../../assets/images/pp.jpg';
 import chrome from '../../assets/images/chrome.png';
 import axios from 'axios';
 import validator from 'validator';
+import tick from "../../assets/images/tick.png"
 
-interface Errors {
-    email: string;
-}
 
 function Login() {
     const { theme, setTheme } = useContext(ThemeContext);
@@ -22,7 +20,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [emailOffert, setEmailOffert] = useState(false);
     const [isUserSaved, setIsUserSaved] = useState(false);
-    const [errors, setErrors] = useState<Errors>({ email: '' });
+    const [errors, setErrors] = useState({ email: '', nick: '', pass: '' });
 
     const [email, setEmail] = useState('');
     const [nick, setNick] = useState('');
@@ -50,17 +48,25 @@ function Login() {
     const validateData = () => {
         const newErrors = {
             email: '',
+            nick: '',
+            pass: ''
         };
 
-        // Sprawdź warunek dla adresu e-mail (co najmniej jedna duża litera)
         if (email && !validator.isEmail(email)) {
-            newErrors.email = 'Podany email jest niepoprawny';
+            newErrors.email = 'Invalid email';
         }
+        if (nick && /[^a-zA-Z0-9\.\_]/.test(nick)) {
+            newErrors.nick = 'Nick can only contain letters, numbers, dots, or underscores';
+        }
+        if (password && !validator.isStrongPassword(password, { minSymbols: 0 })) {
+            newErrors.pass = 'Password requirements: at least 8 characters, including an uppercase letter and a number';
+        }
+
 
         setErrors(newErrors);
 
         // Zwróć true, jeśli nie ma żadnych błędów walidacji, w przeciwnym razie false
-        return Object.keys(newErrors.email).length === 0;
+        return Object.keys(newErrors.email || newErrors.nick || newErrors.pass).length === 0;
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -68,6 +74,17 @@ function Login() {
 
         // Waliduj dane przed wysłaniem formularza
         const isValid = validateData();
+
+        if (!email || !password || !nick) {
+            // Przynajmniej jedno z pól jest puste
+            setErrors({
+                email: !email ? 'Email is required' : '',
+                nick: !nick ? 'Nick is required' : '',
+                pass: !password ? 'Password is required' : '',
+            });
+            return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
+        }
+
 
         if (isValid) {
             const userData = {
@@ -91,9 +108,10 @@ function Login() {
                     // Dodaj logikę obsługi błędu logowania
                 });
         }
+
     };
 
-    const handleEmailBlur = () => {
+    const handleBlur = () => {
         validateData();
     };
 
@@ -102,10 +120,34 @@ function Login() {
     };
 
     const handleLoginClick = () => {
+        const newErrors = {
+            email: '',
+            nick: '',
+            pass: ''
+        };
+
+        setErrors(newErrors);
+
+        setNick("");
+        setPassword("");
+        setEmail("");
+
         setLoginSelected(true);
     };
 
     const handleRegisterClick = () => {
+        const newErrors = {
+            email: '',
+            nick: '',
+            pass: ''
+        };
+
+        setErrors(newErrors);
+
+        setNick("");
+        setPassword("");
+        setEmail("");
+
         setLoginSelected(false);
     };
 
@@ -116,11 +158,18 @@ function Login() {
         <>
             {isUserSaved && (
                 <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-                    <div className="relative bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] md:w-[35rem] md:h-[28rem] lg:w-[45rem] lg:h-[35rem] rounded-2xl"></div>
+                    <div className="flex flex-col  items-center bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] lg:w-[35rem] lg:h-[28rem] xl:w-[45rem] xl:h-[30rem] rounded-2xl">
+                        <LazyLoadImage
+                            alt="Green Tick"
+                            effect="blur"
+                            placeholderSrc={tick}
+                            src={tick}
+                            className='mt-12 w-[8rem] h-[8rem]  lg:w-[10rem] lg:h-[10rem] xl:w-[12rem] xl:h-[12rem]' />
+                        <p className='text-black dark:text-white mt-12 text-2xl lg:text-3xl xl:text-4xl'>Rejestracja zakończona sukcesem!</p>
+                        <p className='mt-6 text-center text-xl lg:text-2xl xl:text-3xl text-black/60 dark:text-white/70'>Dziękujemy za dołączenie do naszej społeczności</p>
+                    </div>
                 </div>
             )}
-
-            <BsArrowLeft onClick={() => navigate(-1)} className="absolute top-2 lg:top-10 left-10 cursor-pointer hover:scale-110 transition ease-in-out duration-300 " size={50} color={theme === 'dark' ? 'white' : 'black'} />
 
             <div className="bg-[#ececec] dark:bg-black/80 w-screen min-h-screen flex items-center justify-center ">
                 <div className="flex flex-col lg:flex-row my-20 w-[90%] lg:w-[60%] h-screen/2 shadow-button rounded-3xl animate-fade-in-long">
@@ -153,18 +202,24 @@ function Login() {
                             {!isLoginSelected && (
                                 <input
                                     value={nick}
+                                    onBlur={handleBlur}
                                     onChange={handleNickChange}
-                                    className="mb-6 w-[100%] h-[3rem] bg-[#e9e9e9] px-4 rounded-3xl focus:outline-none focus:border-2 border-black/60"
+                                    className={`w-[100%] h-[3rem] bg-[#e9e9e9] px-4 rounded-3xl focus:outline-none focus:border-2 border-black/60 ${errors.nick && "border-2 border-red-400"}`}
                                     placeholder={t('login.nick') as string}
                                 />
+
+                            )}
+
+                            {!isLoginSelected && (
+                                errors.nick && <p className="text-red-500 text-sm mt-2 ml-2">{errors.nick}</p>
                             )}
 
                             <input
                                 type="email"
                                 value={email}
-                                onBlur={handleEmailBlur}
+                                onBlur={handleBlur}
                                 onChange={handleEmailChange}
-                                className={`w-[100%] h-[3rem] bg-[#e9e9e9] px-4 rounded-3xl focus:outline-none focus:border-2 border-black/60 ${errors.email && "border-2 border-red-400"}`}
+                                className={`mt-6 w-[100%] h-[3rem] bg-[#e9e9e9] px-4 rounded-3xl focus:outline-none focus:border-2 border-black/60 ${errors.email && "border-2 border-red-400"}`}
                                 placeholder={t('login.email') as string}
                             />
 
@@ -173,11 +228,14 @@ function Login() {
                             <div className="relative flex items-center w-[100%] h-[3rem] bg-[#e9e9e9] rounded-3xl mt-6">
                                 <input
                                     value={password}
+                                    onBlur={handleBlur}
                                     onChange={handlePasswordChange}
                                     type={showPassword ? 'text' : 'password'}
-                                    className="bg-transparent w-full h-full rounded-3xl px-4 focus:outline-none focus:border-2 border-black/60"
+                                    className={`bg-transparent w-full h-full rounded-3xl px-4 focus:outline-none focus:border-2 border-black/60 ${errors.pass && "border-2 border-red-400"}`}
                                     placeholder={t('login.password') as string}
                                 />
+
+
                                 <div onClick={togglePasswordVisibility} className="absolute right-4">
                                     {showPassword ? (
                                         <AiOutlineEye size={20} className="cursor-pointer hover:scale-105 transition ease-in-out duration-300" />
@@ -186,6 +244,9 @@ function Login() {
                                     )}
                                 </div>
                             </div>
+
+                            {errors.pass && <p className="text-red-500 text-sm mt-2 ml-2">{errors.pass}</p>}
+
 
                             {isLoginSelected && (
                                 <button
