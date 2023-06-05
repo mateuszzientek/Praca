@@ -11,8 +11,10 @@ import zdjecie from '../../assets/images/pp.jpg';
 import chrome from '../../assets/images/chrome.png';
 import axios from 'axios';
 import validator from 'validator';
-import tick from "../../assets/images/tick.png"
 
+interface Errors {
+    email: string;
+}
 
 function Login() {
     const { theme, setTheme } = useContext(ThemeContext);
@@ -52,6 +54,18 @@ function Login() {
             pass: ''
         };
 
+        if (!email || !password || !nick) {
+            if (!password) {
+                newErrors.pass = "Password is required";
+            }
+            if (!email) {
+                newErrors.email = "Email is required";
+            }
+            if (!nick) {
+                newErrors.nick = "Nick is required";
+            }
+        }
+
         if (email && !validator.isEmail(email)) {
             newErrors.email = 'Invalid email';
         }
@@ -84,7 +98,6 @@ function Login() {
             });
             return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
         }
-
 
         if (isValid) {
             const userData = {
@@ -158,18 +171,11 @@ function Login() {
         <>
             {isUserSaved && (
                 <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-                    <div className="flex flex-col  items-center bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] lg:w-[35rem] lg:h-[28rem] xl:w-[45rem] xl:h-[30rem] rounded-2xl">
-                        <LazyLoadImage
-                            alt="Green Tick"
-                            effect="blur"
-                            placeholderSrc={tick}
-                            src={tick}
-                            className='mt-12 w-[8rem] h-[8rem]  lg:w-[10rem] lg:h-[10rem] xl:w-[12rem] xl:h-[12rem]' />
-                        <p className='text-black dark:text-white mt-12 text-2xl lg:text-3xl xl:text-4xl'>Rejestracja zakończona sukcesem!</p>
-                        <p className='mt-6 text-center text-xl lg:text-2xl xl:text-3xl text-black/60 dark:text-white/70'>Dziękujemy za dołączenie do naszej społeczności</p>
-                    </div>
+                    <div className="relative bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] md:w-[35rem] md:h-[28rem] lg:w-[45rem] lg:h-[35rem] rounded-2xl"></div>
                 </div>
             )}
+
+            <BsArrowLeft onClick={() => navigate(-1)} className="absolute top-2 lg:top-10 left-10 cursor-pointer hover:scale-110 transition ease-in-out duration-300 " size={50} color={theme === 'dark' ? 'white' : 'black'} />
 
             <div className="bg-[#ececec] dark:bg-black/80 w-screen min-h-screen flex items-center justify-center ">
                 <div className="flex flex-col lg:flex-row my-20 w-[90%] lg:w-[60%] h-screen/2 shadow-button rounded-3xl animate-fade-in-long">
