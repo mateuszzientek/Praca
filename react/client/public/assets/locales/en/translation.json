@@ -135,6 +135,16 @@
         "text4": "By clicking the Create account button, you accept our",
         "text5": "Terms and Conditions",
         "text6": "and you confirm that you have read and understood",
-        "text7": "Privacy Policy"
+        "text7": "Privacy Policy",
+        "text8":"Registration completed successfully!",
+        "text9":"Thank you for joining our community"
+    },
+    "loginError": {
+        "email": "Invalid email",
+        "nick": "Nick can only contain letters, numbers, dots, or underscores",
+        "pass": "Password requirements: at least 8 characters, including an uppercase letter and a number",
+        "emailReq": "Email is required",
+        "passReq": "Password is required",
+        "nickReq": "Nick is required"
     }
 }

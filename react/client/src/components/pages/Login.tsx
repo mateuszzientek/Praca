@@ -11,6 +11,7 @@ import zdjecie from '../../assets/images/pp.jpg';
 import chrome from '../../assets/images/chrome.png';
 import axios from 'axios';
 import validator from 'validator';
+import tick from "../../assets/images/tick.png"
 
 interface Errors {
     email: string;
@@ -54,26 +55,14 @@ function Login() {
             pass: ''
         };
 
-        if (!email || !password || !nick) {
-            if (!password) {
-                newErrors.pass = "Password is required";
-            }
-            if (!email) {
-                newErrors.email = "Email is required";
-            }
-            if (!nick) {
-                newErrors.nick = "Nick is required";
-            }
-        }
-
         if (email && !validator.isEmail(email)) {
-            newErrors.email = 'Invalid email';
+            newErrors.email = t('loginError.email');
         }
         if (nick && /[^a-zA-Z0-9\.\_]/.test(nick)) {
-            newErrors.nick = 'Nick can only contain letters, numbers, dots, or underscores';
+            newErrors.nick = t('loginError.nick');
         }
         if (password && !validator.isStrongPassword(password, { minSymbols: 0 })) {
-            newErrors.pass = 'Password requirements: at least 8 characters, including an uppercase letter and a number';
+            newErrors.pass = t('loginError.pass');
         }
 
 
@@ -92,9 +81,9 @@ function Login() {
         if (!email || !password || !nick) {
             // Przynajmniej jedno z pól jest puste
             setErrors({
-                email: !email ? 'Email is required' : '',
-                nick: !nick ? 'Nick is required' : '',
-                pass: !password ? 'Password is required' : '',
+                email: !email ? t('loginError.emailReq') : '',
+                nick: !nick ? t('loginError.nickReq') : '',
+                pass: !password ? t('loginError.passReq') : '',
             });
             return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
         }
@@ -114,7 +103,7 @@ function Login() {
                     setIsUserSaved(true);
                     setTimeout(() => {
                         navigate(-1);
-                    }, 1500);
+                    }, 2000);
                 })
                 .catch((error) => {
                     console.error(error.response.data);
@@ -171,7 +160,16 @@ function Login() {
         <>
             {isUserSaved && (
                 <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-                    <div className="relative bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] md:w-[35rem] md:h-[28rem] lg:w-[45rem] lg:h-[35rem] rounded-2xl"></div>
+                    <div className="flex flex-col  items-center bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] lg:w-[35rem] lg:h-[28rem] xl:w-[45rem] xl:h-[30rem] rounded-2xl">
+                        <LazyLoadImage
+                            alt="Green Tick"
+                            effect="blur"
+                            placeholderSrc={tick}
+                            src={tick}
+                            className='mt-12 w-[8rem] h-[8rem]  lg:w-[10rem] lg:h-[10rem] xl:w-[12rem] xl:h-[12rem]' />
+                        <p className='text-black dark:text-white mt-12 text-2xl lg:text-3xl xl:text-4xl'>{t('login.text8')}</p>
+                        <p className='mt-6 text-center text-xl lg:text-2xl xl:text-3xl text-black/60 dark:text-white/70'>{t('login.text9')}</p>
+                    </div>
                 </div>
             )}
 

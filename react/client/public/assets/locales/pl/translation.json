@@ -133,9 +133,20 @@
         "text4": "Klikając przycisk Załóż konto, akceptujesz nasz",
         "text5": "Regulamin",
         "text6": "oraz potwierdzasz zapoznanie się z",
-        "text7": "Polityką prywatności"
+        "text7": "Polityką prywatności",
+        "text8":"Rejestracja zakończona sukcesem!",
+        "text9":"Dziękujemy za dołączenie do naszej społeczności"
 
+    },
+    "loginError": {
+        "email": "Niepoprawny email",
+        "nick": "Pseudonim może skladać się tylko z liter, cyfr '.' oraz '_' ",
+        "pass": "Wymagania hasła: 1 Duża litera, 1 cyfra, przynajmniej 8 znaków",
+        "emailReq": "Email jest wymagany",
+        "passReq": "Hasło jest wymagane",
+        "nickReq": "Pseudonim jest wymagany"
     }
+
 }
    
     
