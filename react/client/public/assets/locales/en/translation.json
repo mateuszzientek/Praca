@@ -124,7 +124,8 @@
         "textlogin": "Nice to see you again!",
         "signin": "Sign in",
         "signup": "Sign up",
-        "nick": "Nick*",
+        "name": "Name*",
+        "surname": "Surname*",
         "email": "E-mail*",
         "password": "Password*",
         "text": "Sure! Please subscribe me to receive offers, information about new trends, and special invitations to sales and events.",
@@ -140,11 +141,14 @@
         "text9":"Thank you for joining our community"
     },
     "loginError": {
+        "name": "Name must contains only letters",
+        "surname": "Surname must contains only letters",
         "email": "Invalid email",
-        "nick": "Nick can only contain letters, numbers, dots, or underscores",
         "pass": "Password requirements: at least 8 characters, including an uppercase letter and a number",
         "emailReq": "Email is required",
         "passReq": "Password is required",
-        "nickReq": "Nick is required"
+        "nameReq": "Name is required",
+        "surnameReq": "Surname is required"
+        
     }
 }

@@ -122,7 +122,8 @@
         "textlogin": "Miło Cię znowu widzieć!",
         "signin": "Zaloguj się",
         "signup": "Zarejestruj się",
-        "nick": "Pseudonim*",
+        "name": "Imię*",
+        "surname": "Nazwisko*",
         "email": "Adres e-mail*",
         "password": "Hasło*",
         "text": "Tak, proszę o przesyłanie ofert, informacji o nowych trendach i specjalnych zaproszeń na wyprzedaże i wydarzenia.",
@@ -139,12 +140,14 @@
 
     },
     "loginError": {
+        "name": "Imię musi sklądać się tylko z liter",
+        "surname": "Nazwisko musi sklądać się tylko z liter",
         "email": "Niepoprawny email",
-        "nick": "Pseudonim może skladać się tylko z liter, cyfr '.' oraz '_' ",
         "pass": "Wymagania hasła: 1 Duża litera, 1 cyfra, przynajmniej 8 znaków",
         "emailReq": "Email jest wymagany",
         "passReq": "Hasło jest wymagane",
-        "nickReq": "Pseudonim jest wymagany"
+        "nameReq": "Imię jest wymagane",
+        "surnameReq": "Nazwisko jest wymagane"
     }
 
 }
