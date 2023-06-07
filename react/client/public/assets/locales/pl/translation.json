@@ -136,7 +136,9 @@
         "text6": "oraz potwierdzasz zapoznanie się z",
         "text7": "Polityką prywatności",
         "text8":"Rejestracja zakończona sukcesem!",
-        "text9":"Dziękujemy za dołączenie do naszej społeczności"
+        "text9":"Dziękujemy za dołączenie do naszej społeczności",
+        "text10":"Logowanie powiodło się!",
+        "text11":"Teraz swobodnie możesz odkrywać nasz sklep"
 
     },
     "loginError": {
@@ -147,7 +149,11 @@
         "emailReq": "Email jest wymagany",
         "passReq": "Hasło jest wymagane",
         "nameReq": "Imię jest wymagane",
-        "surnameReq": "Nazwisko jest wymagane"
+        "surnameReq": "Nazwisko jest wymagane",
+        "emailError": "Podany email jest już przypisany do innego konta",
+        "error1": "Błąd podczas zapisywania użytkownika",
+        "error2": "Nieprawidłowy email lub hasło",
+        "error3": "Błąd serwera"
     }
 
 }

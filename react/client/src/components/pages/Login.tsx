@@ -11,7 +11,7 @@ import zdjecie from '../../assets/images/pp.jpg';
 import chrome from '../../assets/images/chrome.png';
 import axios from 'axios';
 import validator from 'validator';
-import tick from "../../assets/images/tick.png"
+import LoginCompleted from '../elements/LoginCompleted';
 
 
 interface Error {
@@ -29,6 +29,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [emailOffert, setEmailOffert] = useState(false);
     const [isUserSaved, setIsUserSaved] = useState(false);
+    const [isUserLogined, setIsUserLogined] = useState(false);
     const [errors, setErrors] = useState({ email: '', pass: '', name: '', surname: '' });
     const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
@@ -101,54 +102,108 @@ function Login() {
         const isValid = validateData();
 
 
-        if (!email || !password || !name || !surname) {
-            // Przynajmniej jedno z pól jest puste
-            setErrors({
-                email: !email ? t('loginError.emailReq') : '',
-                pass: !password ? t('loginError.passReq') : '',
-                name: !name ? t('loginError.nameReq') : '',
-                surname: !surname ? t('loginError.surnameReq') : '',
-            });
-            return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
-        }
+        //logowanie
+        if (isLoginSelected) {
 
-        if (isValid) {
-            const userData = {
-                name: name,
-                surname: surname,
-                password: password,
-                email: email,
-                role: 'user',
-                email_offert: emailOffert,
-            };
-
-            axios
-                .post('/login', userData)
-                .then((response) => {
-                    setErrorsServer("");
-                    setErrorsVadlidationServer([])
-                    setIsUserSaved(true);
-                    setTimeout(() => {
-                        navigate(-1);
-                    }, 2000);
-                })
-                .catch((error) => {
-
-                    if (error.response && error.response.data && error.response.data.error) {
-                        setErrorsServer(error.response.data.error)
-
-                    } else if (error.response && error.response.data && error.response.data.errors) {
-                        setErrorsVadlidationServer(error.response.data.errors)
-
-                    } else {
-                        console.log(error);
-                    }
-
-
+            if (!email || !password) {
+                // Przynajmniej jedno z pól jest puste
+                setErrors({
+                    email: !email ? t('loginError.emailReq') : '',
+                    pass: !password ? t('loginError.passReq') : '',
+                    name: '',
+                    surname: '',
                 });
-        }
+                return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
+            }
 
-    };
+
+            if (isValid) {
+
+                const userData = {
+                    password: password,
+                    email: email,
+                };
+
+                axios
+                    .post('/login', userData)
+                    .then((response) => {
+                        setErrorsServer("");
+                        setErrorsVadlidationServer([])
+                        setIsUserLogined(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
+                    })
+                    .catch((error) => {
+
+                        if (error.response && error.response.data && error.response.data.error) {
+                            setErrorsServer(error.response.data.error)
+
+                        } else if (error.response && error.response.data && error.response.data.errors) {
+                            setErrorsVadlidationServer(error.response.data.errors)
+
+                        } else {
+                            console.log(error);
+                        }
+
+
+                    });
+            }
+
+
+
+            //rejestracja    
+        } else {
+
+            if (!email || !password || !name || !surname) {
+                // Przynajmniej jedno z pól jest puste
+                setErrors({
+                    email: !email ? t('loginError.emailReq') : '',
+                    pass: !password ? t('loginError.passReq') : '',
+                    name: !name ? t('loginError.nameReq') : '',
+                    surname: !surname ? t('loginError.surnameReq') : '',
+                });
+                return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
+            }
+
+            if (isValid) {
+
+                const userData = {
+                    name: name,
+                    surname: surname,
+                    password: password,
+                    email: email,
+                    role: 'user',
+                    email_offert: emailOffert,
+                };
+
+                axios
+                    .post('/register', userData)
+                    .then((response) => {
+                        setErrorsServer("");
+                        setErrorsVadlidationServer([])
+                        setIsUserSaved(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
+                    })
+                    .catch((error) => {
+
+                        if (error.response && error.response.data && error.response.data.error) {
+                            setErrorsServer(error.response.data.error)
+
+                        } else if (error.response && error.response.data && error.response.data.errors) {
+                            setErrorsVadlidationServer(error.response.data.errors)
+
+                        } else {
+                            console.log(error);
+                        }
+
+
+                    });
+            }
+        }
+    }
 
     const handleBlur = () => {
         validateData();
@@ -203,18 +258,11 @@ function Login() {
 
 
             {isUserSaved && (
-                <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-                    <div className="flex flex-col  items-center bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] lg:w-[35rem] lg:h-[28rem] xl:w-[45rem] xl:h-[30rem] rounded-2xl">
-                        <LazyLoadImage
-                            alt="Green Tick"
-                            effect="blur"
-                            placeholderSrc={tick}
-                            src={tick}
-                            className='mt-12 w-[8rem] h-[8rem]  lg:w-[10rem] lg:h-[10rem] xl:w-[12rem] xl:h-[12rem]' />
-                        <p className='text-black dark:text-white mt-12 text-2xl lg:text-3xl xl:text-4xl'>{t('login.text8')}</p>
-                        <p className='mt-6 text-center text-xl lg:text-2xl xl:text-3xl text-black/60 dark:text-white/70'>{t('login.text9')}</p>
-                    </div>
-                </div>
+                <LoginCompleted main={t('login.text8')} text={t('login.text9')} />
+            )}
+
+            {isUserLogined && (
+                <LoginCompleted main={t('login.text10')} text={t('login.text11')} />
             )}
 
 

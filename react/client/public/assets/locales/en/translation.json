@@ -138,7 +138,9 @@
         "text6": "and you confirm that you have read and understood",
         "text7": "Privacy Policy",
         "text8":"Registration completed successfully!",
-        "text9":"Thank you for joining our community"
+        "text9":"Thank you for joining our community",
+        "text10":"Login successful!",
+        "text11":"Now you can freely explore our store"
     },
     "loginError": {
         "name": "Name must contains only letters",
@@ -148,7 +150,11 @@
         "emailReq": "Email is required",
         "passReq": "Password is required",
         "nameReq": "Name is required",
-        "surnameReq": "Surname is required"
+        "surnameReq": "Surname is required",
+        "emailError": "The provided email is already associated with another account",
+        "error1": "Error while saving the user",
+        "error2": "Invalid email or password",
+        "error3": "Server error"
         
     }
 }

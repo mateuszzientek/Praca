@@ -6,8 +6,37 @@ const port = 5000;
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
+const i18next = require("i18next");
+const i18nextMiddleware = require("i18next-http-middleware");
+const Backend = require("i18next-node-fs-backend");
 
 const link_database = process.env.DATABASE_LINK;
+
+i18next
+  .use(Backend)
+  .use(i18nextMiddleware.LanguageDetector)
+  .init({
+    supportedLngs: ["en", "pl"],
+    fallbackLng: "en",
+    detection: {
+      order: [
+        "localStorage",
+        "navigator",
+        "querystring",
+        "sessionStorage",
+        "cookie",
+        "path",
+        "subdomain",
+        "htmlTag",
+      ],
+      caches: ["localStorage"],
+    },
+    backend: {
+      loadPath: "../client/public/assets/locales/{{lng}}/translation.json",
+    },
+  });
+
+app.use(i18nextMiddleware.handle(i18next));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -35,32 +64,58 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
+const validateWithReq = (validations) => {
+  return async (req, res, next) => {
+    await Promise.all(validations.map((validation) => validation.run(req)));
+
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+
+    const translatedErrors = errors.array().map((error) => {
+      // Tłumaczenie wiadomości błędu przy użyciu req.t
+      return {
+        ...error,
+        msg: req.t(error.msg),
+      };
+    });
+
+    res.status(400).json({ errors: translatedErrors });
+  };
+};
+
+app.get(
+  "/locales/:lng/translation.json",
+  i18nextMiddleware.getResourcesHandler(i18next)
+);
+
 app.post(
-  "/login",
-  [
+  "/register",
+  validateWithReq([
     body("email")
       .notEmpty()
-      .withMessage("Email jest wymagany")
+      .withMessage("loginError.emailReq")
       .isEmail()
-      .withMessage("Nieprawidłowy format adresu email"),
+      .withMessage("loginError.email"),
     body("password")
       .notEmpty()
-      .withMessage("Hasło jest wymagane")
-      .isLength({ min: 8 })
-      .withMessage("Hasło musi mieć co najmniej 8 znaków")
+      .withMessage("loginError.passReq")
+      .isLength({ min: 10 })
+      .withMessage("loginError.pass")
       .matches(/^(?=.*[A-Z])(?=.*\d)/)
-      .withMessage("Hasło musi zawierać przynajmniej 1 dużą literę i cyfrę"),
+      .withMessage("loginError.pass"),
     body("name")
       .notEmpty()
-      .withMessage("Imię jest wymagane")
+      .withMessage("loginError.nameReq")
       .isAlpha()
-      .withMessage("Imię może zawierać tylko litery"),
+      .withMessage("loginError.name"),
     body("surname")
       .notEmpty()
-      .withMessage("Nazwisko jest wymagane")
+      .withMessage("loginError.surnameReq")
       .isAlpha()
-      .withMessage("Nazwisko może zawierać tylko litery"),
-  ],
+      .withMessage("loginError.surname"),
+  ]),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -87,7 +142,7 @@ app.post(
             if (existingUser) {
               console.log("Podany email jest już przypisany do innego konta");
               return res.status(400).json({
-                error: "Podany email jest już przypisany do innego konta",
+                error: req.t("loginError.emailError"),
               });
             } else {
               // Kontynuuj zapisywanie użytkownika
@@ -101,9 +156,7 @@ app.post(
                 })
                 .catch((error) => {
                   console.error("Błąd podczas zapisywania użytkownika:", error);
-                  res
-                    .status(500)
-                    .json({ error: "Błąd podczas zapisywania użytkownika" });
+                  res.status(500).json({ error: req.t("loginError.error1") });
                 });
             }
           })
@@ -113,7 +166,63 @@ app.post(
       })
       .catch((error) => {
         console.error("Błąd podczas haszowania hasła:", error);
-        res.status(500).json({ error: "Błąd podczas rejestracji użytkownika" });
+        res.status(500).json({ error: req.t("loginError.error1") });
+      });
+  }
+);
+
+app.post(
+  "/login",
+  validateWithReq([
+    body("email")
+      .notEmpty()
+      .withMessage("loginError.emailReq")
+      .isEmail()
+      .withMessage("loginError.email"),
+    body("password")
+      .notEmpty()
+      .withMessage("loginError.passReq")
+      .isLength({ min: 8 })
+      .withMessage("loginError.pass")
+      .matches(/^(?=.*[A-Z])(?=.*\d)/)
+      .withMessage("loginError.pass"),
+  ]),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { password, email } = req.body;
+
+    User.findOne({ email: email })
+      .then((existingUser) => {
+        if (!existingUser) {
+          console.log("Nieprawidłowy email lub hasło");
+          return res.status(401).json({ error: req.t("loginError.error2") });
+        }
+
+        // Porównaj wprowadzone hasło z hasłem z bazy danych
+        bcrypt.compare(password, existingUser.password, (err, isMatch) => {
+          if (err) {
+            console.error("Błąd podczas porównywania hasła:", err);
+            return res.status(500).json({ error: req.t("loginError.error3") });
+          }
+
+          if (isMatch) {
+            console.log("Użytkownik zalogowany pomyślnie");
+            res
+              .status(200)
+              .json({ message: "Użytkownik zalogowany pomyślnie" });
+          } else {
+            console.log("Nieprawidłowy email lub hasło");
+            res.status(401).json({ error: req.t("loginError.error2") });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Błąd podczas wyszukiwania użytkownika:", error);
+        res.status(500).json({ error: req.t("loginError.error3") });
       });
   }
 );
