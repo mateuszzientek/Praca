@@ -12,6 +12,8 @@ import chrome from '../../assets/images/chrome.png';
 import axios from 'axios';
 import validator from 'validator';
 import LoginCompleted from '../elements/LoginCompleted';
+import { AxiosRequestConfig } from 'axios';
+import { UserContext } from '../elements/UserProvider';
 
 
 interface Error {
@@ -33,6 +35,7 @@ function Login() {
     const [errors, setErrors] = useState({ email: '', pass: '', name: '', surname: '' });
     const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
+    const { setUser, setIsUserLoggedIn } = useContext(UserContext);
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -125,11 +128,26 @@ function Login() {
                 };
 
                 axios
-                    .post('/login', userData)
+                    .post('/login', userData, { withCredentials: true } as AxiosRequestConfig)
                     .then((response) => {
                         setErrorsServer("");
                         setErrorsVadlidationServer([])
                         setIsUserLogined(true);
+                        setIsUserLoggedIn(true)
+
+                        const { _id, name, surname, email, role, email_offert } = response.data.user;
+
+                        const user = {
+                            _id: _id || "",
+                            name: name || "",
+                            surname: surname || "",
+                            email: email || "",
+                            role: role || "",
+                            email_offert: email_offert || false,
+                        };
+
+                        setUser(user);
+
                         setTimeout(() => {
                             navigate(-1);
                         }, 2000);
@@ -178,13 +196,13 @@ function Login() {
                 };
 
                 axios
-                    .post('/register', userData)
+                    .post('/register', userData, { withCredentials: true } as AxiosRequestConfig)
                     .then((response) => {
                         setErrorsServer("");
                         setErrorsVadlidationServer([])
                         setIsUserSaved(true);
                         setTimeout(() => {
-                            navigate(-1);
+                            window.location.reload();
                         }, 2000);
                     })
                     .catch((error) => {
@@ -254,8 +272,6 @@ function Login() {
 
     return (
         <>
-
-
 
             {isUserSaved && (
                 <LoginCompleted main={t('login.text8')} text={t('login.text9')} />
@@ -402,6 +418,11 @@ function Login() {
                         {isLoginSelected && (
                             <button className="text-black dark:text-white font-lato text-xl mt-6 hover:scale-105 transition ease-in-out duration-300">{t('login.forgot')}</button>
                         )}
+                        <div className='flex items-center justify-center w-[60%] mt-10'>
+                            <div className="border-b border-black/50 w-[20%]"></div>
+                            <p className='text-base px-2 '>{isLoginSelected ? t('login.text2') : t('login.text3')} </p>
+                            <div className="border-b border-black/50 w-[20%]"></div>
+                        </div>
 
                         <button className='flex items-center justify-center space-x-2 mt-10 mb-10 w-[70%] h-[3rem] bg-white border-black border-2  px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300'>
                             <img src={chrome} className='rounded-full w-[2rem] h-[2rem]' />

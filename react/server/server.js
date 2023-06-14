@@ -1,6 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
+const passport = require("passport");
+const passportLocal = require("passport-local").Strategy;
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const { body, validationResult } = require("express-validator");
+const User = require("./user");
+
 const app = express();
 const port = 5000;
 const mongoose = require("mongoose");
@@ -41,6 +48,29 @@ app.use(i18nextMiddleware.handle(i18next));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(
+  session({
+    secret: "secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    },
+  })
+);
+
+app.use(cookieParser("secret_key"));
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passportConfig")(passport);
+
 mongoose
   .connect(link_database, {
     useNewUrlParser: true,
@@ -52,17 +82,6 @@ mongoose
   .catch((error) => {
     console.error("Error connecting to MongoDB Atlas:", error);
   });
-
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  surname: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true },
-  email_offert: { type: Boolean, default: false },
-});
-
-const User = mongoose.model("User", userSchema);
 
 const validateWithReq = (validations) => {
   return async (req, res, next) => {
@@ -101,7 +120,7 @@ app.post(
     body("password")
       .notEmpty()
       .withMessage("loginError.passReq")
-      .isLength({ min: 10 })
+      .isLength({ min: 8 })
       .withMessage("loginError.pass")
       .matches(/^(?=.*[A-Z])(?=.*\d)/)
       .withMessage("loginError.pass"),
@@ -187,45 +206,48 @@ app.post(
       .matches(/^(?=.*[A-Z])(?=.*\d)/)
       .withMessage("loginError.pass"),
   ]),
-  (req, res) => {
+  (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { password, email } = req.body;
-
-    User.findOne({ email: email })
-      .then((existingUser) => {
-        if (!existingUser) {
-          console.log("Nieprawidłowy email lub hasło");
-          return res.status(401).json({ error: req.t("loginError.error2") });
-        }
-
-        // Porównaj wprowadzone hasło z hasłem z bazy danych
-        bcrypt.compare(password, existingUser.password, (err, isMatch) => {
-          if (err) {
-            console.error("Błąd podczas porównywania hasła:", err);
-            return res.status(500).json({ error: req.t("loginError.error3") });
-          }
-
-          if (isMatch) {
-            console.log("Użytkownik zalogowany pomyślnie");
-            res
-              .status(200)
-              .json({ message: "Użytkownik zalogowany pomyślnie" });
-          } else {
-            console.log("Nieprawidłowy email lub hasło");
-            res.status(401).json({ error: req.t("loginError.error2") });
-          }
+    passport.authenticate("local", (err, user, info) => {
+      if (err) throw err;
+      if (!user) {
+        res.status(400).json({
+          error: req.t("loginError.error2"),
         });
-      })
-      .catch((error) => {
-        console.error("Błąd podczas wyszukiwania użytkownika:", error);
-        res.status(500).json({ error: req.t("loginError.error3") });
-      });
+      } else {
+        req.logIn(user, (err) => {
+          if (err) throw err;
+          res.status(200).json({
+            message: "Użytkownik zalogowany pomyślnie",
+            user: user,
+          });
+          console.log(req.user);
+          console.log("Użytkownik zalogowany pomyślnie");
+        });
+      }
+    })(req, res, next);
   }
 );
+
+app.get("/user", (req, res) => {
+  res.send(req.user);
+});
+
+app.post("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      console.error("Błąd podczas wylogowywania użytkownika:", err);
+      res.status(500).json({ error: req.t("loginError.error4") });
+    } else {
+      console.log("wylogowano");
+      res.status(200).json({ message: "Użytkownik został wylogowany" });
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

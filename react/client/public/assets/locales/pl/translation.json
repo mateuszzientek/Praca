@@ -129,7 +129,7 @@
         "text": "Tak, proszę o przesyłanie ofert, informacji o nowych trendach i specjalnych zaproszeń na wyprzedaże i wydarzenia.",
         "create": "Załóż konto",
         "forgot": "Nie pamiętam hasła",
-        "text2": "lub zaloguj się za pomocą",
+        "text2": "lub zaloguj się z",
         "text3": "lub kontynuuj z",
         "text4": "Klikając przycisk Załóż konto, akceptujesz nasz",
         "text5": "Regulamin",
@@ -153,7 +153,8 @@
         "emailError": "Podany email jest już przypisany do innego konta",
         "error1": "Błąd podczas zapisywania użytkownika",
         "error2": "Nieprawidłowy email lub hasło",
-        "error3": "Błąd serwera"
+        "error3": "Błąd serwera",
+        "error4": "Błąd podczas wylogowywania użytkownika"
     }
 
 }

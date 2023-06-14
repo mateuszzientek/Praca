@@ -154,7 +154,8 @@
         "emailError": "The provided email is already associated with another account",
         "error1": "Error while saving the user",
         "error2": "Invalid email or password",
-        "error3": "Server error"
+        "error3": "Server error",
+        "error4": "Error while logging out the user"
         
     }
 }

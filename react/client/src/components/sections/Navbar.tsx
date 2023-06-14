@@ -24,6 +24,9 @@ import languages from '../../languages';
 import i18next from 'i18next';
 import ProfileLink from '../elements/ProfileLink';
 import ProfileLinkMobile from '../elements/ProfileLinkMobile';
+import axios from 'axios';
+import { AxiosRequestConfig } from 'axios';
+import { UserContext } from '../elements/UserProvider';
 
 
 interface NavbarProps {
@@ -38,6 +41,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
     const { isLoginSelected, setLoginSelected } = useContext(LoginContext) || {};
     const { theme, setTheme } = useContext(ThemeContext);
+    const { user, setUser, isUserLoggedIn, setIsUserLoggedIn } = useContext(UserContext);
     const [nav, setNav] = useState(false);
     const [dropdown, setDropdown] = useState(false);
     const [isSecondDivVisible, setSecondDivVisible] = useState(false);
@@ -75,6 +79,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         setSecondDivVisible(!isSecondDivVisible);
     };
 
+    const handleClickLogout = () => {
+        axios
+            .post('/logout', {
+                withCredentials: true, // Wysyła ciasteczka sesji
+            } as AxiosRequestConfig)
+            .then((response) => {
+                setUser(null)
+                setIsUserLoggedIn(false)
+
+            })
+            .catch((error) => {
+
+                console.error('Błąd podczas wylogowywania użytkownika:', error);
+            });
+    };
+
+    console.log(user)
 
     return (
         <div className={`${props.background || 'bg-[#F8F6F4]'} ${props.darkBackground || 'dark:bg-[#292929]'} ${props.shadow || 'shadow-2xl'} ${props.extra}`} >
@@ -135,27 +156,31 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     <div className='group relative'>
                         <RoundIcon icon={<IoPersonOutline size={20} />} />
 
-                        <div className='hidden group-hover:flex flex-col items-start space-y-4 absolute top-16 right-0 w-auto p-4 h-auto bg-white dark:bg-[#e2e2e2] shadow-button mt-1 rounded z-10 animate-fade-in '>
+                        <div className='hidden group-hover:flex flex-col items-start space-y-4 absolute top-16 right-0 w-[18rem] p-4 h-auto bg-white dark:bg-[#e2e2e2] shadow-button mt-1 rounded z-10 animate-fade-in '>
 
-                            <button onClick={handleClickLogin} className='w-full h-[3rem] rounded bg-black/90 hover:scale-105 transition ease-in-out duration-300 hover:bg-black/70'>
+                            {!isUserLoggedIn && (<button onClick={handleClickLogin} className='w-full h-[3rem] rounded bg-black/90 hover:scale-105 transition ease-in-out duration-300 hover:bg-black/70'>
                                 <p className='text-lg text-white px-4 whitespace-nowrap'>{t('profile.signin')}</p>
-                            </button>
+                            </button>)}
 
-                            <p onClick={handleClickRegister} className='text-base whitespace-nowrap '><span className='text-[#0078aa] cursor-pointer hover:border-b-2 border-[#0078aa]  '>{t('profile.signup')}</span> {t('profile.continue')}</p>
+                            {!isUserLoggedIn && (<p onClick={handleClickRegister} className='text-base whitespace-nowrap '><span className='text-[#0078aa] cursor-pointer hover:border-b-2 border-[#0078aa]  '>{t('profile.signup')}</span> {t('profile.continue')}</p>)}
+
+                            {isUserLoggedIn && (<div className='flex items-center space-x-2 ml-2'>
+                                <p className='text-lg whitespace-nowrap'>{t('profile.hello')} {user?.name}</p>
+                                <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
+                            </div>)}
 
                             <div className="border-b border-black/50 w-full"></div>
 
-                            <ProfileLink text={t('profile.myprofile')} link="/abra" />
+                            <ProfileLink text={t('profile.myprofile')} link="/profile" />
                             <ProfileLink text={t('profile.orders')} link="/abra" />
                             <ProfileLink text={t('profile.projects')} link="/abra" />
                             <ProfileLink text={t('profile.help')} link="/contact" />
-                            <ProfileLink text={t('profile.signout')} link="/abra" />
+
+                            {isUserLoggedIn && (<button onClick={handleClickLogout} className='w-full h-[3rem] rounded bg-black/90 hover:scale-105 transition ease-in-out duration-300 hover:bg-black/70'>
+                                <p className='text-lg text-white px-4 whitespace-nowrap'>{t('profile.signout')}</p>
+                            </button>)}
 
 
-                            <div className='hidden flex items-center space-x-2 pr-8'>
-                                <p className='text-lg whitespace-nowrap'>{t('profile.hello')} Mateusz</p>
-                                <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
-                            </div>
 
                         </div>
 
@@ -257,18 +282,17 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                             ) : ""}
                         </div>
 
-                        <button className='hidden h-[3rem] w-[50%] mx-auto bg-black/70 rounded-full mt-6 hover:scale-110 ease-in-out duration-300'>
-                            <p className='text-white text-lg'>Wyloguj się</p>
-                        </button>
+                        {isUserLoggedIn && (<button onClick={handleClickLogout} className='h-[3rem] w-[50%] mx-auto bg-black/70 rounded-full mt-6 hover:scale-110 ease-in-out duration-300'>
+                            <p className='text-white text-lg'>{t('profile.signout')}</p>
+                        </button>)}
 
-                        <button onClick={handleClickLogin} className='h-[3rem] w-[50%] mx-auto bg-black/70 dark:bg-white rounded-full mt-6 hover:scale-110 ease-in-out duration-300'>
+                        {!isUserLoggedIn && (<button onClick={handleClickLogin} className='h-[3rem] w-[50%] mx-auto bg-black/70 dark:bg-white rounded-full mt-6 hover:scale-110 ease-in-out duration-300'>
                             <p className='text-white dark:text-black/80 text-lg'>{t('login.signin')}</p>
-                        </button>
-                        <button onClick={handleClickRegister} className='h-[3rem] w-[50%] mx-auto border-2 border-black/60 dark:border-white rounded-full mt-6 hover:scale-110 ease-in-out duration-300'>
+                        </button>)}
+
+                        {!isUserLoggedIn && (<button onClick={handleClickRegister} className='h-[3rem] w-[50%] mx-auto border-2 border-black/60 dark:border-white rounded-full mt-6 hover:scale-110 ease-in-out duration-300'>
                             <p className='text-black dark:text-white text-lg'>{t('login.signup')}</p>
-                        </button>
-
-
+                        </button>)}
 
                         {isSecondDivVisible && (
                             <div className={`fixed top-0 left-0 w-[19rem] h-screen bg-white z-20 slide-in overflow-y-auto`}>
@@ -280,12 +304,14 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
 
                                 <div className='flex flex-col items-start ml-4 mt-20'>
-                                    <div className='flex items-center space-x-2 '>
-                                        <p className='text-2xl whitespace-nowrap text-[#0078aa]'>{t('profile.hello')} Mateusz</p>
-                                        <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
-                                    </div>
 
-                                    <div className='flex flex-col space-y-4 text-2xl mt-10'>
+                                    {isUserLoggedIn && (<div className='flex items-center space-x-2 mb-2 '>
+                                        <p className='text-2xl whitespace-nowrap text-[#0078aa]'>{t('profile.hello')} {user?.name}</p>
+                                        <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
+                                    </div>)}
+
+
+                                    <div className='flex flex-col space-y-4 text-2xl mt-4'>
 
                                         <ProfileLinkMobile text={t('profile.myprofile')} link="/abra" />
                                         <ProfileLinkMobile text={t('profile.orders')} link="/abra" />

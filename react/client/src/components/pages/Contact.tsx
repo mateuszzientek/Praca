@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../sections/Navbar';
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from '../elements/ThemeContext';
+import { UserContext } from '../elements/UserProvider';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import contact from "../../assets/images/contact.png";
@@ -15,10 +16,9 @@ import ContactCircle from '../elements/ContactCircle';
 
 function Contact() {
 
-
+    const { user, isUserLoggedIn } = useContext(UserContext);
     const { theme, setTheme } = useContext(ThemeContext);
     const { t } = useTranslation();
-
 
     return (
         <>
