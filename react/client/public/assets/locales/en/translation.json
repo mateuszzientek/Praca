@@ -155,7 +155,15 @@
         "error1": "Error while saving the user",
         "error2": "Invalid email or password",
         "error3": "Server error",
-        "error4": "Error while logging out the user"
+        "error4": "Error while logging out the user",
+        "error5": "No such email"
         
+    },
+    "passwordReset":{
+        "text1": "Reset Password",
+        "text2": "Enter the email address to which we will send the password reset link.",
+        "text3": "Reset Password",
+        "text4": "Click on the link below to reset your password:"
     }
+
 }

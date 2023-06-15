@@ -14,6 +14,7 @@ import validator from 'validator';
 import LoginCompleted from '../elements/LoginCompleted';
 import { AxiosRequestConfig } from 'axios';
 import { UserContext } from '../elements/UserProvider';
+import ResetPasswordDiv from '../elements/ResetPasswordDiv';
 
 
 interface Error {
@@ -32,7 +33,8 @@ function Login() {
     const [emailOffert, setEmailOffert] = useState(false);
     const [isUserSaved, setIsUserSaved] = useState(false);
     const [isUserLogined, setIsUserLogined] = useState(false);
-    const [errors, setErrors] = useState({ email: '', pass: '', name: '', surname: '' });
+    const [isForgotPasswordClicked, setIsForgotPasswordClicked] = useState(false);
+    const [errors, setErrors] = useState({ email: '', pass: '', name: '', surname: '', resetEmail: '' });
     const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
     const { setUser, setIsUserLoggedIn } = useContext(UserContext);
@@ -41,6 +43,9 @@ function Login() {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [resetEmail, setResetEmail] = useState('');
+
+
 
     const handleEmailOffertChange = () => {
         setEmailOffert(!emailOffert); // Odwróć wartość stanu przy każdej zmianie
@@ -64,7 +69,10 @@ function Login() {
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
+    };
 
+    const handleResetEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setResetEmail(event.target.value);
     };
 
     const validateData = () => {
@@ -72,11 +80,16 @@ function Login() {
             email: '',
             pass: '',
             name: '',
-            surname: ''
+            surname: '',
+            resetEmail: ''
         };
 
         if (email && !validator.isEmail(email)) {
             newErrors.email = t('loginError.email');
+        }
+
+        if (resetEmail && !validator.isEmail(resetEmail)) {
+            newErrors.resetEmail = t('loginError.email');
         }
 
         if (name && !/^[a-zA-Z]+$/.test(name)) {
@@ -92,11 +105,53 @@ function Login() {
         }
 
 
+
         setErrors(newErrors);
 
         // Zwróć true, jeśli nie ma żadnych błędów walidacji, w przeciwnym razie false
         return Object.keys(newErrors.email || newErrors.name || newErrors.surname || newErrors.pass).length === 0;
     };
+
+    const handleRessetPassword = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const isValid = validateData();
+
+        if (!resetEmail) {
+            setErrors({
+                email: '',
+                pass: '',
+                name: '',
+                surname: '',
+                resetEmail: !resetEmail ? t('loginError.emailReq') : ''
+            })
+            return;
+        }
+
+        if (isValid) {
+
+            const userData = {
+                email: resetEmail,
+            };
+
+
+            axios
+                .post("/resetPassword", userData, { withCredentials: true } as AxiosRequestConfig)
+                .then((response) => {
+                    navigate(-1)
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data && error.response.data.error) {
+                        setErrorsServer(error.response.data.error)
+
+                    } else if (error.response && error.response.data && error.response.data.errors) {
+                        setErrorsVadlidationServer(error.response.data.errors)
+
+                    } else {
+                        console.log(error);
+                    }
+                })
+        }
+    }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -115,6 +170,7 @@ function Login() {
                     pass: !password ? t('loginError.passReq') : '',
                     name: '',
                     surname: '',
+                    resetEmail: ''
                 });
                 return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
             }
@@ -180,6 +236,7 @@ function Login() {
                     pass: !password ? t('loginError.passReq') : '',
                     name: !name ? t('loginError.nameReq') : '',
                     surname: !surname ? t('loginError.surnameReq') : '',
+                    resetEmail: ''
                 });
                 return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
             }
@@ -231,12 +288,13 @@ function Login() {
         setShowPassword(!showPassword);
     };
 
-    const handleLoginClick = () => {
+    const handleChooseClick = () => {
         const newErrors = {
             email: '',
             pass: '',
             name: '',
-            surname: ''
+            surname: '',
+            resetEmail: ''
         };
 
         setErrors(newErrors);
@@ -245,33 +303,45 @@ function Login() {
         setPassword("");
         setEmail("");
         setName("")
+        setErrorsServer('')
+        setErrorsVadlidationServer([])
 
-        setLoginSelected(true);
-    };
-
-    const handleRegisterClick = () => {
-        const newErrors = {
-            email: '',
-            pass: '',
-            name: '',
-            surname: ''
-        };
-
-        setErrors(newErrors);
-
-        setSurname("");
-        setPassword("");
-        setEmail("");
-        setName("")
-
-        setLoginSelected(false);
     };
 
     const navigate = useNavigate();
     const { t } = useTranslation();
 
+
     return (
         <>
+            {isForgotPasswordClicked &&
+                (<ResetPasswordDiv
+                    mainText={t('passwordReset.text1')}
+                    text={t('passwordReset.text2')}
+                    textButton={t('passwordReset.text1')}
+                    textEmail={t('login.email')}
+                    errors={errors.resetEmail}
+                    errorsServer={errorsServer}
+                    errorsValidationServer={errorsVadlidationServer}
+                    onResetPassword={() => {
+                        setIsForgotPasswordClicked(!isForgotPasswordClicked)
+                        setResetEmail('')
+                        setErrorsServer('')
+                        setErrorsVadlidationServer([])
+                        setErrors({
+                            email: '',
+                            pass: '',
+                            name: '',
+                            surname: '',
+                            resetEmail: ''
+                        });
+                    }}
+                    value={resetEmail}
+                    onBlur={handleBlur}
+                    onChange={handleResetEmailChange}
+                    handleRessetPassword={handleRessetPassword}
+
+                />)}
 
             {isUserSaved && (
                 <LoginCompleted main={t('login.text8')} text={t('login.text9')} />
@@ -300,14 +370,20 @@ function Login() {
                         <div className="flex mt-10 text-2xl font-lato mb-2">
                             <button
                                 className={`px-8 py-4 border-b-2  dark:hover:text-[#72cff7] hover:text-[#72cff7] ${isLoginSelected ? " border-[#72cff7]  text-[#72cff7]" : "border-black/30 dark:border-white text-black/70 dark:text-white"}`}
-                                onClick={handleLoginClick}
+                                onClick={() => {
+                                    handleChooseClick()
+                                    setLoginSelected(true);
+                                }}
                             >
                                 {t('login.signin')}
                             </button>
                             <button
                                 className={`px-8 py-4 border-b-2  dark:hover:text-[#72cff7] hover:text-[#72cff7] ${isLoginSelected ? "border-black/30 dark:border-white text-black/70 dark:text-white" : "border-[#72cff7]  text-[#72cff7]"}`}
 
-                                onClick={handleRegisterClick}
+                                onClick={() => {
+                                    handleChooseClick()
+                                    setLoginSelected(false);
+                                }}
                             >
                                 {t('login.signup')}
                             </button>
@@ -416,12 +492,16 @@ function Login() {
                         )}
 
                         {isLoginSelected && (
-                            <button className="text-black dark:text-white font-lato text-xl mt-6 hover:scale-105 transition ease-in-out duration-300">{t('login.forgot')}</button>
+                            <button onClick={() => setIsForgotPasswordClicked(!isForgotPasswordClicked)} className="text-black dark:text-white font-lato text-xl mt-6 hover:scale-105 transition ease-in-out duration-300">{t('login.forgot')}</button>
                         )}
+
+
+
+
                         <div className='flex items-center justify-center w-[60%] mt-10'>
-                            <div className="border-b border-black/50 w-[20%]"></div>
-                            <p className='text-base px-2 '>{isLoginSelected ? t('login.text2') : t('login.text3')} </p>
-                            <div className="border-b border-black/50 w-[20%]"></div>
+                            <div className="border-b border-black/50 dark:border-white  w-[20%]"></div>
+                            <p className='text-base px-2 text-black dark:text-white '>{isLoginSelected ? t('login.text2') : t('login.text3')} </p>
+                            <div className="border-b border-black/50 dark:border-white w-[20%]"></div>
                         </div>
 
                         <button className='flex items-center justify-center space-x-2 mt-10 mb-10 w-[70%] h-[3rem] bg-white border-black border-2  px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300'>

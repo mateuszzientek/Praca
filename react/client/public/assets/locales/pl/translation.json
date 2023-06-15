@@ -154,7 +154,14 @@
         "error1": "Błąd podczas zapisywania użytkownika",
         "error2": "Nieprawidłowy email lub hasło",
         "error3": "Błąd serwera",
-        "error4": "Błąd podczas wylogowywania użytkownika"
+        "error4": "Błąd podczas wylogowywania użytkownika",
+        "error5": "Nie ma takiego emaila"
+    },
+    "passwordReset":{
+        "text1": "Zresetuj hasło",
+        "text2": "Wpisz adres e-mail, na który wyślemy link do resetu hasła.",
+        "text3": "Resetowanie Hasła",
+        "text4": "Kliknij na poniższy link, aby zresetować hasło:"
     }
 
 }
