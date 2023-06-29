@@ -12,10 +12,11 @@ import Profile from "./components/pages/Profile";
 const Login = lazy(() => import("./components/pages/Login"))
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));
+const ResetPassword = lazy(() => import('./components/pages/ResetPassword'))
 
 const App: React.FC = () => {
   const location = useLocation();
-
+  
   return (
     <UserProvider>
       <ThemeContextProvider>
@@ -43,6 +44,14 @@ const App: React.FC = () => {
               }
             />
             <Route
+              path="/resetPassword/:token"
+              element={
+                <Suspense fallback={<LoadingAnimation />}>
+                  <ResetPassword />
+                </Suspense>
+              }
+            />
+            <Route
               path="*"
               element={
                 <Suspense fallback={<LoadingAnimation />}>
@@ -51,7 +60,7 @@ const App: React.FC = () => {
               }
             />
           </Routes>
-          {location.pathname !== "/login" && <Footer />}
+          {location.pathname !== "/login" && location.pathname !== "*" && !location.pathname.startsWith("/resetPassword/") && <Footer />}
         </LoginProvider>
       </ThemeContextProvider>
     </UserProvider >

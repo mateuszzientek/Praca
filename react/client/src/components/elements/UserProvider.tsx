@@ -7,7 +7,8 @@ interface User {
   surname: string | null;
   email: string | null;
   role: string | null;
-  email_offert: boolean | null;
+  newslatter: boolean
+  email_offert: boolean
 }
 
 interface UserContextProps {
@@ -32,24 +33,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     axios
       .get('/user', { withCredentials: true } as AxiosRequestConfig)
       .then((response) => {
-        const { _id, name, surname, email, role, email_offert } = response.data;
-        const userData: User = {
-          _id: _id || null,
-          name: name || null,
-          surname: surname || null,
-          email: email || null,
-          role: role || null,
-          email_offert: email_offert === 'true' ? true : email_offert === 'false' ? false : null,
-        };
-        setUser(userData);
-
-        // Sprawdź, czy dane użytkownika nie są puste
-        if (
-          Object.keys(userData).some((key) => userData[key as keyof User] !== null)
-        ) {
+        const { _id, name, surname, email, role, newslatter, email_offert, } = response.data;
+        if (_id && name && email && role) {
+          const userData: User = {
+            _id: _id,
+            name: name,
+            surname: surname,
+            email: email,
+            role: role,
+            newslatter: newslatter || false,
+            email_offert: email_offert || false,
+          };
+          setUser(userData);
           setIsUserLoggedIn(true);
+        } else {
+          setUser(null)
         }
-
       })
       .catch((error) => {
         console.error('Błąd podczas pobierania użytkownika:', error);
@@ -62,6 +61,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isUserLoggedIn,
     setIsUserLoggedIn,
   };
+
 
 
   return (

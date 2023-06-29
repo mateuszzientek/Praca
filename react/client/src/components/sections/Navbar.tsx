@@ -95,8 +95,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             });
     };
 
-    console.log(user)
-
     return (
         <div className={`${props.background || 'bg-[#F8F6F4]'} ${props.darkBackground || 'dark:bg-[#292929]'} ${props.shadow || 'shadow-2xl'} ${props.extra}`} >
 

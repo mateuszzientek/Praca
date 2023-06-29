@@ -156,14 +156,32 @@
         "error2": "Invalid email or password",
         "error3": "Server error",
         "error4": "Error while logging out the user",
-        "error5": "No such email"
-        
+        "error5": "No such email",
+        "error6": "The fields cannot be left empty",
+        "error7": "The passwords provided do not match",
+        "error8": "Field cannot be empty"
+       
     },
     "passwordReset":{
         "text1": "Reset Password",
         "text2": "Enter the email address to which we will send the password reset link.",
         "text3": "Reset Password",
-        "text4": "Click on the link below to reset your password:"
+        "text4": "Click on the link below to reset your password:",
+        "text5": "Back",
+        "text6": "Enter new password",
+        "text7": "Change password",
+        "text8": "New password",
+        "text9": "Repeat password",
+        "text10": "We have sent a password reset link to the provided email address!",
+        "text11": "Your password reset token has expired...",
+        "text12": "Please generate a new password reset link.",
+        "text13": "You can do this by going to the login page.",
+        "text14": "Back to login",
+        "text15": "Password successfully changed"
+    },
+    "emailQuestion":{
+        "error": "Fields cannot be empty",
+        "successful": "Email successfully sent!"
     }
 
 }

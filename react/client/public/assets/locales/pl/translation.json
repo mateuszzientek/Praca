@@ -142,8 +142,8 @@
 
     },
     "loginError": {
-        "name": "Imię musi sklądać się tylko z liter",
-        "surname": "Nazwisko musi sklądać się tylko z liter",
+        "name": "Imię może zawierać tylko litery",
+        "surname": "Nazwisko może zawierać tylko litery",
         "email": "Niepoprawny email",
         "pass": "Wymagania hasła: 1 Duża litera, 1 cyfra, przynajmniej 8 znaków",
         "emailReq": "Email jest wymagany",
@@ -155,15 +155,32 @@
         "error2": "Nieprawidłowy email lub hasło",
         "error3": "Błąd serwera",
         "error4": "Błąd podczas wylogowywania użytkownika",
-        "error5": "Nie ma takiego emaila"
+        "error5": "Nie ma takiego emaila",
+        "error6": "Pola nie mogą zostać puste",
+        "error7": "Podane hasła nie są takie same",
+        "error8": "Pole nie może być puste"
     },
     "passwordReset":{
         "text1": "Zresetuj hasło",
         "text2": "Wpisz adres e-mail, na który wyślemy link do resetu hasła.",
         "text3": "Resetowanie Hasła",
-        "text4": "Kliknij na poniższy link, aby zresetować hasło:"
+        "text4": "Kliknij na poniższy link, aby zresetować hasło:",
+        "text5": "Powrót",
+        "text6": "Wpisz nowe hasło",
+        "text7": "Zmień hasło",
+        "text8": "Nowe hasło",
+        "text9": "Powtórz hasło",
+        "text10": "Wysłaliśmy link resetujący hasło na podany adres email!",
+        "text11": "Twój Token resetujący wygasł...",
+        "text12": "Prosimy o wygenerowanie nowego linku resetującego hasło.",
+        "text13": "Możesz to zrobić przechodząc do strony logowania.",
+        "text14": "Powrót do logowania",
+        "text15": "Pomyślnie zmieniono hasło"
+    },
+    "emailQuestion":{
+        "error": "Pola nie mogą być puste",
+        "successful":"Pomyślnie wysłano email!"
     }
-
 }
    
     

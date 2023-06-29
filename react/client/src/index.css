@@ -251,3 +251,18 @@ button[disabled] {
 .slide-in {
   animation: slideIn 0.2s ease-in-out;
 }
+
+@keyframes fade-in-infoDiv {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-infoDiv {
+  animation: fade-in-infoDiv 0.4s ease-out forwards;
+}

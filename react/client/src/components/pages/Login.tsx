@@ -4,7 +4,7 @@ import { ThemeContext } from '../elements/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { BsArrowLeft } from 'react-icons/bs';
-import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEyeInvisible, AiOutlineEye, AiOutlineHome } from 'react-icons/ai';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import zdjecie from '../../assets/images/pp.jpg';
@@ -15,6 +15,7 @@ import LoginCompleted from '../elements/LoginCompleted';
 import { AxiosRequestConfig } from 'axios';
 import { UserContext } from '../elements/UserProvider';
 import ResetPasswordDiv from '../elements/ResetPasswordDiv';
+import CircleSvg from '../elements/CircleSvg';
 
 
 interface Error {
@@ -27,6 +28,10 @@ interface Error {
 
 
 function Login() {
+
+    const navigate = useNavigate();
+    const { t } = useTranslation();
+
     const { theme, setTheme } = useContext(ThemeContext);
     const { isLoginSelected, setLoginSelected } = useContext(LoginContext);
     const [showPassword, setShowPassword] = useState(false);
@@ -38,13 +43,16 @@ function Login() {
     const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
     const { setUser, setIsUserLoggedIn } = useContext(UserContext);
+    const [isSubmittingReset, setIsSubmittingReset] = useState(false);
+    const [showInfoReset, setShowInfoReset] = useState(false);
+    const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
+    const [isSubmittingRegister, setIsSubmittingRegister] = useState(false);
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [resetEmail, setResetEmail] = useState('');
-
 
 
     const handleEmailOffertChange = () => {
@@ -128,6 +136,7 @@ function Login() {
         }
 
         if (isValid) {
+            setIsSubmittingReset(true);
 
             const userData = {
                 email: resetEmail,
@@ -137,7 +146,12 @@ function Login() {
             axios
                 .post("/resetPassword", userData, { withCredentials: true } as AxiosRequestConfig)
                 .then((response) => {
-                    navigate(-1)
+                    setResetEmail("")
+                    setShowInfoReset(true);
+                    setTimeout(() => {
+                        setShowInfoReset(false);
+                    }, 2500);
+
                 })
                 .catch((error) => {
                     if (error.response && error.response.data && error.response.data.error) {
@@ -150,6 +164,9 @@ function Login() {
                         console.log(error);
                     }
                 })
+                .finally(() => {
+                    setIsSubmittingReset(false);
+                });
         }
     }
 
@@ -178,6 +195,8 @@ function Login() {
 
             if (isValid) {
 
+                setIsSubmittingLogin(true)
+
                 const userData = {
                     password: password,
                     email: email,
@@ -191,7 +210,7 @@ function Login() {
                         setIsUserLogined(true);
                         setIsUserLoggedIn(true)
 
-                        const { _id, name, surname, email, role, email_offert } = response.data.user;
+                        const { _id, name, surname, email, role, newslatter, email_offert } = response.data.user;
 
                         const user = {
                             _id: _id || "",
@@ -199,13 +218,15 @@ function Login() {
                             surname: surname || "",
                             email: email || "",
                             role: role || "",
+                            newslatter: newslatter || false,
                             email_offert: email_offert || false,
                         };
 
                         setUser(user);
 
+
                         setTimeout(() => {
-                            navigate(-1);
+                            navigate("/");
                         }, 2000);
                     })
                     .catch((error) => {
@@ -221,7 +242,10 @@ function Login() {
                         }
 
 
-                    });
+                    })
+                    .finally(() => {
+                        setIsSubmittingLogin(false)
+                    });;
             }
 
 
@@ -242,6 +266,7 @@ function Login() {
             }
 
             if (isValid) {
+                setIsSubmittingRegister(true)
 
                 const userData = {
                     name: name,
@@ -275,6 +300,9 @@ function Login() {
                         }
 
 
+                    })
+                    .finally(() => {
+                        setIsSubmittingRegister(false)
                     });
             }
         }
@@ -308,10 +336,6 @@ function Login() {
 
     };
 
-    const navigate = useNavigate();
-    const { t } = useTranslation();
-
-
     return (
         <>
             {isForgotPasswordClicked &&
@@ -340,6 +364,8 @@ function Login() {
                     onBlur={handleBlur}
                     onChange={handleResetEmailChange}
                     handleRessetPassword={handleRessetPassword}
+                    disabled={isSubmittingReset}
+                    showInfoReset={showInfoReset}
 
                 />)}
 
@@ -352,7 +378,17 @@ function Login() {
             )}
 
 
+
+
             <div className="bg-[#ececec] dark:bg-black/80 w-screen min-h-screen flex items-center justify-center ">
+
+                <div className='absolute left-10 top-8 '>
+                    <div onClick={() => navigate("/")} className='flex items-center space-x-2 cursor-pointer hover:scale-105 transform ease-in-out duration-300'>
+                        <p className='text-xl text-black dark:text-white'>{t('passwordReset.text5')}</p>
+                        <AiOutlineHome size={20} color={theme === 'dark' ? "white" : "black"} />
+                    </div>
+                </div>
+
                 <div className="flex flex-col lg:flex-row my-20 w-[90%] lg:w-[80%] 2xl:w-[60%] h-screen/2 shadow-button rounded-3xl animate-fade-in-long">
                     <div className="relative flex justify-center w-full h-[15rem] lg:h-auto lg:w-[50%] ">
                         <img alt="Photo of ocean" className="object-cover w-full h-full rounded-t-3xl lg:rounded-r-none lg:rounded-l-3xl " src={zdjecie} />
@@ -465,7 +501,11 @@ function Login() {
                                     type="submit"
                                     className="mt-6 w-[100%] h-[3rem] bg-black/80 dark:bg-[#72cff7] px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
                                 >
-                                    <p className="text-white dark:text-black font-lato text-xl">{t('login.signin')}</p>
+
+                                    <div className='flex items-center justify-center'>
+                                        {isSubmittingLogin && (<CircleSvg color="white" secColor='white' />)}
+                                        <p className="text-white dark:text-black font-lato text-xl">{t('login.signin')}</p>
+                                    </div>
                                 </button>
                             )}
                             {!isLoginSelected && (
@@ -480,7 +520,10 @@ function Login() {
                                     type="submit"
                                     className="mt-6 w-[100%] h-[3rem] bg-black/80 dark:bg-[#72cff7] px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
                                 >
-                                    <p className="text-white dark:text-black font-lato text-xl">{t('login.create')}</p>
+                                    <div className='flex items-center justify-center'>
+                                        {isSubmittingRegister && (<CircleSvg color="white" secColor='white' />)}
+                                        <p className="text-white dark:text-black font-lato text-xl">{t('login.create')}</p>
+                                    </div>
                                 </button>
                             )}
                         </form>
@@ -504,7 +547,7 @@ function Login() {
                             <div className="border-b border-black/50 dark:border-white w-[20%]"></div>
                         </div>
 
-                        <button className='flex items-center justify-center space-x-2 mt-10 mb-10 w-[70%] h-[3rem] bg-white border-black border-2  px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300'>
+                        <button onClick={() => { window.open("http://localhost:5000/auth/google", "_self") }} className='flex items-center justify-center space-x-2 mt-10 mb-10 w-[70%] h-[3rem] bg-white border-black border-2  px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300'>
                             <img src={chrome} className='rounded-full w-[2rem] h-[2rem]' />
                             <p className='text-black font-lato text-xl'>Google</p>
                         </button>

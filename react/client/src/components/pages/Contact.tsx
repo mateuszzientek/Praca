@@ -11,6 +11,10 @@ import { AiOutlineArrowDown, AiOutlineClockCircle } from "react-icons/ai";
 import { TfiLocationPin } from "react-icons/tfi";
 import { BsTelephone, BsEnvelope } from "react-icons/bs";
 import ContactCircle from '../elements/ContactCircle';
+import axios from 'axios';
+import validator from 'validator';
+import InfoDivBottom from '../elements/InfoDivBottom';
+import CircleSvg from '../elements/CircleSvg';
 
 
 
@@ -20,9 +24,100 @@ function Contact() {
     const { theme, setTheme } = useContext(ThemeContext);
     const { t } = useTranslation();
 
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [email, setEmail] = useState("");
+    const [text, setText] = useState("");
+    const [message, setMessage] = useState("");
+    const [showInfo, setshowInfo] = useState(false);
+    const [showLoading, setLoading] = useState(false);
+
+
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value)
+    }
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value)
+    }
+    const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSurname(event.target.value)
+    }
+    const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setText(event.target.value)
+    }
+
+    const validateData = () => {
+        setMessage("");
+
+        if (email && !validator.isEmail(email)) {
+            const message = t('loginError.email')
+            setMessage(message);
+            return false;
+        }
+
+        if (name && !/^[a-zA-Z]+$/.test(name)) {
+            const message = t('loginError.name')
+            setMessage(message);
+            return false;
+        }
+
+        if (surname && !/^[a-zA-Z]+$/.test(surname)) {
+            const message = t('loginError.surname')
+            setMessage(message);
+            return false;
+        }
+
+        return true;
+    };
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+        event.preventDefault();
+
+        if (!email || !name || !surname || !text) {
+            const message = t('emailQuestion.error');
+            setMessage(message);
+            return;
+        }
+
+        if (!validateData()) {
+            return;
+        }
+
+        const data = {
+            name: name,
+            surname: surname,
+            email: email,
+            text: text
+        };
+
+        setLoading(true)
+
+        axios.post("/emailQuestion", data)
+            .then((response) => {
+                setEmail('')
+                setName('')
+                setSurname('')
+                setText('')
+
+                setshowInfo(true)
+                setTimeout(() => {
+                    setshowInfo(false);
+                }, 2500);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
     return (
         <>
+            {showInfo && (<InfoDivBottom text={t('emailQuestion.successful')} />)}
             <div >
+
                 <div className="relative">
                     <Navbar background="bg-white" extra="absolute top-0 left-0 right-0 z-10" shadow="shadow-button" />
 
@@ -73,18 +168,21 @@ function Contact() {
                     </div >
 
 
-                    <div className='flex flex-col space-y-6 items-center'>
+                    <form onSubmit={handleSubmit} className='flex flex-col space-y-6 items-center'>
+                        <input value={name} onChange={handleNameChange} className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.name') as string} />
+                        <input value={surname} onChange={handleSurnameChange} className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.surname') as string} />
+                        <input value={email} onChange={handleEmailChange} className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="email" placeholder={t('questionSection.email') as string} />
+                        <textarea value={text} onChange={handleTextChange} className="p-3  focus:outline-none focus:border-2 border-black/60 w-[22rem] h-[8rem] bg-[#e6e6e6]  " placeholder={t('questionSection.question') as string}></textarea>
 
-                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.name') as string} />
-                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="text" placeholder={t('questionSection.surname') as string} />
-                        <input className='px-3 w-[22rem] h-[3rem] bg-[#e6e6e6] focus:outline-none focus:border-2 border-black/60' type="email" placeholder={t('questionSection.email') as string} />
-                        <textarea className="p-3  focus:outline-none focus:border-2 border-black/60 w-[22rem] h-[8rem] bg-[#e6e6e6]  " placeholder={t('questionSection.question') as string}></textarea>
+                        {message && <p className='text-red-500 text-base'>{message}</p>}
 
-                        <button type="button" className='text-2xl rounded-full bg-[#97DEFF] w-[22rem] h-[3rem] transform hover:scale-105 transition ease-out duration-300 '>
-                            <p className='text-black/80' >{t('questionSection.button')}</p>
+                        <button type="submit" className='text-2xl rounded-full bg-[#97DEFF] w-[22rem] h-[3rem] transform hover:scale-105 transition ease-out duration-300 '>
+                            <div className='flex items-center justify-center'>
+                                {showLoading && (<CircleSvg color="black" secColor='black' />)}
+                                <p className='text-black/80' >{t('questionSection.button')}</p>
+                            </div>
                         </button>
-
-                    </div>
+                    </form>
 
 
 

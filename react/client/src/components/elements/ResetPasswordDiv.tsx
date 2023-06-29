@@ -1,6 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { ThemeContext } from './ThemeContext';
+import { useTranslation } from 'react-i18next';
+import InfoDivBottom from './InfoDivBottom';
+import CircleSvg from './CircleSvg';
 
 interface ResetPasswordDivProps {
     mainText: string,
@@ -10,6 +13,8 @@ interface ResetPasswordDivProps {
     value: string;
     errors: string;
     errorsServer: string;
+    disabled: boolean
+    showInfoReset: boolean
     errorsValidationServer: { msg: string }[];
     onBlur: () => void;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -20,6 +25,7 @@ interface ResetPasswordDivProps {
 function ResetPasswordDiv(props: ResetPasswordDivProps) {
 
     const { theme, setTheme } = useContext(ThemeContext);
+    const { t } = useTranslation()
 
     return (
         <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
@@ -46,11 +52,18 @@ function ResetPasswordDiv(props: ResetPasswordDivProps) {
                         <p key={index} className="text-red-500 text-sm mt-2 ml-2">{error.msg}</p>
                     ))}
 
-                    <button type="submit" className={`mt-10 w-full h-[4rem] px-4 rounded bg-black/90 dark:bg-white/80 hover:bg-black/80 dark:hover:bg-white`} >
-                        <p className='text-xl text-white dark:text-black '>{props.textButton}</p>
+                    <button type="submit" disabled={props.disabled} className={`mt-10 w-full h-[4rem] px-4 rounded bg-black/90 dark:bg-white/80 hover:bg-black/80 dark:hover:bg-white`} >
+                        <div className='flex items-center justify-center'>
+                            {props.disabled && (<CircleSvg color="white" secColor='white' />)}
+
+                            <p className='text-xl text-white dark:text-black '>{props.textButton}</p>
+                        </div>
                     </button>
                 </form>
             </div>
+
+            {props.showInfoReset && (<InfoDivBottom text={t('passwordReset.text10')} />)}
+
         </div>
     );
 }

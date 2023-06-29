@@ -14,6 +14,7 @@ import { ThemeContextProvider } from "../elements/ThemeContext";
 function Home() {
 
 
+
     return (
         <>
             <Newslatter />

@@ -4,12 +4,14 @@ const cors = require("cors");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const exceljs = require("exceljs");
 const { body, validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const fs = require("fs");
 const ejs = require("ejs");
 const User = require("./user");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const app = express();
 const port = 5000;
@@ -161,7 +163,8 @@ app.post(
           email: email,
           role: role,
           email_offert: email_offert,
-          resetToken: "",
+          newslatter: false,
+          resetToken: null,
           resetTokenExpiration: null,
         });
 
@@ -198,6 +201,35 @@ app.post(
       });
   }
 );
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get("/auth/google/callback", (req, res, next) => {
+  passport.authenticate("google", (err, user, info) => {
+    if (err) {
+      console.error("Błąd uwierzytelniania:", err);
+      return next(err);
+    }
+
+    if (!user) {
+      console.log("Uwierzytelnienie nie powiodło się");
+      return res.redirect("http://localhost:3000/login");
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Błąd logowania:", err);
+        return next(err);
+      }
+
+      console.log("Logowanie powiodło się");
+      return res.redirect("http://localhost:3000/");
+    });
+  })(req, res, next);
+});
 
 app.post(
   "/login",
@@ -281,7 +313,7 @@ app.post(
         const token = crypto.randomBytes(20).toString("hex");
 
         existingUser.resetToken = token;
-        existingUser.resetTokenExpiration = Date.now() + 300000; // Token ważny przez 1 godzinę
+        existingUser.resetTokenExpiration = Date.now() + 5 * 60 * 1000; // Token ważny przez 5 min
         existingUser
           .save()
           .then(() => {
@@ -327,6 +359,223 @@ app.post(
     });
   }
 );
+
+app.post(
+  "/resetPasswordChange",
+  validateWithReq([
+    body("password")
+      .notEmpty()
+      .withMessage("Hasło wymagane")
+      .isLength({ min: 8 })
+      .withMessage("Hasło musi mieć co najmniej 8 znaków")
+      .matches(/^(?=.*[A-Z])(?=.*\d)/)
+      .withMessage("Hasło musi być silne"),
+    body("secPassword")
+      .notEmpty()
+      .withMessage("Hasło wymagane")
+      .isLength({ min: 8 })
+      .withMessage("Hasło musi mieć co najmniej 8 znaków")
+      .matches(/^(?=.*[A-Z])(?=.*\d)/)
+      .withMessage("Hasło musi być silne"),
+  ]),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { token, secPassword } = req.body;
+
+    User.findOne({ resetToken: token })
+      .then((existingUser) => {
+        if (!existingUser) {
+          console.log("Błąd: Nie znaleziono użytkownika");
+          return res.status(404).json({ error: "Nie znaleziono użytkownika" });
+        }
+
+        if (
+          existingUser.resetTokenExpiration &&
+          existingUser.resetTokenExpiration < Date.now()
+        ) {
+          console.log("Błąd: Token wygasł");
+          return res.status(400).json({ error: "Token wygasł" });
+        }
+
+        bcrypt.hash(secPassword, 10, (err, hash) => {
+          if (err) {
+            console.log("Błąd: Haszowanie hasła nie powiodło się");
+            return res.status(500).json({ error: "Wystąpił błąd serwera" });
+          }
+
+          existingUser.password = hash;
+
+          existingUser.resetToken = null;
+          existingUser.resetTokenExpiration = null;
+
+          existingUser
+            .save()
+            .then(() => {
+              console.log("Zmieniono hasło");
+              return res
+                .status(200)
+                .json({ message: "Hasło zostało zmienione" });
+            })
+            .catch((error) => {
+              console.log("Wystąpił błąd");
+              return res.status(500).json({ error: "Wystąpił błąd serwera" });
+            });
+        });
+      })
+      .catch((error) => {
+        console.log("Wystąpił błąd");
+        return res.status(500).json({ error: "Wystąpił błąd serwera" });
+      });
+  }
+);
+
+app.post("/checkExpireToken", (req, res) => {
+  const { token } = req.body;
+
+  User.findOne({ resetToken: token }).then((existingUser) => {
+    if (!existingUser) {
+      console.log("Błąd: Nie znaleziono użytkownika");
+      return res.status(404).json({ error: "Nie znaleziono użytkownika" });
+    }
+
+    if (
+      existingUser.resetTokenExpiration &&
+      existingUser.resetTokenExpiration < Date.now()
+    ) {
+      console.log("Błąd: Token wygasł");
+      return res.status(400).json({ error: "Token wygasł" });
+    } else {
+      console.log("Token aktywny");
+      return res.status(200).json({ message: "Token aktywny" });
+    }
+  });
+});
+
+app.post(
+  "/newslatter",
+  validateWithReq([
+    body("email")
+      .notEmpty()
+      .withMessage("loginError.emailReq")
+      .isEmail()
+      .withMessage("loginError.email"),
+  ]),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email } = req.body;
+
+    User.findOne({ email })
+      .then((existingUser) => {
+        const workbook = new exceljs.Workbook();
+        const worksheet = workbook.addWorksheet("Newslatter");
+
+        worksheet.addRow([email]);
+
+        const filePath = "C:/Users/mateu/Desktop/Praca/newslatter.xlsx";
+
+        // Sprawdź, czy plik Excel istnieje
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+          if (err) {
+            // Jeśli plik nie istnieje, utwórz nowy plik i zapisz go
+            workbook.xlsx
+              .writeFile(filePath)
+              .then(() => {
+                console.log("Plik Excel został zapisany");
+                return res.status(200).json({
+                  message:
+                    "Zmieniono newslatter i zapisano e-mail w pliku Excel",
+                });
+              })
+              .catch((error) => {
+                console.log("Błąd podczas zapisywania pliku Excel:", error);
+                return res.status(500).json({ error: "Wystąpił błąd serwera" });
+              });
+          } else {
+            // Jeśli plik istnieje, wczytaj go i dodaj nowy wiersz z e-mailem
+            workbook.xlsx
+              .readFile(filePath)
+              .then(() => {
+                const worksheet = workbook.getWorksheet("Newslatter");
+                worksheet.addRow([email]);
+
+                return workbook.xlsx.writeFile(filePath);
+              })
+              .then(() => {
+                console.log("E-mail został dodany do istniejącego pliku Excel");
+                return res.status(200).json({
+                  message:
+                    "Zmieniono newslatter i dodano e-mail do istniejącego pliku Excel",
+                });
+              })
+              .catch((error) => {
+                console.log("Błąd podczas zapisywania pliku Excel:", error);
+                return res.status(500).json({ error: "Wystąpił błąd serwera" });
+              });
+          }
+        });
+
+        if (existingUser) {
+          existingUser.newslatter = true;
+
+          existingUser
+            .save()
+            .then(() => {
+              console.log("Zmieniono newslatter");
+            })
+            .catch((error) => {
+              console.log("Wystąpił błąd");
+            });
+        }
+      })
+      .catch((err) => {
+        console.error("Błąd podczas wyszukiwania użytkownika:", err);
+        return res.status(500).json({ error: "Wystąpił błąd" });
+      });
+  }
+);
+
+app.post("/emailQuestion", (req, res) => {
+  const { name, surname, email, text } = req.body;
+
+  // Konfiguracja transportera poczty
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: email_user,
+      pass: email_pass,
+    },
+  });
+
+  // Utworzenie opcji wiadomości
+  const mailOptions = {
+    from: email,
+    to: email_user,
+    replyTo: email,
+    subject: "Widomośc ze strony SneakersZone",
+    text: `Imię: ${name}\nNazwisko: ${surname}\nE-mail: ${email}\nWiadomość: ${text}`,
+  };
+
+  // Wysłanie wiadomości
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ error: "Wystąpił błąd podczas wysyłąnai emaila" });
+    } else {
+      console.log("Wiadomość wysłana");
+      res.status(200).json({ message: "Wiadomość została wysłana" });
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
