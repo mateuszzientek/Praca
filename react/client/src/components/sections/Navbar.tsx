@@ -67,7 +67,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         } else {
             document.body.classList.remove('overflow-hidden');
         }
-
         // Clean up the effect
         return () => {
             document.body.classList.remove('overflow-hidden');
@@ -119,7 +118,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 {/* pages */}
                 <div className='hidden xl:flex  mx-auto font-roboto text-xl '>
                     <HeroLink text={t('navbar.home')} link="/" />
-                    <HeroLink text={t('navbar.shop')} link="/abra" />
+                    <HeroLink text={t('navbar.shop')} link="/shop" />
                     <HeroLink text={t('navbar.custom')} link="/cfd" />
                     <HeroLink text={t('navbar.contact')} link="/contact" />
                 </div>
@@ -232,8 +231,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                 {/* Side drawer menu */}
 
-
-
                 <div className={nav ? 'fixed top-0 left-0 w-[19rem] h-screen overflow-y-auto   bg-white dark:bg-black z-10 duration-500' : 'fixed top-0 left-[-100%] w-[19rem] h-screen bg-white z-10 duration-500 '}>
                     <AiOutlineClose onClick={() => setNav(!nav)} size={25} color={theme === 'dark' ? "white" : "black"} className='absolute right-4 top-6 cursor-pointer' />
 
@@ -241,7 +238,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                     <div className='flex flex-col py-4 text-gray-800'>
                         <MobileLink text={t('navbar.home')} icon={<AiFillHome size={25} className='mr-4' />} link="/" />
-                        <MobileLink text={t('navbar.shop')} icon={<AiTwotoneShop size={25} className='mr-4' />} link="/fds" />
+                        <MobileLink text={t('navbar.shop')} icon={<AiTwotoneShop size={25} className='mr-4' />} link="/shop" />
                         <MobileLink text={t('navbar.custom')} icon={<FaPencilAlt size={25} className='mr-4' />} link="/fds" />
                         <MobileLink text={t('navbar.contact')} icon={<RiContactsBook2Fill size={25} className='mr-4' />} link="/contact" />
                         <div className="border-b border-black dark:border-white"></div>

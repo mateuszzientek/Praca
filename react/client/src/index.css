@@ -244,6 +244,16 @@ button[disabled] {
   }
 }
 
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
 .slide-out {
   animation: slideOut 0.2s ease-in-out;
 }
@@ -252,11 +262,16 @@ button[disabled] {
   animation: slideIn 0.2s ease-in-out;
 }
 
+.slide-in-bottom {
+  animation: slideInBottom 0.4s ease-in-out;
+}
+
 @keyframes fade-in-infoDiv {
   0% {
     opacity: 0;
     transform: translateY(100%);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);

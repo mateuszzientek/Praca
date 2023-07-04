@@ -4,6 +4,7 @@
   "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
+    "@firebase/storage": "^0.11.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -15,6 +16,7 @@
     "axios": "^1.4.0",
     "blurhash": "^2.0.5",
     "classnames": "^2.3.2",
+    "firebase": "^9.23.0",
     "flag-icons": "^6.6.6",
     "i18next": "^22.5.0",
     "i18next-browser-languagedetector": "^7.0.2",

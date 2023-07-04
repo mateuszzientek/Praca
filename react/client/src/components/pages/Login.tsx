@@ -147,6 +147,8 @@ function Login() {
                 .post("/resetPassword", userData, { withCredentials: true } as AxiosRequestConfig)
                 .then((response) => {
                     setResetEmail("")
+                    setErrorsServer("")
+                    setErrorsVadlidationServer([])
                     setShowInfoReset(true);
                     setTimeout(() => {
                         setShowInfoReset(false);
@@ -210,7 +212,7 @@ function Login() {
                         setIsUserLogined(true);
                         setIsUserLoggedIn(true)
 
-                        const { _id, name, surname, email, role, newslatter, email_offert } = response.data.user;
+                        const { _id, name, surname, email, role, newsletter, email_offert } = response.data.user;
 
                         const user = {
                             _id: _id || "",
@@ -218,7 +220,7 @@ function Login() {
                             surname: surname || "",
                             email: email || "",
                             role: role || "",
-                            newslatter: newslatter || false,
+                            newsletter: newsletter || false,
                             email_offert: email_offert || false,
                         };
 

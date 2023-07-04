@@ -46,7 +46,7 @@ function Newslatter() {
     };
 
     useEffect(() => {
-        if (user?.newslatter === false || !user) {
+        if (user?.newsletter === false || !user) {
             const timer = setTimeout(() => {
                 const storedExpiryTime = localStorage.getItem('newslatter');
 
@@ -72,7 +72,7 @@ function Newslatter() {
             }, 2000);
             return () => clearTimeout(timer);
         }
-    }, [user?.newslatter]);
+    }, [user?.newsletter]);
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -93,7 +93,7 @@ function Newslatter() {
         }
 
         axios
-            .post("/newslatter", { email })
+            .post("/newsletter", { email })
             .then((response) => {
                 setShowNewslatter(false);
             })

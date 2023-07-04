@@ -7,7 +7,7 @@ interface User {
   surname: string | null;
   email: string | null;
   role: string | null;
-  newslatter: boolean
+  newsletter: boolean
   email_offert: boolean
 }
 
@@ -33,7 +33,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     axios
       .get('/user', { withCredentials: true } as AxiosRequestConfig)
       .then((response) => {
-        const { _id, name, surname, email, role, newslatter, email_offert, } = response.data;
+        const { _id, name, surname, email, role, newsletter, email_offert, } = response.data;
         if (_id && name && email && role) {
           const userData: User = {
             _id: _id,
@@ -41,7 +41,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             surname: surname,
             email: email,
             role: role,
-            newslatter: newslatter || false,
+            newsletter: newsletter || false,
             email_offert: email_offert || false,
           };
           setUser(userData);

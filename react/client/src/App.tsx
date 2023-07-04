@@ -13,10 +13,12 @@ const Login = lazy(() => import("./components/pages/Login"))
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));
 const ResetPassword = lazy(() => import('./components/pages/ResetPassword'))
+const Shop = lazy(() => import('./components/pages/Shop'))
+
 
 const App: React.FC = () => {
   const location = useLocation();
-  
+
   return (
     <UserProvider>
       <ThemeContextProvider>
@@ -32,6 +34,14 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<LoadingAnimation />}>
                   <Contact />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/shop"
+              element={
+                <Suspense fallback={<LoadingAnimation />}>
+                  <Shop />
                 </Suspense>
               }
             />
@@ -60,7 +70,7 @@ const App: React.FC = () => {
               }
             />
           </Routes>
-          {location.pathname !== "/login" && location.pathname !== "*" && !location.pathname.startsWith("/resetPassword/") && <Footer />}
+          {location.pathname !== "/login" && location.pathname !== "/shop" && location.pathname !== "*" && !location.pathname.startsWith("/resetPassword/") && <Footer />}
         </LoginProvider>
       </ThemeContextProvider>
     </UserProvider >

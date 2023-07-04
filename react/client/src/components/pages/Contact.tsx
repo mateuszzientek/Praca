@@ -16,7 +16,13 @@ import validator from 'validator';
 import InfoDivBottom from '../elements/InfoDivBottom';
 import CircleSvg from '../elements/CircleSvg';
 
-
+interface Error {
+    msg: string;
+    type: string;
+    value: string;
+    path: string;
+    location: string;
+}
 
 function Contact() {
 
@@ -31,6 +37,8 @@ function Contact() {
     const [message, setMessage] = useState("");
     const [showInfo, setshowInfo] = useState(false);
     const [showLoading, setLoading] = useState(false);
+    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
+    const [errorsServer, setErrorsServer] = useState("");
 
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +114,15 @@ function Contact() {
                 }, 2500);
             })
             .catch((error) => {
-                console.log(error)
+                if (error.response && error.response.data && error.response.data.error) {
+                    setErrorsServer(error.response.data.error)
+
+                } else if (error.response && error.response.data && error.response.data.errors) {
+                    setErrorsVadlidationServer(error.response.data.errors)
+
+                } else {
+                    console.log(error);
+                }
             })
             .finally(() => {
                 setLoading(false)
@@ -115,7 +131,10 @@ function Contact() {
 
     return (
         <>
-            {showInfo && (<InfoDivBottom text={t('emailQuestion.successful')} />)}
+            {showInfo && (
+                <div className='flex justify-center'>
+                    <InfoDivBottom text={t('emailQuestion.successful')} />
+                </div>)}
             <div >
 
                 <div className="relative">
@@ -175,6 +194,12 @@ function Contact() {
                         <textarea value={text} onChange={handleTextChange} className="p-3  focus:outline-none focus:border-2 border-black/60 w-[22rem] h-[8rem] bg-[#e6e6e6]  " placeholder={t('questionSection.question') as string}></textarea>
 
                         {message && <p className='text-red-500 text-base'>{message}</p>}
+
+                        {errorsServer && <p className="text-red-500 text-base ">{errorsServer}</p>}
+
+                        {errorsVadlidationServer.map((error, index) => (
+                            <p key={index} className="text-red-500 text-base ">{error.msg}</p>
+                        ))}
 
                         <button type="submit" className='text-2xl rounded-full bg-[#97DEFF] w-[22rem] h-[3rem] transform hover:scale-105 transition ease-out duration-300 '>
                             <div className='flex items-center justify-center'>
