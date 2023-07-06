@@ -5,6 +5,19 @@ import { BiFilterAlt } from 'react-icons/bi';
 import ProductTemplate from '../elements/ProductTemplate';
 import FilterSection from '../sections/FilterSection';
 import axios from 'axios';
+import { ref, getDownloadURL } from "firebase/storage";
+import storage from '../../firebase';
+
+interface Shoe {
+    _id: string;
+    name: string;
+    category: string;
+    price: number;
+    discountPrice: number;
+    image: string;
+    imageUrl?: string; // Dodane pole imageUrl
+    isHearted: boolean; // Dodane pole isHearted
+}
 
 function Shop() {
 
@@ -19,16 +32,76 @@ function Shop() {
         { label: 'Over $150', value: 'range4' },
     ];
 
+    const [page, setPage] = useState(1)
+    const [pageCount, setPageCount] = useState(0)
+    const [shoes, setShoes] = useState<Shoe[]>([]);
+
 
     const handleClickFilter = () => {
         setShowFilter(!showFilter)
     }
 
+    useEffect(() => {
+        const fetchShoes = async () => {
+            try {
+                const response = await axios.get(`/shoes?page=${page}`);
+                const fetchedShoes: any[] = response.data;
+                const shoeImages = await Promise.all(
+                    fetchedShoes.map(async (shoe) => {
+                        const pathReference = ref(storage, shoe.image);
+                        const url = await getDownloadURL(pathReference);
+                        return {
+                            ...shoe,
+                            imageUrl: url,
+                        };
+                    })
+                );
+                const shuffledShoes = shoeImages.sort(() => Math.random() - 0.5);
+                setShoes(shuffledShoes as Shoe[]);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchShoes();
+    }, []);
+
+    const handleHeartClick = (shoe: Shoe) => {
+        setShoes(prevShoes => {
+            const updatedShoes = prevShoes.map(prevShoe => {
+                if (prevShoe._id === shoe._id) {
+                    return {
+                        ...prevShoe,
+                        isHearted: !prevShoe.isHearted
+                    };
+                }
+                return prevShoe;
+            });
+            return updatedShoes;
+        });
+    }
+
+    const handlePrevious = () => {
+        setPage((p) => {
+            if (p === 1) return p;
+            return p - 1;
+        })
+    }
+
+    const handleNext = () => {
+        setPage((p) => {
+            if (p === pageCount) return p;
+            return p + 1;
+        })
+    }
+
+    console.log(shoes)
+
     return (
         <>
             {showFilter && (<FilterSection showFilter={showFilter} setShowFilter={setShowFilter} />)}
             <Navbar background="bg-white" extra="z-10 border-b-[2px] border-black/10 dark:border-white" shadow="none" />
-            <div className='flex justify-center   xl:px-12 2xl:px-20 bg-white dark:bg-[#292929] '>
+            <div className='flex justify-center   xl:px-12 2xl:px-20 bg-white dark:bg-[#292929] min-h-screen '>
 
                 <div className='hidden lg:flex flex-col items-center w-[270px] min-w-[270px] h-auto  border-r-[2px] dark:border-white border-black/10'>
                     <div className='text-left '>
@@ -131,10 +204,28 @@ function Shop() {
                     </div>
 
                     <div className='justify-center mx-auto gap-10 px-12 grid sm:grid-cols-2 min-[1150px]:grid-cols-3 lg:gap-x-10  2xl:grid-cols-4 min-[1920px]:grid-cols-5 mt-10 gap-y-10 xl:gap-x-14'>
-                        <ProductTemplate />
+                        {shoes.map((shoe) =>
+                            <div key={shoe._id}>
+                                <ProductTemplate
+                                    shoe={shoe}
+                                    isHearted={shoe.isHearted}
+                                    imageUrl={shoe.imageUrl || ""}
+                                    discountPrice={shoe.discountPrice}
+                                    price={shoe.price}
+                                    name={shoe.name}
+                                    handleHeartClick={handleHeartClick}
+                                    category={shoe.category} />
+                            </div>
+                        )}
+                    </div>
+                    <div className='flex justify-center space-x-10 mt-10'>
+                        <button disabled={page === 1} onClick={handlePrevious} >Previous</button>
+                        <button disabled={page === pageCount} onClick={handleNext} className=''>Next</button>
+
                     </div>
 
                 </div>
+
             </div >
 
         </ >

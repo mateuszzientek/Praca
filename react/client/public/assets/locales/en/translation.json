@@ -182,6 +182,12 @@
     "emailQuestion":{
         "error": "Fields cannot be empty",
         "successful": "Email successfully sent!"
-    }
+    },
+    "categoryShoes":{
+        "sport": "Sports Shoes",
+        "low": "Low Sneakers",
+        "high": "High Sneakers"
+    },
+    "currencySymbol":"$"
 
 }

@@ -180,7 +180,13 @@
     "emailQuestion":{
         "error": "Pola nie mogą być puste",
         "successful":"Pomyślnie wysłano email!"
-    }
+    },
+    "categoryShoes":{
+        "sport":"Buty sportowe",
+        "low":"Sneakersy niskie",
+        "high":"Sneakersy wysokie"
+    },
+    "currencySymbol":"zł"
 }
    
     

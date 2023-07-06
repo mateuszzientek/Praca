@@ -45,7 +45,7 @@ function FilterSection(props: FilterSectionProps) {
                         {brands.map(brand => (
                             <label key={brand} className="cursor-pointer ">
                                 <input type="radio" className="peer sr-only" name="brand" defaultChecked={brand === 'All products'} />
-                                <div className="flex items-center px-2 h-[3rem]  border-[2px] border-black/10 dark:border-white text-black/60 dark:text-white  rounded-md peer-checked:bg-[#97DEFF] peer-checked:text-black/60  peer-checked:border-none hover:scale-105 transform ease-in-out duration-500">
+                                <div className="flex justify-center items-center px-2 h-[3rem]  border-[2px] border-black/10 dark:border-white text-black/60 dark:text-white  rounded-md peer-checked:bg-[#97DEFF] peer-checked:text-black/60  peer-checked:border-none hover:scale-105 transform ease-in-out duration-500">
                                     <p>{brand}</p>
                                 </div>
                             </label>
