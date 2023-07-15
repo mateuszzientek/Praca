@@ -62,7 +62,7 @@ function ResetPasswordDiv(props: ResetPasswordDivProps) {
                 </form>
             </div>
 
-            {props.showInfoReset && (<InfoDivBottom text={t('passwordReset.text10')} />)}
+            {props.showInfoReset && (<InfoDivBottom color={"bg-green-500"} text={t('passwordReset.text10')} />)}
 
         </div>
     );

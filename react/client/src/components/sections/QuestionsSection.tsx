@@ -120,7 +120,7 @@ function QuestionsSection() {
     return (
         <div className={`flex justify-center text-center h-[75rem] md:h-[50rem]   ${theme === 'dark' ? "questions-background-black questions-background-mobile-black" : "questions-background questions-background-mobile"}`}>
 
-            {showInfo && (<InfoDivBottom text={t('emailQuestion.successful')} />)}
+            {showInfo && (<InfoDivBottom color={"bg-green-500"} text={t('emailQuestion.successful')} />)}
 
 
             {/* main text */}

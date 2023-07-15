@@ -116,10 +116,10 @@ function ResetPassword() {
     };
 
     useEffect(() => {
-
         axios
             .post("/checkExpireToken", { token })
             .then((response) => {
+                localStorage.setItem('wasOnResetPassword', 'true');
                 setShowForm(true)
             })
             .catch((error) => {
@@ -148,7 +148,7 @@ function ResetPassword() {
                 (
 
                     <div className='w-full md:w-[30rem] h-screen md:h-auto bg-white dark:bg-white/80 shadow-button rounded flex flex-col justify-center items-center py-10'>
-                        {showInfoDiv && (<InfoDivBottom text={t('passwordReset.text15')} />)}
+                        {showInfoDiv && (<InfoDivBottom color={"bg-green-500"} text={t('passwordReset.text15')} />)}
 
                         <p className='text-3xl mb-10'>{t('passwordReset.text6')}</p>
                         <form className='w-[80%] space-y-6' onSubmit={handleSubmit}>

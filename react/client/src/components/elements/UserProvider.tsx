@@ -16,6 +16,7 @@ interface UserContextProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isUserLoggedIn: boolean;
   setIsUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  isUserDataLoaded: boolean; // Dodatkowy stan śledzący, czy dane użytkownika zostały pobrane
 }
 
 export const UserContext = createContext<UserContextProps>({
@@ -23,11 +24,13 @@ export const UserContext = createContext<UserContextProps>({
   setUser: () => { },
   isUserLoggedIn: false,
   setIsUserLoggedIn: () => { },
+  isUserDataLoaded: false,
 });
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isUserDataLoaded, setIsUserDataLoaded] = useState(false); // Dodatkowy stan
 
   useEffect(() => {
     axios
@@ -52,6 +55,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
       .catch((error) => {
         console.error('Błąd podczas pobierania użytkownika:', error);
+      })
+      .finally(() => {
+        setIsUserDataLoaded(true); // Ustawienie stanu isUserDataLoaded na true, niezależnie od wyniku żądania
       });
   }, []);
 
@@ -60,9 +66,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser,
     isUserLoggedIn,
     setIsUserLoggedIn,
+    isUserDataLoaded, // Dodanie isUserDataLoaded do kontekstu
   };
 
-
+  if (!isUserDataLoaded) {
+    return null; // Lub wyrenderuj komunikat oczekiwania
+  }
 
   return (
     <UserContext.Provider value={userContextValue}>

@@ -7,6 +7,7 @@ import storage from '../../firebase';
 import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { useNavigate } from "react-router-dom";
 
 interface Shoe {
     _id: string;
@@ -27,11 +28,13 @@ interface ProductTemplateProps {
     price: number
     name: string,
     category: string
+    idShoe: string
     handleHeartClick: (shoe: Shoe) => void
 }
 
 function ProductTemplate(props: ProductTemplateProps) {
 
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const { theme, setTheme } = useContext(ThemeContext);
     const currentCode = localStorage.getItem('i18nextLng')
@@ -43,16 +46,24 @@ function ProductTemplate(props: ProductTemplateProps) {
         return roundedPricePLN;
     }
 
+    const handleHeartIconClick = (event: React.MouseEvent) => {
+        event.stopPropagation(); // Zatrzymaj propagację zdarzenia, aby uniknąć przenoszenia do "/shoeView"
+        props.handleHeartClick(props.shoe); // Wywołaj funkcję obsługującą kliknięcie na ikonę serca
+    };
+
+    const handleCardClick = () => {
+        navigate(`/shoeView/${props.idShoe}`);
+    };
 
     return (
         <>
-            <div className='w-[15rem] h-[20rem] rounded-lg shadow-xl cursor-pointer hover:scale-105 transform ease-in-out duration-500 '>
+            <div onClick={handleCardClick} className='w-[15rem] h-[20rem] rounded-lg shadow-xl cursor-pointer hover:scale-105 transform ease-in-out duration-500 '>
                 <div className='flex relative items-center justify-center bg-[#fafafa] dark:bg-black/50 w-full h-[70%] rounded-t-lg border-[1px] border-black/10 dark:border-white/20  '>
-                    <div onClick={() => props.handleHeartClick(props.shoe)}>
+                    <div >
                         {props.isHearted ? (
-                            <AiFillHeart size={25} color={"#f54e4e"} className='absolute top-4 right-4 cursor-pointer' />
+                            <AiFillHeart size={25} color={"#f54e4e"} className='absolute top-4 right-4 cursor-pointer' onClick={handleHeartIconClick} />
                         ) : (
-                            <AiOutlineHeart size={25} color={theme === 'dark' ? "white" : "black"} className='absolute top-4 right-4 cursor-pointer' />
+                            <AiOutlineHeart size={25} color={theme === 'dark' ? "white" : "black"} className='absolute top-4 right-4 cursor-pointer' onClick={handleHeartIconClick} />
                         )}
                     </div>
                     <div className='mr-4 mt-6'>

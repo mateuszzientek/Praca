@@ -13,7 +13,7 @@ function Footer() {
     const { t } = useTranslation()
 
     return (
-        <div>
+        <div >
 
             <div className='flex justify-center  bg-black/90 md:h-28 py-6'>
 

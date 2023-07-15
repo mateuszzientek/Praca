@@ -133,7 +133,7 @@ function Contact() {
         <>
             {showInfo && (
                 <div className='flex justify-center'>
-                    <InfoDivBottom text={t('emailQuestion.successful')} />
+                    <InfoDivBottom color={"bg-green-500"} text={t('emailQuestion.successful')} />
                 </div>)}
             <div >
 
@@ -172,7 +172,7 @@ function Contact() {
 
                 </div >
 
-                <div className='witam flex flex-col lg:flex-row justify-center items-center space-y-16 lg:space-y-0 lg:space-x-60   bg-white dark:bg-black/80 mt-[-1rem] pt-20 '>
+                <div className='witam flex flex-col lg:flex-row justify-center items-center space-y-16 lg:space-y-0 lg:space-x-60  bg-white dark:bg-black/80 mt-[-1rem] pt-20 '>
 
                     <div className='items-center space-y-12 '>
 

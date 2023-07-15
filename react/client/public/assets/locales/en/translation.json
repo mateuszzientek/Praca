@@ -183,11 +183,55 @@
         "error": "Fields cannot be empty",
         "successful": "Email successfully sent!"
     },
+    "shop":{
+        "category": "Category",
+        "price": "Price",
+        "size": "Size",
+        "reset": "Reset",
+        "all": "All Products",
+        "error": "An internal server error occurred",
+        "notFound": "No shoes found matching the criteria",
+        "sort": "Sort by"
+    },
     "categoryShoes":{
         "sport": "Sports Shoes",
         "low": "Low Sneakers",
         "high": "High Sneakers"
     },
-    "currencySymbol":"$"
-
+    "currencySymbol":"$",
+    "priceRange":{
+       "range1": "$0 - $50",
+       "range2": "$50 - $100",
+       "range3": "$100 - $150",
+       "range4": "Over $150"
+    },
+    "sizes":{
+        "36": "5",
+        "37": "6",
+        "38": "6,5",
+        "39": "7",
+        "40": "7,5",
+        "41": "8,5",
+        "42": "9,5",
+        "43": "10",
+        "44": "10,5",
+        "45": "11,5",
+        "46": "12"
+    },
+    "sort":{
+        "newest": "Newest",
+        "priceLow": "Lowest Price",
+        "priceHigh": "Highest Price"
+    },
+    "shoeView": {
+       "selectSize": "Select size",
+       "cart": "Add to cart",
+       "ship": "Shipping in 24h",   
+       "ship2": "Free delivery from $0 and free returns",
+       "secure": "Secure online shopping"
+    },
+    "favoriteShoes": {
+        "text1": "My Wishlist",
+        "text2": "Here, you can save the products you add to your favorites."
+    }
 }

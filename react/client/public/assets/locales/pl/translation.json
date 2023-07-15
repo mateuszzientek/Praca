@@ -181,12 +181,58 @@
         "error": "Pola nie mogą być puste",
         "successful":"Pomyślnie wysłano email!"
     },
+    "shop":{
+        "category": "Kategorie",
+        "price": "Cena",
+        "size": "Rozmiar",
+        "reset": "Resetuj",
+        "all": "Wszystkie Produkty",
+        "error": "Wystąpił błąd systemu",
+        "notFound": "Nie znaleziono butów spełniających dane kryteria",
+        "sort": "Sortuj wg"
+    },
     "categoryShoes":{
         "sport":"Buty sportowe",
         "low":"Sneakersy niskie",
         "high":"Sneakersy wysokie"
     },
-    "currencySymbol":"zł"
+    "currencySymbol":"zł",
+    "priceRange":{
+        "range1": "0 zł - 205 zł",
+        "range2": "205 zł - 410 zł",
+        "range3": "410 zł - 610 zł",
+        "range4": "Ponad 610 zł"
+    },
+    "sizes":{
+        "36": "36",
+        "37": "37",
+        "38": "38",
+        "39": "39",
+        "40": "40",
+        "41": "41",
+        "42": "42",
+        "43": "43",
+        "44": "44",
+        "45": "45",
+        "46": "46"
+    },
+    "sort":{
+       "newest": "Najnowsze",
+       "priceLow": "Najniższa cena",
+       "priceHigh": "Najwyższa cena"
+    },
+    "shoeView": {
+       "selectSize": "Wybierz rozmiar",
+       "cart": "Dodaj do koszyka",
+       "ship": "Wysyłka w 24h",
+       "ship2": "Dostawa od 0 zł i darmowy zwrot",
+       "secure": "Bezpieczne zakupy online"
+    }
+    ,
+    "favoriteShoes": {
+       "text1": "Moja Lista Życzeń",
+       "text2": "Tu zostaną zapisane produkty, które dodasz do ulubionych."
+    }
 }
    
     

@@ -32,6 +32,8 @@ function Login() {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
+    const wasOnResetPassword = localStorage.getItem('wasOnResetPassword') === 'true';
+
     const { theme, setTheme } = useContext(ThemeContext);
     const { isLoginSelected, setLoginSelected } = useContext(LoginContext);
     const [showPassword, setShowPassword] = useState(false);
@@ -226,10 +228,17 @@ function Login() {
 
                         setUser(user);
 
+                        if (wasOnResetPassword) {
+                            localStorage.removeItem("wasOnResetPassword")
+                            setTimeout(() => {
+                                navigate("/");
+                            }, 2000);
+                        } else {
+                            setTimeout(() => {
+                                navigate(-1);
+                            }, 2000);
+                        }
 
-                        setTimeout(() => {
-                            navigate("/");
-                        }, 2000);
                     })
                     .catch((error) => {
 

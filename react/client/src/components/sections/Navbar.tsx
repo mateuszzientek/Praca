@@ -86,6 +86,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             .then((response) => {
                 setUser(null)
                 setIsUserLoggedIn(false)
+                window.location.reload();
 
             })
             .catch((error) => {
@@ -147,7 +148,9 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                     {/* favorite icon */}
 
-                    <RoundIcon icon={<AiOutlineHeart size={20} />} />
+                    <div onClick={() => { navigate("/favorite") }}>
+                        <RoundIcon icon={<AiOutlineHeart size={20} />} extra="cursor-pointer" />
+                    </div>
 
                     {/* person icon */}
                     <div className='group relative'>
@@ -189,7 +192,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                     {/* cart icon */}
 
-                    <RoundIcon icon={<BsCart2 size={20} />} />
+                    <RoundIcon icon={<BsCart2 size={20} />} extra="cursor-pointer" />
 
                     {/* button for language */}
                     <div onClick={() => setDropdown(!dropdown)} className='relative hidden lg:flex justify-center items-center rounded-full mx-4 sm:mr-0'>

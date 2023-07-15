@@ -9,7 +9,8 @@ import dotenv from "dotenv";
 import i18next from "i18next";
 import i18nextMiddleware from "i18next-http-middleware";
 import Backend from "i18next-node-fs-backend";
-import Shoes from './schemas/shoes';
+import Shoes from "./schemas/shoes";
+import FavoriteShoes from "./schemas/favoriteShoes";
 dotenv.config();
 
 const app = express();
@@ -31,6 +32,8 @@ import logoutHandler from './controllers/logout';
 import loginHandler from './controllers/login';
 import registerHandler from './controllers/register';
 import authGoogleCallbackHandler from './controllers/authGoogleCallback';
+import shoesHandler from "./controllers/shoes";
+import getShoeByIdHandler from "./controllers/getShoeById";
 
 //-------------i18next----------------------------------
 
@@ -97,31 +100,92 @@ mongoose.connect(link_database!)
 });
 
 
+
+
 //---------------------routes----------------------------
-app.get('/shoes', async (req, res) => {
-  Shoes.find({})
-  .then((shoes) => {
-    console.log(shoes); 
-    res.send(shoes);
+
+app.get('/getFavoriteShoesById',(req, res) => {
+  
+  const userId = req.query.userId;
+
+  FavoriteShoes.find({ userId })
+  .then((favoriteShoes) => {
+    const shoeIds = favoriteShoes.map((favoriteShoe) => favoriteShoe.shoeId);
+
+    console.log(shoeIds);
+    res.json(shoeIds);
   })
   .catch((error) => {
-    console.error("Błąd podczas pobierania danych z kolekcji 'shoes':", error);
-    res.status(400).json({ error: 'Wystąpił błąd' });
+    console.error('Błąd podczas pobierania ulubionych butów', error);
+    res.status(500).json({ error: 'Wystąpił błąd podczas pobierania ulubionych butów' });
   });
-})
+});
 
+app.get('/getShoeById', getShoeByIdHandler);
+app.get('/shoes',shoesHandler)
 app.get("/locales/:lng/translation.json",i18nextMiddleware.getResourcesHandler(i18next));
-app.post( "/register",registerHandler);
 app.get("/auth/google",passport.authenticate("google", { scope: ["profile", "email"] }));
 app.get("/auth/google/callback",authGoogleCallbackHandler);
-app.post("/login",loginHandler);
 app.get("/user", (req, res) => { res.send(req.user);});
+app.post( "/register",registerHandler);
+app.post("/login",loginHandler);
 app.post("/logout", logoutHandler);
 app.post( "/resetPassword",resetPasswordHandler);
 app.post( "/resetPasswordChange",resetPasswordChangeHandler);
 app.post("/checkExpireToken", checkExpireTokenHandler);
 app.post( "/newsletter",newsletterHandler);
 app.post("/emailQuestion", emailQuestionHandler);
+
+app.post('/saveFavoriteShoe', async (req, res) => {
+  try {
+    const { userId, shoeId } = req.body;
+
+    const favoriteShoe = new FavoriteShoes({
+      userId,
+      shoeId,
+    });
+
+    await favoriteShoe.save();
+
+    return res.status(200).json({ message: 'But został pomyślnie dodany do ulubionych' });
+  } catch (error) {
+    console.error('Błąd podczas zapisywania ulubionego buta', error);
+    return res.status(500).json({ error: 'Wystąpił błąd podczas zapisywania ulubionego buta' });
+  }
+});
+
+app.post('/removeFavoriteShoe', async (req, res) => {
+  const { userId, shoeId } = req.body;
+
+  try {
+    const removedShoe = await FavoriteShoes.findOneAndRemove({ userId, shoeId });
+    if (removedShoe) {
+      res.status(200).json({ message: 'But został usunięty z ulubionych' });
+    } else {
+      res.status(404).json({ message: 'Nie znaleziono buta w ulubionych' });
+    }
+  } catch (error) {
+    console.error('Błąd podczas usuwania buta z ulubionych', error);
+    res.status(500).json({ message: 'Wystąpił błąd podczas usuwania buta z ulubionych' });
+  }
+});
+
+
+app.get('/getFavoriteShoes', async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const favoriteShoes = await FavoriteShoes.find({ userId });
+    const favoriteShoeIds = favoriteShoes.map(favoriteShoe => favoriteShoe.shoeId);
+
+    const shoes = await Shoes.find({ _id: { $in: favoriteShoeIds } });
+    
+    res.status(200).json({ favoriteShoes: shoes });
+  } catch (error) {
+    console.error('Błąd podczas pobierania ulubionych butów', error);
+    res.status(500).json({ message: 'Wystąpił błąd podczas pobierania ulubionych butów' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
