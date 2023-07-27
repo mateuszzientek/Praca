@@ -6,3 +6,4 @@ declare module "react-lazy-load-image-component";
 declare module "react-scroll";
 declare module 'validator';
 declare module 'classnames';
+declare module 'cooperjs';

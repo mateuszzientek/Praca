@@ -17,6 +17,7 @@ const ResetPassword = lazy(() => import('./components/pages/ResetPassword'))
 const Shop = lazy(() => import('./components/pages/Shop'))
 const ShoeView = lazy(() => import('./components/pages/ShoeView'))
 const Favorite = lazy(() => import('./components/pages/Favorite'))
+const Address = lazy(() => import('./components/pages/Address'))
 
 
 const App: React.FC = () => {
@@ -31,6 +32,7 @@ const App: React.FC = () => {
             <Routes>
               <Route element={<PrivateRoutes />}>
                 <Route element={<Profile />} path="/profile" />
+                <Route element={<Address />} path="/address" />
               </Route>
               <Route path="/" element={<Home />} />
               <Route
@@ -58,7 +60,7 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/shop/:pageNumber/:brand?/:category?/:price?/:min?/:max?/:sizes?/:sort?"
+                path="/shop/:pageNumber"
                 element={
                   <Suspense fallback={<LoadingAnimation />}>
                     <Shop />

@@ -180,7 +180,7 @@ function Contact() {
 
                         <ContactCircle mainText={t('contact.phone')} text="+48 509 976 345" icon={<BsTelephone size={35} color={theme === "dark" ? "black" : "white"} />} text2="" />
 
-                        <ContactCircle mainText={"Email"} text="sneakerzone@gmail.com" icon={<BsEnvelope size={35} color={theme === "dark" ? "black" : "white"} />} text2="" />
+                        <ContactCircle mainText={"Email"} text="sneakerszone@gmail.com" icon={<BsEnvelope size={35} color={theme === "dark" ? "black" : "white"} />} text2="" />
 
                         <ContactCircle mainText={t('contact.hours-main')} text={<><span className='font-bold'>{t('contact.mon-sat')}</span> {t('contact.hours1')} </>} text2={<><span className='font-bold'>{t('contact.sun')}</span> {t('contact.hours2')}</>} icon={<AiOutlineClockCircle size={35} color={theme === "dark" ? "black" : "white"} />} />
 

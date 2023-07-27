@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 interface FilterContextType {
     selectedBrand: string;
@@ -7,6 +7,7 @@ interface FilterContextType {
     selectedMin: string;
     selectedMax: string;
     selectedSort: string;
+    searchTerm: string;
     selectedSizes: Array<String>;
     setSelectedBrand: React.Dispatch<React.SetStateAction<string>>;
     setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
@@ -15,6 +16,7 @@ interface FilterContextType {
     setSelectedMax: React.Dispatch<React.SetStateAction<string>>;
     setSelectedSort: React.Dispatch<React.SetStateAction<string>>;
     setSelectedSizes: React.Dispatch<React.SetStateAction<Array<string>>>;
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface FilterProviderProps {
@@ -29,6 +31,7 @@ export const FilterContext = createContext<FilterContextType>({
     selectedMax: "",
     selectedSizes: [],
     selectedSort: "",
+    searchTerm: '',
     setSelectedMin: () => { },
     setSelectedMax: () => { },
     setSelectedBrand: () => { },
@@ -36,6 +39,7 @@ export const FilterContext = createContext<FilterContextType>({
     setSelectedPrice: () => { },
     setSelectedSizes: () => { },
     setSelectedSort: () => { },
+    setSearchTerm: () => { },
 });
 
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
@@ -45,7 +49,27 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     const [selectedMin, setSelectedMin] = useState("");
     const [selectedMax, setSelectedMax] = useState("");
     const [selectedSort, setSelectedSort] = useState("");
+    const [searchTerm, setSearchTerm] = useState('');
     const [selectedSizes, setSelectedSizes] = useState<Array<string>>([]);
+
+
+    useEffect(() => {
+        // Check if filters exist in localStorage
+        const searchTerm = localStorage.getItem('searchTerm');
+        const savedFilters = localStorage.getItem('shopFilters');
+        if (savedFilters) {
+            const parsedFilters = JSON.parse(savedFilters);
+            setSelectedBrand(parsedFilters.selectedBrand || 'All');
+            setSelectedCategory(parsedFilters.selectedCategory || '');
+            setSelectedPrice(parsedFilters.selectedPrice || '');
+            setSelectedMin(parsedFilters.selectedMin || '');
+            setSelectedMax(parsedFilters.selectedMax || '');
+            setSelectedSizes(parsedFilters.selectedSizes || []);
+            setSelectedSort(parsedFilters.selectedSort || '');
+        }
+        setSearchTerm(searchTerm || '');
+
+    }, []);
 
     return (
         <FilterContext.Provider
@@ -63,7 +87,9 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
                 selectedSizes,
                 setSelectedSizes,
                 selectedSort,
-                setSelectedSort
+                setSelectedSort,
+                searchTerm,
+                setSearchTerm
             }}
         >
             {children}

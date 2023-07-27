@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import zdjecie from "../../assets/images/xha.jpg"
+import zdjecie from "../../assets/images/profile_avatar.png"
 import ToogleButton from '../elements/ToogleButton';
 import RoundIcon from "../elements/RoundIcon";
 import MobileLink from "../elements/MobileLink";
@@ -27,6 +27,9 @@ import ProfileLinkMobile from '../elements/ProfileLinkMobile';
 import axios from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { UserContext } from '../elements/UserProvider';
+import storage from "../../firebase";
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { FilterContext } from "../elements/FilterProvider";
 
 
 interface NavbarProps {
@@ -38,6 +41,25 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = (props) => {
+    const {
+        selectedBrand,
+        setSelectedBrand,
+        selectedCategory,
+        setSelectedCategory,
+        selectedPrice,
+        setSelectedPrice,
+        selectedMin,
+        setSelectedMin,
+        selectedMax,
+        setSelectedMax,
+        selectedSizes,
+        setSelectedSizes,
+        selectedSort,
+        setSelectedSort,
+        searchTerm,
+        setSearchTerm
+    } = useContext(FilterContext);
+
 
     const { isLoginSelected, setLoginSelected } = useContext(LoginContext) || {};
     const { theme, setTheme } = useContext(ThemeContext);
@@ -45,11 +67,46 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     const [nav, setNav] = useState(false);
     const [dropdown, setDropdown] = useState(false);
     const [isSecondDivVisible, setSecondDivVisible] = useState(false);
+    const [imageUrl, setImageUrl] = useState(null);
 
     const currentCode = localStorage.getItem('i18nextLng')
 
     const { t } = useTranslation()
     const navigate = useNavigate();
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = event.target.value.toLowerCase();
+        localStorage.setItem("searchTerm", inputValue);
+        setSelectedBrand('All');
+        setSelectedCategory('');
+        setSelectedPrice('');
+        setSelectedMin('');
+        setSelectedMax('');
+        setSelectedSizes([]);
+        setSelectedSort('');
+
+        setSearchTerm(inputValue);
+
+    };
+
+    const handleImageLoad = async () => {
+        if (user && user.avatar) {
+            try {
+                const pathReference = ref(storage, `/avatars/${user.avatar}`);
+                const url = await getDownloadURL(pathReference);
+                setImageUrl(url as any);
+            } catch (error) {
+                console.log('Błąd podczas pobierania zdjęcia:', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            handleImageLoad();
+        }
+    }, [user]);
+
 
     const handleClickRegister = () => {
         setLoginSelected(false)
@@ -95,6 +152,12 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             });
     };
 
+    const handleSearch = () => {
+        localStorage.setItem("searchTerm", searchTerm);
+        navigate(`/shop`);
+    };
+
+
     return (
         <div className={`${props.background || 'bg-[#F8F6F4]'} ${props.darkBackground || 'dark:bg-[#292929]'} ${props.shadow || 'shadow-2xl'} ${props.extra}`} >
 
@@ -135,8 +198,16 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     {/* search input */}
 
                     <div className='hidden md:flex bg-white rounded-full items-center px-2 shadow-2xl hover:bg-gray-50 w-32 md:w-48 xl:w-64 '>
-                        <AiOutlineSearch size={20} />
-                        <input className='bg-transparent p-2 w-full focus:outline-none' type="text" placeholder='Szukaj' />
+                        <input
+                            className='bg-transparent p-2 w-full focus:outline-none'
+                            type="text"
+                            placeholder={t('navbar.search') as string}
+                            value={searchTerm}
+                            onChange={handleInputChange}
+                        />
+                        <button onClick={handleSearch} className='mr-2'>
+                            <AiOutlineSearch size={20} />
+                        </button>
                     </div>
 
                     {/* mobile icons */}
@@ -166,12 +237,13 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                             {isUserLoggedIn && (<div className='flex items-center space-x-2 ml-2'>
                                 <p className='text-lg whitespace-nowrap'>{t('profile.hello')} {user?.name}</p>
-                                <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
+                                <img src={imageUrl ? imageUrl : zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
                             </div>)}
 
                             <div className="border-b border-black/50 w-full"></div>
 
                             <ProfileLink text={t('profile.myprofile')} link="/profile" />
+                            <ProfileLink text={t('profile.address')} link="/address" />
                             <ProfileLink text={t('profile.orders')} link="/abra" />
                             <ProfileLink text={t('profile.projects')} link="/abra" />
                             <ProfileLink text={t('profile.help')} link="/contact" />
@@ -249,7 +321,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                             <MobileLink text={t('navbar.profile')} icon={<BsFillPersonFill size={25} className='mr-4' />} />
 
                         </div>
-                        <MobileLink text={t('navbar.favorite')} icon={<AiFillHeart size={25} className='mr-4' />} link="/fds" />
+                        <MobileLink text={t('navbar.favorite')} icon={<AiFillHeart size={25} className='mr-4' />} link="/favorite" />
                         <MobileLink text={t('navbar.cart')} icon={<BsFillCartFill size={25} className='mr-4' />} link="/fds" />
 
                         <div className='flex items-center my-2'>
@@ -305,13 +377,14 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                                     {isUserLoggedIn && (<div className='flex items-center space-x-2 mb-2 '>
                                         <p className='text-2xl whitespace-nowrap text-[#0078aa]'>{t('profile.hello')} {user?.name}</p>
-                                        <img src={zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
+                                        <img src={imageUrl ? imageUrl : zdjecie} className='rounded-full w-[2rem] h-[2rem]' />
                                     </div>)}
 
 
                                     <div className='flex flex-col space-y-4 text-2xl mt-4'>
 
-                                        <ProfileLinkMobile text={t('profile.myprofile')} link="/abra" />
+                                        <ProfileLinkMobile text={t('profile.myprofile')} link="/profile" />
+                                        <ProfileLinkMobile text={t('profile.address')} link="/address" />
                                         <ProfileLinkMobile text={t('profile.orders')} link="/abra" />
                                         <ProfileLinkMobile text={t('profile.projects')} link="/abra" />
                                         <ProfileLinkMobile text={t('profile.help')} link="/contact" />

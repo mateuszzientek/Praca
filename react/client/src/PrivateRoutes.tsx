@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { UserContext } from './components/elements/UserProvider';
 import LoadingAnimation from './components/elements/LoadingAnimation';
@@ -8,11 +8,14 @@ const PrivateRoutes = () => {
 
     if (!isUserLoggedIn) {
         window.location.replace("/login");
-        return <LoadingAnimation />; // Możesz zwrócić null lub inny komponent ładowania, jeśli chcesz
+        return <LoadingAnimation />;
     }
 
-    return <Outlet />;
+    return (
+        <Suspense fallback={<LoadingAnimation />}>
+            <Outlet />
+        </Suspense>
+    );
 };
 
 export default PrivateRoutes;
-

@@ -10,6 +10,9 @@ export interface IUser extends Document {
   email_offert?: boolean;
   resetToken?: string;
   resetTokenExpiration?: Date;
+  dateOfBirth?: Date;
+  gender?: string;
+  avatar?: string
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -22,6 +25,9 @@ const userSchema = new mongoose.Schema<IUser>({
   email_offert: { type: Boolean, default: false },
   resetToken: { type: String },
   resetTokenExpiration: { type: Date },
+  dateOfBirth: { type: Date },
+  gender: { type: String },
+  avatar: { type: String },
 });
 
 const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);

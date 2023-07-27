@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
-import axios, { AxiosRequestConfig } from 'axios';
+import React, { createContext, useState, useEffect } from "react";
+import axios, { AxiosRequestConfig } from "axios";
 
 interface User {
   _id: string | null;
@@ -7,8 +7,11 @@ interface User {
   surname: string | null;
   email: string | null;
   role: string | null;
-  newsletter: boolean
-  email_offert: boolean
+  newsletter: boolean;
+  email_offert: boolean;
+  dateOfBirth?: Date | null; // Pole data urodzenia
+  gender?: string | null;
+  avatar?: string | null;
 }
 
 interface UserContextProps {
@@ -16,7 +19,8 @@ interface UserContextProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isUserLoggedIn: boolean;
   setIsUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  isUserDataLoaded: boolean; // Dodatkowy stan śledzący, czy dane użytkownika zostały pobrane
+  isUserDataLoaded: boolean;
+  fetchUserData: () => void; // Dodatkowy stan śledzący, czy dane użytkownika zostały pobrane
 }
 
 export const UserContext = createContext<UserContextProps>({
@@ -25,18 +29,32 @@ export const UserContext = createContext<UserContextProps>({
   isUserLoggedIn: false,
   setIsUserLoggedIn: () => { },
   isUserDataLoaded: false,
+  fetchUserData: () => { },
 });
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [isUserDataLoaded, setIsUserDataLoaded] = useState(false); // Dodatkowy stan
+  const [isUserDataLoaded, setIsUserDataLoaded] = useState(false);
 
-  useEffect(() => {
+  const fetchUserData = () => {
     axios
-      .get('/user', { withCredentials: true } as AxiosRequestConfig)
+      .get("/user", { withCredentials: true } as AxiosRequestConfig)
       .then((response) => {
-        const { _id, name, surname, email, role, newsletter, email_offert, } = response.data;
+        const {
+          _id,
+          name,
+          surname,
+          email,
+          role,
+          newsletter,
+          email_offert,
+          gender,
+          dateOfBirth,
+          avatar
+        } = response.data;
         if (_id && name && email && role) {
           const userData: User = {
             _id: _id,
@@ -46,19 +64,26 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             role: role,
             newsletter: newsletter || false,
             email_offert: email_offert || false,
+            dateOfBirth: dateOfBirth || null,
+            gender: gender || null,
+            avatar: avatar || null,
           };
           setUser(userData);
           setIsUserLoggedIn(true);
         } else {
-          setUser(null)
+          setUser(null);
         }
       })
       .catch((error) => {
-        console.error('Błąd podczas pobierania użytkownika:', error);
+        console.error("Błąd podczas pobierania użytkownika:", error);
       })
       .finally(() => {
-        setIsUserDataLoaded(true); // Ustawienie stanu isUserDataLoaded na true, niezależnie od wyniku żądania
+        setIsUserDataLoaded(true);
       });
+  };
+
+  useEffect(() => {
+    fetchUserData();
   }, []);
 
   const userContextValue: UserContextProps = {
@@ -66,11 +91,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser,
     isUserLoggedIn,
     setIsUserLoggedIn,
-    isUserDataLoaded, // Dodanie isUserDataLoaded do kontekstu
+    isUserDataLoaded,
+    fetchUserData,
   };
 
   if (!isUserDataLoaded) {
-    return null; // Lub wyrenderuj komunikat oczekiwania
+    return null;
   }
 
   return (

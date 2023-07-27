@@ -8,6 +8,7 @@ const shoesHandler = async (req: Request, res: Response) => {
     const sizes = req.query.sizes as string;
     const selectedSizes = sizes ? sizes.split(",") : [];  
     
+    const name= req.query.name as string
     const sortType= req.query.sort as string
     const min = parseInt(req.query.min as string);
     const max = parseInt(req.query.max as string);
@@ -17,6 +18,8 @@ const shoesHandler = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string);
     const pageSize = parseInt(req.query.limit as string || '10');
     
+   console.log(name)
+
     const sizeQuery = {
       'sizes': {
         $elemMatch: {
@@ -31,6 +34,12 @@ const shoesHandler = async (req: Request, res: Response) => {
     if (brand && brand !== 'All') {
       query = query.where('brand').equals(brand);
     }
+
+    if (name) {
+      const regexPattern = new RegExp(name, 'i');
+      query = query.where('name').regex(regexPattern);
+    }
+
 
     if (category) {
       query = query.where('category').equals(category);
@@ -67,9 +76,11 @@ const shoesHandler = async (req: Request, res: Response) => {
     if (sortType === 'newest') {
       query = query.sort({ _id: -1 });
     } else if (sortType === 'priceLow') {
-      query = query.sort({ price: 1 }); // Sortuj według ceny od najniższej do najwyższej
+      query = query.sort({ price: 1 }); 
     } else if (sortType === 'priceHigh') {
-      query = query.sort({ price: -1 }); // Sortuj według ceny od najwyższej do najniższej
+      query = query.sort({ price: -1 }); 
+    }else if (sortType === 'default') {
+      query = query.sort({ _id: 1 }); 
     }
 
     const total = await Shoes.countDocuments(query);
@@ -83,23 +94,19 @@ const shoesHandler = async (req: Request, res: Response) => {
     
     const pages = Math.ceil(total / pageSize);
 
+    let correctedPage = page;
     if (page > pages) {
-      
-      return res.status(404).json({
-        status: 'fail',
-        error: 'Nie znaleziono strony',
-      });
+      correctedPage = pages;
     }
 
     const result = await query
-      .skip((page - 1) * pageSize)
+      .skip((correctedPage - 1) * pageSize)
       .limit(pageSize);
-
 
     res.status(200).json({
       status: 'success',
       count: result.length,
-      page,
+      page: correctedPage,
       pages,
       data: result,
     });
