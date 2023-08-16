@@ -20,21 +20,19 @@ import { AxiosRequestConfig } from "axios";
 import { UserContext } from "../elements/UserProvider";
 import ResetPasswordDiv from "../elements/ResetPasswordDiv";
 import CircleSvg from "../elements/CircleSvg";
-
-interface Error {
-  msg: string;
-  type: string;
-  value: string;
-  path: string;
-  location: string;
-}
+import { ErrorInterface } from "src/types";
 
 function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const wasOnResetPassword =
-    localStorage.getItem("wasOnResetPassword") === "true";
+  const lastVisitedPath = localStorage.getItem("lastVisitedPath");
+
+  const changeCart = localStorage.getItem("changeCart");
+
+  useEffect(() => {
+    window.history.replaceState(null, "", "/");
+  }, []);
 
   const { theme, setTheme } = useContext(ThemeContext);
   const { isLoginSelected, setLoginSelected } = useContext(LoginContext);
@@ -51,7 +49,7 @@ function Login() {
     resetEmail: "",
   });
   const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<
-    Error[]
+    ErrorInterface[]
   >([]);
   const [errorsServer, setErrorsServer] = useState("");
   const { setUser, setIsUserLoggedIn } = useContext(UserContext);
@@ -226,7 +224,6 @@ function Login() {
             setErrorsVadlidationServer([]);
             setIsUserLogined(true);
             setIsUserLoggedIn(true);
-
             const {
               _id,
               name,
@@ -249,15 +246,41 @@ function Login() {
 
             setUser(user);
 
-            if (wasOnResetPassword) {
-              localStorage.removeItem("wasOnResetPassword");
-              setTimeout(() => {
-                navigate("/");
-              }, 2000);
+            if (changeCart === "true") {
+              console.log("1");
+              axios
+                .post("/changeCart", { userId: _id })
+                .then(() => {
+                  console.log("2");
+                  localStorage.removeItem("changeCart");
+
+                  setTimeout(() => {
+                    if (lastVisitedPath) {
+                      navigate(lastVisitedPath);
+                    } else {
+                      navigate("/");
+                    }
+                  }, 1500);
+                })
+                .catch((error) => {
+                  if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.error
+                  ) {
+                    setErrorsServer(error.response.data.error);
+                  } else {
+                    console.log(error);
+                  }
+                });
             } else {
               setTimeout(() => {
-                navigate(-1);
-              }, 2000);
+                if (lastVisitedPath) {
+                  navigate(lastVisitedPath);
+                } else {
+                  navigate("/");
+                }
+              }, 1500);
             }
           })
           .catch((error) => {
@@ -316,9 +339,14 @@ function Login() {
             setErrorsServer("");
             setErrorsVadlidationServer([]);
             setIsUserSaved(true);
+
             setTimeout(() => {
-              window.location.reload();
+              setIsUserSaved(false);
+              setLoginSelected(true)
+              setEmail("")
+              setPassword("")
             }, 2000);
+
           })
           .catch((error) => {
             if (
@@ -445,8 +473,8 @@ function Login() {
             <div className="flex mt-10 text-2xl font-lato mb-2">
               <button
                 className={`px-8 py-4 border-b-2  dark:hover:text-[#72cff7] hover:text-[#72cff7] ${isLoginSelected
-                    ? " border-[#72cff7]  text-[#72cff7]"
-                    : "border-black/30 dark:border-white text-black/70 dark:text-white"
+                  ? " border-[#72cff7]  text-[#72cff7]"
+                  : "border-black/30 dark:border-white text-black/70 dark:text-white"
                   }`}
                 onClick={() => {
                   handleChooseClick();
@@ -457,8 +485,8 @@ function Login() {
               </button>
               <button
                 className={`px-8 py-4 border-b-2  dark:hover:text-[#72cff7] hover:text-[#72cff7] ${isLoginSelected
-                    ? "border-black/30 dark:border-white text-black/70 dark:text-white"
-                    : "border-[#72cff7]  text-[#72cff7]"
+                  ? "border-black/30 dark:border-white text-black/70 dark:text-white"
+                  : "border-[#72cff7]  text-[#72cff7]"
                   }`}
                 onClick={() => {
                   handleChooseClick();
@@ -561,14 +589,15 @@ function Login() {
 
               {isLoginSelected && (
                 <button
+                  disabled={isSubmittingLogin}
                   type="submit"
-                  className="mt-6 w-[100%] h-[3rem] bg-black/80 dark:bg-[#72cff7] px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
+                  className="mt-6 w-[100%] h-[3rem]  disabled:bg-[#c9c9c9]  bg-[#9fdaf3] px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
                 >
                   <div className="flex items-center justify-center">
                     {isSubmittingLogin && (
-                      <CircleSvg color="white" secColor="white" />
+                      <CircleSvg color="black" secColor="black" />
                     )}
-                    <p className="text-white dark:text-black font-lato text-xl">
+                    <p className="text-black/80 font-lato text-xl">
                       {t("login.signin")}
                     </p>
                   </div>
@@ -589,14 +618,15 @@ function Login() {
 
               {!isLoginSelected && (
                 <button
+                  disabled={isSubmittingRegister}
                   type="submit"
-                  className="mt-6 w-[100%] h-[3rem] bg-black/80 dark:bg-[#72cff7] px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
+                  className="mt-6 w-[100%] h-[3rem] bg-[#9fdaf3] disabled:bg-[#c9c9c9]  px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
                 >
                   <div className="flex items-center justify-center">
                     {isSubmittingRegister && (
-                      <CircleSvg color="white" secColor="white" />
+                      <CircleSvg color="black" secColor="black" />
                     )}
-                    <p className="text-white dark:text-black font-lato text-xl">
+                    <p className="text-black font-lato text-xl">
                       {t("login.create")}
                     </p>
                   </div>
@@ -634,7 +664,7 @@ function Login() {
 
             <button
               onClick={() => {
-                window.open("http://localhost:5000/auth/google", "_self");
+                window.open(`http://localhost:5000/auth/google`, "_self");
               }}
               className="flex items-center justify-center space-x-2 mt-10 mb-10 w-[70%] h-[3rem] bg-white border-black border-2  px-4 rounded-3xl hover:scale-105 transition ease-in-out duration-300"
             >

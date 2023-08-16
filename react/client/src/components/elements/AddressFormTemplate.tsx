@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
 import CircleSvg from "../elements/CircleSvg";
+
 
 interface Address {
     _id: string;
@@ -13,6 +14,7 @@ interface Address {
     postalCode: string;
     telephone: string;
     extra: string;
+    country: string
     isDefault: boolean;
 }
 
@@ -25,6 +27,7 @@ interface AddressFormTemplateProps {
     postalCode: string;
     telephone: string;
     extra: string;
+    country: string
     addressId: string;
     isDefault: boolean;
     isLoading: boolean
@@ -46,6 +49,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
     const [postalCode, setPostalCode] = useState(props.postalCode ? props.postalCode : "");
     const [telephone, setTelephone] = useState(props.telephone ? props.telephone : "");
     const [extra, setExtra] = useState(props.extra ? props.extra : "");
+    const [country, setCountry] = useState(props.country ? props.country : "");
     const [errors, setErrors] = useState({
         name: "",
         surname: "",
@@ -53,8 +57,39 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
         city: "",
         postalCode: "",
         telephone: "",
+        country: ""
     });
 
+    const countries = [
+        {
+            name: "poland",
+            code: "pl",
+        },
+        {
+            name: "united_kingdom",
+            code: "gb",
+        },
+        {
+            name: "ukraine",
+            code: "ua",
+        },
+        {
+            name: "germany",
+            code: "de",
+        },
+        {
+            name: "czech_republic",
+            code: "cz",
+        },
+    ];
+
+    const [showCountryDiv, setShowCountryDiv] = useState(false);
+
+
+    const handleChangeCountry = (name: string) => {
+        setCountry(name)
+        setShowCountryDiv(false)
+    }
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const updated = event.target.value;
@@ -108,6 +143,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
             city: "",
             postalCode: "",
             telephone: "",
+            country: ""
         };
 
         if (name && !/^[a-zA-Z]+$/.test(name)) {
@@ -160,7 +196,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
 
         const isValid = validateData();
 
-        if (!name || !surname || !street || !city || !postalCode || !telephone) {
+        if (!name || !surname || !street || !city || !postalCode || !telephone || !country) {
             // Przynajmniej jedno z pól jest puste
             setErrors({
                 name: !name ? t("loginError.nameReq") : "",
@@ -169,6 +205,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
                 city: !city ? t("address.cityReq") : "",
                 postalCode: !postalCode ? t("address.postalCodeReq") : "",
                 telephone: !telephone ? t("address.telephoneReq") : "",
+                country: !country ? t("address.countryReq") : "",
             });
             return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
         }
@@ -183,6 +220,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
                 postalCode,
                 telephone,
                 extra,
+                country,
                 _id: props.addressId,
                 isDefault: props.isDefault,
             };
@@ -193,8 +231,8 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
 
 
     return (
-        <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-            <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem]  lg:w-[35rem]  xl:w-[45rem]  rounded-lg">
+        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center ">
+            <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black  w-[25rem]  lg:w-[35rem]  xl:w-[45rem]  rounded-lg">
                 <div onClick={props.setShowDiv}>
                     <AiOutlineClose
                         size={30}
@@ -306,7 +344,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
                         </div>
                     </div>
                     <input
-                        className={`mt-6 w-[49%]  px-2 h-[3rem] border-2 border-black/50 `}
+                        className={`mt-6 w-[100%]  px-2 h-[3rem] border-2 border-black/50 `}
                         placeholder={t("address.telephone") as string}
                         onChange={handleTelephoneChange}
                         value={telephone}
@@ -321,7 +359,40 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
                         {errors.telephone ? errors.telephone : t("address.text5")}
                     </p>
 
+                    <div className='relative'>
+                        <button
+                            type='button'
+                            onClick={() => setShowCountryDiv(!showCountryDiv)} className='relative flex justify-between items-center border-[1px] px-4 border-black/30 dark:border-white/50 h-[3rem] w-full mt-6 hover:bg-black/10'>
+                            <p className='text-lg text-black/80 dark:text-white/80'>
+                                {country === "" ? t("address.country") : t(`country.${country}`)}
+                            </p>
+                            {showCountryDiv
+                                ? <AiOutlineUp size={20} color={theme === "dark" ? "white" : "black"} />
+                                : <AiOutlineDown size={20} color={theme === "dark" ? "white" : "black"} />
+                            }
+                        </button>
+                        {showCountryDiv && (
+                            <div className='absolute top-[3.2rem] left-0 border-[1px]  border-black/30  bg-white dark:bg-[#b8b8b8] w-full z-10'>
+                                {countries.map(({ code, name }) => (
+                                    <button
+                                        onClick={() => handleChangeCountry(name)}
+                                        key={code}
+                                        className='flex justify-start items-center px-4 py-2 w-full hover:bg-black/10'>
+
+                                        <span className={`fi fi-${code} mr-2`} ></span>
+                                        {t(`country.${name}`)}
+                                    </button>
+                                ))}
+                            </div>)}
+                    </div>
+                    {errors.country && (
+                        <p className="text-red-500 text-sm mt-1 ml-3">
+                            {errors.country}
+                        </p>
+                    )}
+
                     <button
+                        disabled={props.isLoading}
                         type="submit"
                         className={`mt-6 w-full px-2 h-[3rem] dark:bg-white/50 bg-black/80 hover:scale-105 ease-in-out duration-300`}
                     >

@@ -10,6 +10,7 @@ export interface AddressInterface extends Document {
   telephone: string;
   extra?: string;
   isDefault: boolean;
+  country: string
 }
 
 const addressSchema = new mongoose.Schema<AddressInterface>({
@@ -22,6 +23,7 @@ const addressSchema = new mongoose.Schema<AddressInterface>({
   telephone: { type: String, required: true },
   extra: { type: String },
   isDefault: { type: Boolean, default: false },
+  country: { type: String, required: true },
 });
 
 const Address: Model<AddressInterface> = mongoose.model<AddressInterface>(

@@ -8,7 +8,7 @@ interface ProfileLinkProps {
 
 function ProfileLinkMobile(props: ProfileLinkProps) {
     return (
-        <Link className='text-xl whitespace-nowrap  hover:scale-110 transition ease-in-out duration-300 ' to={props.link}>{props.text}</Link>
+        <Link className='text-xl whitespace-nowrap text-black/80 dark:text-white/80  hover:bg-black/10  dark:hover:bg-white/20 w-full pl-4 py-2' to={props.link}>{props.text}</Link>
     );
 }
 

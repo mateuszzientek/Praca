@@ -161,7 +161,10 @@ function QuestionsSection() {
                             <p key={index} className="text-red-500 text-base ">{error.msg}</p>
                         ))}
 
-                        <button type="submit" className='text-2xl rounded-full bg-[#97DEFF] shadow-button px-6 h-[3rem] mt-10 transform hover:scale-110 transition ease-out duration-300 '>
+                        <button
+                            type="submit"
+                            disabled={showLoading}
+                            className='text-2xl rounded-full bg-[#97DEFF] disabled:bg-[#c9c9c9] shadow-button px-6 h-[3rem] mt-10 transform hover:scale-110 transition ease-out duration-300 '>
                             <div className='flex items-center justify-center'>
                                 {showLoading && (<CircleSvg color="black" secColor='black' />)}
                                 <p className='text-black/80' >{t('questionSection.button')}</p>

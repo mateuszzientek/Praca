@@ -21,7 +21,8 @@ const authGoogleCallbackHandler= [
         }
   
         console.log("Logowanie powiodło się");
-        return res.redirect("http://localhost:3000/");
+
+        return res.redirect(`http://localhost:3000/redirectAfterGoogleLogin`);
       });
     })(req, res, next);
   }

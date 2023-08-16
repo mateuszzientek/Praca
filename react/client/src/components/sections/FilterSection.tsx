@@ -28,7 +28,9 @@ function FilterSection(props: FilterSectionProps) {
         selectedMax,
         setSelectedMax,
         selectedSizes,
-        setSelectedSizes } = useContext(FilterContext);
+        setSelectedSizes,
+        searchTerm,
+        setSearchTerm } = useContext(FilterContext);
 
     const sizes = Array.from({ length: 11 }, (_, index) => 36 + index);
     const categories = ['high', 'low', 'sport'];
@@ -97,6 +99,17 @@ function FilterSection(props: FilterSectionProps) {
         setSelectedSizes([])
     }
 
+    const formatSearchTerm = (term: string) => {
+        if (!term) return ''; // Return an empty string if searchTerm is empty
+
+        return term.charAt(0).toUpperCase() + term.slice(1);
+    };
+
+    const handleClickRemoveSearchTerm = () => {
+        localStorage.removeItem("searchTerm");
+        setSearchTerm("");
+    };
+
     return (
         <>
             {props.showFilter ? <div className='bg-black/80 fixed w-full h-screen z-10 top-0 left-0'></div> : ''}
@@ -104,6 +117,16 @@ function FilterSection(props: FilterSectionProps) {
                 <AiOutlineClose onClick={() => props.setShowFilter(!props.showFilter)} size={25} color={theme === 'dark' ? "white" : "black"} className='absolute right-10 top-10 cursor-pointer' />
 
                 <div className='flex flex-col items-start ml-10 mb-10'>
+
+                    {searchTerm && (
+                        <div className="flex items-center mt-10 space-x-4">
+                            <p className="text-2xl text-black dark:text-white">
+                                {formatSearchTerm(searchTerm)}
+                            </p>
+                            <div onClick={handleClickRemoveSearchTerm} className="cursor-pointer">
+                                <AiOutlineClose size={30} color={theme === "dark" ? "white" : "black"} />
+                            </div>
+                        </div>)}
 
                     <div className='justify-start grid grid-cols-2 gap-4 mt-10'>
 

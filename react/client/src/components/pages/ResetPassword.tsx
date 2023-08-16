@@ -40,7 +40,6 @@ function ResetPassword() {
     const [isSubmittingButton, setIsSubmittingButton] = useState(false);
 
 
-
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
@@ -48,7 +47,6 @@ function ResetPassword() {
     const handleSecPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSecPassword(event.target.value);
     };
-
 
     const validateData = () => {
         setMessage("");

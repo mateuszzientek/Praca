@@ -59,7 +59,7 @@ function Favorite() {
           setIsLoadingImages(false); // Zakończono ładowanie zdjęć
         }
       } catch (error) {
-        console.log(error);
+        console.log("blad");
       } finally {
         setLoading(false);
       }
@@ -67,6 +67,8 @@ function Favorite() {
 
     fetchFavoriteShoes();
   }, [user]);
+
+  console.log(favoriteShoes);
 
   const handleHeartClick = (shoe: Shoe) => {
     axios
@@ -111,7 +113,7 @@ function Favorite() {
         </div>
       ) : (
         <>
-          <div className="flex flex-wrap w-[90%] justify-center  mx-auto gap-10  mt-10 gap-y-10 mb-10">
+          <div className="flex flex-wrap w-[90%] justify-center  mx-auto gap-10  mt-10 gap-y-10 pb-10">
             {favoriteShoes.map((shoe) => (
               <div key={shoe._id}>
                 <ProductTemplate

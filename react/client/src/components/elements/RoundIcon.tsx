@@ -7,7 +7,7 @@ interface RoundIconProps {
 
 function RoundIcon(props: RoundIconProps) {
 
-  const iconClassName = `hidden lg:flex bg-[#97DEFF] rounded-full ml-4 p-2 shadow-xl my-4 transform hover:scale-125 hover:bg-opacity-75 transition ease-out duration-300 ${props.extra}`;
+  const iconClassName = `hidden lg:flex bg-[#97DEFF] rounded-full ml-4 p-2 shadow-xl my-4 ${props.extra}`;
 
   return (
     <div className={iconClassName}>

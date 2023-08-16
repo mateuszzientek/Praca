@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import BrandCard from "../elements/BrandCard";
 import adidas from '../../assets/images/adidas.jpg';
@@ -6,8 +6,11 @@ import newBalance from '../../assets/images/NewBalance.jpg';
 import nike from '../../assets/images/nike.jpg';
 
 
+
+
 function HeadLineCards() {
     const { t } = useTranslation()
+
 
     return (
 
@@ -26,14 +29,18 @@ function HeadLineCards() {
                     <BrandCard
                         text={t('headlineCards.text-nike')}
                         brand={nike}
-                        alt="Logo Nike" />
+                        alt="Logo Nike"
+                        brandName='Nike'
+                    />
 
                     {/* Adidas card*/}
 
                     <BrandCard
                         text={t('headlineCards.text-adidas')}
                         brand={adidas}
-                        alt="Logo Adidas" />
+                        alt="Logo Adidas"
+                        brandName='Adidas'
+                    />
 
                     {/* New Balance card*/}
                 </div>
@@ -41,7 +48,9 @@ function HeadLineCards() {
                     <BrandCard
                         text={t('headlineCards.text-newbalance')}
                         brand={newBalance}
-                        alt="Logo New balance" />
+                        alt="Logo New balance"
+                        brandName='New Balance'
+                    />
                 </div>
 
             </div>

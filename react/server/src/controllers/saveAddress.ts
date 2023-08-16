@@ -56,10 +56,27 @@ const saveAddressHandler = [
         city,
         postalCode,
         telephone,
+        country,
         extra,
       } = req.body;
 
       await Address.updateMany({ userId }, { $set: { isDefault: false } });
+
+      const isAddressExist = await Address.exists({
+        userId,
+        name,
+        surname,
+        street,
+        city,
+        postalCode,
+        telephone,
+        country
+     });
+          
+        if (isAddressExist) {
+              return res.status(200).json({ exist: "Address already exists" });
+        }
+        
 
       const address = new Address({
         userId,
@@ -69,6 +86,7 @@ const saveAddressHandler = [
         city,
         postalCode,
         telephone,
+        country,
         isDefault: true,
       });
 

@@ -9,11 +9,14 @@ import { useTranslation } from "react-i18next";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import storage from "../../firebase";
+import { CartContext } from "../elements/CartProvider";
 import { UserContext } from "../elements/UserProvider";
 import { useNavigate } from "react-router-dom";
 import tick from "../../assets/images/tick.png"
 import { AiOutlineClose } from "react-icons/ai";
 import InfoDivBottom from "../elements/InfoDivBottom";
+import CircleSvg from "../elements/CircleSvg";
+import { formatPrice } from 'src/currencyUtils';
 
 interface ShoeSize {
   size: string;
@@ -39,9 +42,11 @@ function ShoeView() {
   const { id } = useParams();
   const { theme, setTheme } = useContext(ThemeContext);
   const { user, isUserLoggedIn, isUserDataLoaded } = useContext(UserContext);
+  const { quantityCart, setQuantityCart } = useContext(CartContext);
 
   const [shoe, setShoe] = useState<Shoe>({} as Shoe);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDataFetched, setIsDataFetched] = useState(false);
   const [arePhotosLoaded, setArePhotosLoaded] = useState(false);
   const [photos, setPhotos] = useState<string[]>([]);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
@@ -49,13 +54,7 @@ function ShoeView() {
   const [error, setError] = useState("");
   const [showDiv, setShowDiv] = useState(false)
   const [showQuantityMessage, setShowQuantityMessage] = useState(true);
-
-  const convertPriceToPLN = (priceUSD: number) => {
-    const exchangeRateUSDToPLN = 4.08;
-    const pricePLN = priceUSD * exchangeRateUSDToPLN;
-    const roundedPricePLN = Math.round(pricePLN / 5) * 5; // Zaokrąglenie do najbliższej liczby kończącej się na 5 lub 0
-    return roundedPricePLN;
-  };
+  const [errorsServer, setErrorsServer] = useState("");
 
   const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowQuantityMessage(true)
@@ -64,8 +63,11 @@ function ShoeView() {
   }
 
   useEffect(() => {
+
+
     const fetchData = async () => {
       try {
+
         const response = await axios.get(`/getShoeById?id=${id}`);
         setShoe(response.data);
         setIsLoading(false);
@@ -151,7 +153,8 @@ function ShoeView() {
     setError("")
 
     if (!selectedSize) {
-      setError("Przed dodaniem wybierz rozmiar")
+      const message = t("shoeView.text2")
+      setError(message)
       return
     }
 
@@ -166,36 +169,77 @@ function ShoeView() {
       requestData.userId = user._id;
     }
 
+    setIsDataFetched(true)
+
     axios.post("/addToCart", requestData)
       .then((response) => {
-        setSelectedSize("")
-        setShowDiv(true)
-        setShowQuantityMessage(false)
+
+        if (response.data.limit) {
+          setShowQuantityMessage(false)
+          const message = t("shoeView.text6")
+          setError(message)
+          return
+        } else {
+
+          const userIdParam = user?._id || '';
+
+          axios.get(`/getQuantityCart?userId=${userIdParam}`)
+            .then((response) => {
+              setQuantityCart(response.data.itemCount)
+
+              setSelectedSize("")
+              setShowDiv(true)
+              setShowQuantityMessage(false)
+            })
+            .catch((error) => {
+              if (
+                error.response &&
+                error.response.data &&
+                error.response.data.error
+              ) {
+                setErrorsServer(error.response.data.error);
+              } else {
+                console.log(error);
+              }
+            })
+        }
 
       }).catch((error) => {
-        console.log(error)
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorsServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      }).finally(() => {
+        setIsDataFetched(false)
       })
 
   }
 
-
-
   return (
     <>
+      <div className="flex justify-center">
+        {errorsServer && <InfoDivBottom color="bg-red-500" text={errorsServer} />}
+      </div>
+
       {showDiv && (
         <div className="bg-black/50 fixed w-full h-screen z-10 flex justify-center items-center animate-fade-in-long ">
           <div className="relative flex flex-col items-center bg-white dark:bg-black w-[23rem] h-[23rem]  lg:w-[30rem] lg:h-[30rem]  rounded-full">
             <img src={tick} className="w-[6rem] h-[6rem] lg:w-[8rem] lg:h-[8rem] mt-10 lg:mt-20" />
             <p className="text-2xl text-black/80 dark:text-white/80 mt-4">
-              Item added tou your cart!
+              {t("shoeView.text3")}
             </p>
 
             <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0 mt-8 lg:mt-10">
-              <button onClick={() => setShowDiv(!showDiv)} className="w-[10rem] h-[3rem] border-[3px] border-[#32c1ff] rounded-md">
-                <p className="text-[#32c1ff] text-sm ">KONTYNYUJ ZAKUPY</p>
+              <button onClick={() => setShowDiv(!showDiv)} className="w-[10rem] h-[3rem] border-[3px] border-[#32c1ff] rounded-md hover:bg-black/5">
+                <p className="text-[#32c1ff] text-sm ">{t("shoeView.text4")}</p>
               </button>
-              <button className="w-[10rem] h-[3rem] border-[3px] border-[#23bf61]  rounded-md">
-                <p className="text-[#23bf61] text-sm ">IDZ DO KOSZYKA</p>
+              <button onClick={() => navigate("/cart")} className="w-[10rem] h-[3rem] border-[3px] border-[#23bf61]  rounded-md hover:bg-black/5">
+                <p className="text-[#23bf61] text-sm ">{t("shoeView.text5")}</p>
               </button>
             </div>
           </div>
@@ -253,19 +297,11 @@ function ShoeView() {
                   <div className="flex items-center mt-4 space-x-2">
                     {shoe.discountPrice !== 0 && (
                       <p className="line-through text-2xl text-black/50 dark:text-white/50">
-                        {currentCode !== "pl" ? t("currencySymbol") : ""}
-                        {currentCode === "pl"
-                          ? convertPriceToPLN(shoe.discountPrice)
-                          : shoe.discountPrice + ",00"}{" "}
-                        {currentCode === "pl" ? t("currencySymbol") : ""}
+                        {formatPrice(shoe.discountPrice, t)}
                       </p>
                     )}
                     <p className="text-2xl xl:text-3xl text-black/90 dark:text-white/90">
-                      {currentCode !== "pl" ? t("currencySymbol") : ""}
-                      {currentCode === "pl"
-                        ? convertPriceToPLN(shoe.price)
-                        : shoe.price + ",00"}{" "}
-                      {currentCode === "pl" ? t("currencySymbol") : ""}
+                      {formatPrice(shoe.price, t)}
                     </p>
                   </div>
                   <p className="text-lg xl:text-xl text-black/90 dark:text-white/90 mb-3 mt-8">
@@ -283,8 +319,10 @@ function ShoeView() {
                           type="radio"
                           className="peer sr-only"
                           name="sizeChoice"
+                          disabled={size.quantity === 0}
                           value={size.size}
                           onChange={handleChangeSize}
+                          checked={size.size === selectedSize}
                         />
                         <div
                           className={` flex justify-center space-x-1 items-center rounded w-[4rem] h-[2rem] xl:w-[5rem] xl:h-[3rem] text-black/80 dark:text-white  shadow-md ${size.quantity === 0
@@ -302,7 +340,7 @@ function ShoeView() {
                   {showQuantityMessage && selectedSize &&
                     shoe.sizes.find((size) => size.size === selectedSize && size.quantity < 5 && size.quantity > 0) && (
                       <p className="text-red-600 text-lg mt-2">
-                        {`Śpiesz się, zostało tylko ${shoe.sizes.find((size) => size.size === selectedSize && size.quantity)?.quantity} `}
+                        {t("shoeView.text1")} {shoe.sizes.find((size) => size.size === selectedSize && size.quantity)?.quantity}
                       </p>
                     )}
 
@@ -311,7 +349,16 @@ function ShoeView() {
                   </p>}
 
                   <div className="flex space-x-4 mt-6">
-                    <button onClick={addToCart} className="py-3 px-6 rounded-lg shadow-lg bg-[#97DEFF] transform hover:scale-105 ease-in-out duration-300">
+                    <button
+                      onClick={addToCart}
+                      disabled={isDataFetched}
+                      className="flex items-center py-3 px-6 rounded-lg shadow-lg bg-[#97DEFF] disabled:bg-[#c9c9c9] transform hover:scale-105 ease-in-out duration-300">
+                      {isDataFetched && (
+                        <CircleSvg
+                          color={theme === "dark" ? "white" : "black"}
+                          secColor={theme === "dark" ? "white" : "black"}
+                        />
+                      )}
                       <p className="text-lg">{t("shoeView.cart")}</p>
                     </button>
                     <button

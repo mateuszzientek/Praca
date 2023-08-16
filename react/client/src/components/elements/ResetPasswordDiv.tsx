@@ -28,8 +28,8 @@ function ResetPasswordDiv(props: ResetPasswordDivProps) {
     const { t } = useTranslation()
 
     return (
-        <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-            <div className="relative flex flex-col  items-center bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] lg:w-[35rem] lg:h-[28rem] xl:w-[45rem] xl:h-[30rem] rounded-2xl">
+        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center ">
+            <div className="relative flex flex-col  items-center bg-white dark:bg-black w-[25rem] h-[27rem] lg:w-[35rem] lg:h-[28rem] xl:w-[45rem] xl:h-[30rem] rounded-2xl">
                 <div onClick={props.onResetPassword}>
                     <AiOutlineClose size={30} color={theme === 'dark' ? "white" : "black"} className='absolute right-8 top-6 cursor-pointer hover:scale-125' />
                 </div>

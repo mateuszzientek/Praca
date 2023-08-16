@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
 import Footer from "./components/sections/Footer";
@@ -9,101 +9,155 @@ import { FilterProvider } from "./components/elements/FilterProvider";
 import { LoginProvider } from "./components/elements/LoginProvider";
 import LoadingAnimation from "./components/elements/LoadingAnimation";
 import PrivateRoutes from "./PrivateRoutes";
-import Profile from "./components/pages/Profile";
-const Login = lazy(() => import("./components/pages/Login"))
+import { CartProvider } from "./components/elements/CartProvider";
+import CheckoutRoute from "./CheckoutRoute";
+import SubmitOrderRoute from "./SubmitOrderRoute";
+import AdminPanelRoute from "./AdminPanelRoute";
+const Login = lazy(() => import("./components/pages/Login"));
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));
-const ResetPassword = lazy(() => import('./components/pages/ResetPassword'))
-const Shop = lazy(() => import('./components/pages/Shop'))
-const ShoeView = lazy(() => import('./components/pages/ShoeView'))
-const Favorite = lazy(() => import('./components/pages/Favorite'))
-const Address = lazy(() => import('./components/pages/Address'))
-
+const ResetPassword = lazy(() => import("./components/pages/ResetPassword"));
+const Shop = lazy(() => import("./components/pages/Shop"));
+const ShoeView = lazy(() => import("./components/pages/ShoeView"));
+const Favorite = lazy(() => import("./components/pages/Favorite"));
+const Address = lazy(() => import("./components/pages/Address"));
+const Cart = lazy(() => import("./components/pages/Cart"));
+const Checkout = lazy(() => import("./components/pages/Checkout"));
+const Profile = lazy(() => import("./components/pages/Profile"));
+const RedirectAfterGoogleLogin = lazy(
+  () => import("./components/pages/RedirectAfterGoogleLogin")
+);
+const SubmitOrder = lazy(() => import("./components/pages/SubmitOrder"));
+const Order = lazy(() => import("./components/pages/Order"));
+const AdminPanel = lazy(() => import("./components/pages/AdminPanel"));
 
 const App: React.FC = () => {
   const location = useLocation();
 
+  useEffect(() => {
+    // Sprawdzamy, czy bieżąca ścieżka nie jest '/login' ani '/redirectAfterGoogleLogin'
+    if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/redirectAfterGoogleLogin" &&
+      !location.pathname.startsWith("/resetPassword/") &&
+      location.pathname !== "/submitOrder"
+    ) {
+      localStorage.setItem("lastVisitedPath", location.pathname);
+    }
+  }, [location]);
+
   return (
-    <FilterProvider >
+    <FilterProvider>
       <UserProvider>
         <ThemeContextProvider>
-          <LoginProvider>
-            <ButtonToUp />
-            <Routes>
-              <Route element={<PrivateRoutes />}>
-                <Route element={<Profile />} path="/profile" />
-                <Route element={<Address />} path="/address" />
-              </Route>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/favorite"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <Favorite />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/contact"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <Contact />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/shop"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <Shop />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/shop/:pageNumber"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <Shop />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/shoeView/:id"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <ShoeView />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/login"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <Login />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/resetPassword/:token"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <ResetPassword />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="*"
-                element={
-                  <Suspense fallback={<LoadingAnimation />}>
-                    <PageNotFound />
-                  </Suspense>
-                }
-              />
-            </Routes>
-            {location.pathname !== "/login" && location.pathname !== "*" && !location.pathname.startsWith("/resetPassword/") && <Footer />}
-          </LoginProvider>
+          <CartProvider>
+            <LoginProvider>
+              <ButtonToUp />
+              <Routes>
+                <Route element={<PrivateRoutes />}>
+                  <Route element={<Profile />} path="/profile" />
+                  <Route element={<Address />} path="/address" />
+                  <Route element={<Order />} path="/order" />
+                </Route>
+                <Route element={<CheckoutRoute />}>
+                  <Route element={<Checkout />} path="/checkout" />
+                </Route>
+                <Route element={<AdminPanelRoute />}>
+                  <Route element={<AdminPanel />} path="/adminPanel" />
+                </Route>
+                <Route element={<SubmitOrderRoute />}>
+                  <Route element={<SubmitOrder />} path="/submitOrder" />
+                </Route>
+                <Route path="/" element={<Home />} />
+                <Route
+                  path="/favorite"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Favorite />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/redirectAfterGoogleLogin"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <RedirectAfterGoogleLogin />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/contact"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Contact />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/cart"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Cart />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/shop"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Shop />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/shop/:pageNumber"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Shop />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/shoeView/:id"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <ShoeView />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/login"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Login />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/resetPassword/:token"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <ResetPassword />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="*"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <PageNotFound />
+                    </Suspense>
+                  }
+                />
+              </Routes>
+              {location.pathname !== "/login" &&
+                location.pathname !== "/redirectAfterGoogleLogin" &&
+                location.pathname !== "*" &&
+                !location.pathname.startsWith("/resetPassword/") && <Footer />}
+            </LoginProvider>
+          </CartProvider>
         </ThemeContextProvider>
-      </UserProvider >
+      </UserProvider>
     </FilterProvider>
   );
 };

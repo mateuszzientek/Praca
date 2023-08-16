@@ -13,6 +13,27 @@ body {
   overflow-x: hidden;
 }
 
+input[type="text"]:focus~.input-text-light,
+.input-text {
+  @apply transform bg-white -translate-y-6 -translate-x-2;
+}
+
+input[type="text"]:focus~.input-text-dark,
+.input-text {
+  @apply transform bg-[#313131] -translate-y-6 -translate-x-2;
+}
+
+.input-text-light.input-text-active {
+  background: white;
+  transform: translate(-8px, -24px);
+}
+
+/* For the dark theme */
+.input-text-dark.input-text-active {
+  background: #313131;
+  transform: translate(-8px, -24px);
+}
+
 .main-background {
   background-image: url("./assets/images/background.jpg");
   background-size: 100% 100%;
@@ -296,4 +317,18 @@ button[disabled] {
 
 .animate-sort-in {
   animation: animate-sort-in 0.4s ease-out;
+}
+
+@keyframes animateOpacity {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-opacity {
+  animation: animateOpacity 0.7s ease-out;
 }

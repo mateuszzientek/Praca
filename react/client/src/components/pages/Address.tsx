@@ -32,13 +32,12 @@ interface Address {
   telephone: string;
   extra: string;
   isDefault: boolean;
+  country: string;
 }
 
 function Address() {
-
   const { t } = useTranslation();
-  const { user, isUserDataLoaded, fetchUserData } =
-    useContext(UserContext);
+  const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
   const { theme, setTheme } = useContext(ThemeContext);
 
   const [openEditDiv, setOpenEditDiv] = useState(false);
@@ -56,17 +55,20 @@ function Address() {
   const [errorsServer, setErrorsServer] = useState("");
 
   const handleOpenEditDiv = () => {
-    setOpenEditDiv(!openEditDiv)
+    setOpenEditDiv(!openEditDiv);
+    setErrorsServer("");
   };
 
   const handleOpenDiv = (addressId: string) => {
     setOpenDiv(true);
     setSelectedAddressId(addressId);
+    setErrorsServer("");
   };
 
   const handleCloseDiv = () => {
     setOpenDiv(!openDiv);
     setSelectedAddressId("");
+    setErrorsServer("");
   };
 
   const handleClickAdd = () => {
@@ -121,9 +123,7 @@ function Address() {
     }
   }, [user]);
 
-
   const handleClickSubmit = (address: Address) => {
-
     const data = {
       userId: user?._id,
       name: address.name,
@@ -132,6 +132,7 @@ function Address() {
       city: address.city,
       postalCode: address.postalCode,
       telephone: address.telephone,
+      country: address.country,
       extra: address.extra,
     };
 
@@ -140,7 +141,14 @@ function Address() {
     axios
       .post("/saveAddress", data)
       .then((response) => {
-        const message = t("address.text6")
+        if (response.data.exist) {
+          const message = t("address.error5");
+          setErrorsServer(message);
+          return;
+        }
+
+        setErrorsServer("");
+        const message = t("address.text6");
         setMessage(message);
 
         setAddresses((prevAddresses) =>
@@ -177,7 +185,6 @@ function Address() {
       .finally(() => {
         setIsLoading(false);
       });
-
   };
 
   const handleDeleteAddress = () => {
@@ -185,7 +192,7 @@ function Address() {
     axios
       .delete(`/deleteAddress/${selectedAddressId}`)
       .then((response) => {
-        const message = t("address.text7")
+        const message = t("address.text7");
         setMessage(message);
         setAddresses((prevAddresses) =>
           prevAddresses.filter((address) => address._id !== selectedAddressId)
@@ -209,8 +216,11 @@ function Address() {
   };
 
   const handleChangeDefault = (addressId: string) => {
-
-    axios.post("/changeDefaultAddress", { addressId: addressId, userId: user?._id })
+    axios
+      .post("/changeDefaultAddress", {
+        addressId: addressId,
+        userId: user?._id,
+      })
       .then((response) => {
         setAddresses((prevAddresses) =>
           prevAddresses.map((address) => ({
@@ -229,15 +239,14 @@ function Address() {
         } else {
           console.log(error);
         }
-      })
-  }
+      });
+  };
 
   const handleEditClick = (address: Address) => {
     setSingleAddress(address);
   };
 
   const handleEditAddress = (address: Address) => {
-
     const data = {
       addressId: address._id,
       name: address.name,
@@ -247,20 +256,29 @@ function Address() {
       postalCode: address.postalCode,
       telephone: address.telephone,
       extra: address.extra,
-      isDefault: address.isDefault
+      country: address.country,
+      isDefault: address.isDefault,
     };
 
     setIsLoading(true);
 
-    axios.post("/editAddress", data)
+    axios
+      .post("/editAddress", data)
       .then((response) => {
+        if (response.data.exist) {
+          const message = t("address.error5");
+          setErrorsServer(message);
+          return;
+        }
+
+        setErrorsServer("");
         const updatedAddresses = addresses.map((addr) =>
           addr._id === address._id ? { ...addr, ...data } : addr
         );
         setAddresses(updatedAddresses);
-        const message = t("address.text8")
+        const message = t("address.text8");
         setMessage(message);
-        setOpenEditDiv(false)
+        setOpenEditDiv(false);
       })
       .catch((error) => {
         if (
@@ -272,15 +290,15 @@ function Address() {
         } else {
           console.log(error);
         }
-      }).finally(() => {
+      })
+      .finally(() => {
         setIsLoading(false);
       });
-
-  }
+  };
 
   return (
     <>
-      {openEditDiv && singleAddress &&
+      {openEditDiv && singleAddress && (
         <AddressFormTemplate
           text={t("address.text9")}
           setShowDiv={handleOpenEditDiv}
@@ -292,10 +310,12 @@ function Address() {
           postalCode={singleAddress?.postalCode}
           telephone={singleAddress?.telephone}
           extra={singleAddress?.extra}
+          country={singleAddress?.country}
           isDefault={singleAddress.isDefault}
           isLoading={isLoading}
           onSubmit={handleEditAddress}
-        />}
+        />
+      )}
 
       {showAdd && (
         <AddressFormTemplate
@@ -309,6 +329,7 @@ function Address() {
           postalCode={""}
           telephone={""}
           extra={""}
+          country={""}
           isDefault={false}
           isLoading={isLoading}
           onSubmit={handleClickSubmit}
@@ -316,19 +337,23 @@ function Address() {
       )}
 
       {openDiv && (
-        <div className="bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
-          <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] xl:w-[38rem]  rounded-lg">
+        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center ">
+          <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black  w-[25rem] xl:w-[38rem]  rounded-lg">
             <p className="text-3xl  text-black/80 dark:text-white/80 font-bold mt-6">
               {t("address.text11")}
             </p>
 
             <button
+              disabled={isLoading}
               onClick={handleDeleteAddress}
               className={`mt-10 w-[90%] h-[3rem] dark:bg-white/50 bg-black/80 hover:scale-105 ease-in-out duration-300`}
             >
               <div className="flex items-center justify-center">
                 {isLoading && <CircleSvg color="white" secColor="white" />}
-                <p className="text-xl  text-white/80  "> {t("profile.delete")}</p>
+                <p className="text-xl  text-white/80  ">
+                  {" "}
+                  {t("profile.delete")}
+                </p>
               </div>
             </button>
 
@@ -354,19 +379,18 @@ function Address() {
         />
 
         <div className="flex justify-center items-center bg-white dark:bg-[#292929] h-[13rem]">
-          {errorsServer ||
-            (errorsVadlidationServer.length > 0 && (
-              <InfoDivBottom
-                color="bg-red-500"
-                text={
-                  errorsServer
-                    ? errorsServer
-                    : errorsVadlidationServer
-                      .map((error) => error.msg)
-                      .join(", ")
-                }
-              />
-            ))}
+          {errorsServer && (
+            <InfoDivBottom color="bg-red-500" text={errorsServer} />
+          )}
+
+          {errorsVadlidationServer.length > 0 && (
+            <InfoDivBottom
+              color="bg-red-500"
+              text={errorsVadlidationServer
+                .map((error) => error.msg)
+                .join(", ")}
+            />
+          )}
 
           {message && <InfoDivBottom color="bg-green-500" text={message} />}
 
@@ -396,9 +420,12 @@ function Address() {
               <a className="text-xl lg:text-2xl text-black/80 dark:text-white/80 px-4 h-[3rem]  border-b-4  border-black dark:border-white cursor-default ">
                 {t("profile.address")}
               </a>
-              <a className="text-xl lg:text-2xl text-black/50 dark:text-white/50  px-4 h-[3rem] hover:border-b-4  hover:border-black hover:dark:border-white cursor-pointer">
+              <Link
+                to={"/order"}
+                className="text-xl lg:text-2xl text-black/50 dark:text-white/50  px-4 h-[3rem] hover:border-b-4  hover:border-black hover:dark:border-white cursor-pointer"
+              >
                 {t("profile.orders")}
-              </a>
+              </Link>
             </div>
 
             <img
@@ -420,7 +447,7 @@ function Address() {
             <div className="flex flex-wrap justify-center w-full mx-auto gap-6 gap-y-6 ">
               <button
                 onClick={handleClickAdd}
-                className="relative w-[25rem] h-[15rem] border-[1px] border-black/30 dark:border-white/30 hover:scale-105 ease-in-out duration-300"
+                className="relative w-[25rem] h-[16rem] border-[1px] border-black/30 dark:border-white/30 hover:scale-105 ease-in-out duration-300"
               >
                 <p className="absolute left-6 top-6 text-black dark:text-white">
                   {t("address.text14")}
@@ -441,6 +468,7 @@ function Address() {
                     postalCode={address.postalCode}
                     telephone={address.telephone}
                     extra={address.extra}
+                    country={address.country}
                     isDefault={address.isDefault}
                     onDelete={handleOpenDiv}
                     setShowDiv={setOpenEditDiv}

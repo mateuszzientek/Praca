@@ -16,6 +16,7 @@ import { FilterContext } from "../elements/FilterProvider";
 import { useTranslation } from "react-i18next";
 import validator from "validator";
 import { UserContext } from "../elements/UserProvider";
+import { ThemeContext } from '../elements/ThemeContext';
 
 interface Shoe {
   _id: string;
@@ -30,8 +31,8 @@ interface Shoe {
 
 function Shop() {
   const { user, isUserLoggedIn } = useContext(UserContext);
+  const { theme, setTheme } = useContext(ThemeContext);
 
-  const location = useLocation();
   const navigate = useNavigate();
   const currentCode = localStorage.getItem("i18nextLng");
   const { t } = useTranslation();
@@ -53,6 +54,7 @@ function Shop() {
     searchTerm,
     setSearchTerm
   } = useContext(FilterContext);
+
 
   const sizesNumber = Array.from({ length: 11 }, (_, index) => 36 + index);
   const [showFilter, setShowFilter] = useState(false);
@@ -168,6 +170,7 @@ function Shop() {
   };
 
   useEffect(() => {
+
     const filters = {
       selectedBrand,
       selectedCategory,
@@ -226,14 +229,18 @@ function Shop() {
           axios
             .get(`/getFavoriteShoesById/?userId=${user?._id}`)
             .then((response) => {
-              const favoriteShoesIds = response.data;
-              const updatedShoes = shoeImages.map((shoe) => {
-                if (favoriteShoesIds.includes(shoe._id.toString())) {
-                  return { ...shoe, isHearted: true };
-                }
-                return shoe;
-              });
-              setShoes(updatedShoes);
+
+              if (response.data.favoriteShoes.length !== 0) {
+                const favoriteShoesIds = response.data.favoriteShoes;
+                const updatedShoes = shoeImages.map((shoe) => {
+                  if (favoriteShoesIds.includes(shoe._id.toString())) {
+                    return { ...shoe, isHearted: true };
+                  }
+                  return shoe;
+                });
+                setShoes(updatedShoes);
+              }
+
             })
             .catch((error) => {
               console.error("Błąd podczas pobierania ulubionych butów", error);
@@ -330,8 +337,6 @@ function Shop() {
   };
 
 
-  console.log(searchTerm)
-
   return (
     <>
       {error && (
@@ -359,7 +364,7 @@ function Shop() {
                   {formatSearchTerm(searchTerm)}
                 </p>
                 <div onClick={handleClickRemoveSearchTerm} className="cursor-pointer">
-                  <AiOutlineClose size={30} />
+                  <AiOutlineClose size={30} color={theme === "dark" ? "white" : "black"} />
                 </div>
               </div>)}
 
@@ -545,7 +550,7 @@ function Shop() {
             </div>
           ) : message ? (
             <div className="flex justify-center items-center h-[50vh]">
-              <p className="text-lg text-black/80 dark:test-white md:text-3xl">
+              <p className="text-lg text-black/80 dark:text-white/80 md:text-3xl">
                 {t("shop.notFound")}
               </p>
             </div>

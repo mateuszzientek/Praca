@@ -6,12 +6,22 @@ const saveFavoriteShoeHandler = [
     try {
       const { userId, shoeId } = req.body;
 
-      const favoriteShoe = new FavoriteShoes({
-        userId,
-        shoeId,
-      });
+      // Find the existing favorite shoe entry for the user
+      const favoriteShoeEntry = await FavoriteShoes.findOne({ userId });
 
-      await favoriteShoe.save();
+      if (favoriteShoeEntry) {
+        // If the entry exists, add the new shoeId to the 'shoes' array
+        favoriteShoeEntry.shoes.push(shoeId);
+        await favoriteShoeEntry.save();
+      } else {
+        // If the entry does not exist, create a new entry with the 'shoes' array containing the new shoeId
+        const favoriteShoe = new FavoriteShoes({
+          userId,
+          shoes: [shoeId],
+        });
+
+        await favoriteShoe.save();
+      }
 
       return res
         .status(200)

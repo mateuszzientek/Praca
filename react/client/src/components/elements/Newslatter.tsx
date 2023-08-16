@@ -46,6 +46,7 @@ function Newslatter() {
     };
 
     useEffect(() => {
+
         if (user?.newsletter === false || !user) {
             const timer = setTimeout(() => {
                 const storedExpiryTime = localStorage.getItem('newslatter');
@@ -114,9 +115,9 @@ function Newslatter() {
     return (
         <div>
             {showNewslatter && (
-                <div className='bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center '>
+                <div className='bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center '>
 
-                    <div className='relative  bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem] h-[27rem] md:w-[35rem] md:h-[28rem] lg:w-[45rem] py-10 lg:h-auto rounded-2xl'>
+                    <div className='relative  bg-white dark:bg-black  w-[25rem] h-[27rem] md:w-[35rem] md:h-[28rem] lg:w-[45rem] py-10 lg:h-auto rounded-2xl'>
                         <div onClick={() => {
                             setShowNewslatter(!showNewslatter)
                         }}>

@@ -6,7 +6,7 @@ const editAddressHandler = [
     async (req:Request, res:Response) => {
         try {
       
-          const { addressId, name, surname, street, city, postalCode, telephone, extra, isDefault } = req.body;
+          const { addressId, name, surname, street, city, postalCode, telephone, extra,country, isDefault } = req.body;
       
       
           const addressToUpdate = await Address.findById(addressId);
@@ -15,6 +15,20 @@ const editAddressHandler = [
             return res.status(404).json({ error: "Address not found" });
           }
       
+          const addressCheck = await Address.exists({
+            name,
+            surname,
+            street,
+            city,
+            postalCode,
+            telephone,
+            country
+          });
+              
+          if (addressCheck) {
+                  return res.status(200).json({ exist: "Address already exists" });
+            }
+
           addressToUpdate.name = name;
           addressToUpdate.surname = surname;
           addressToUpdate.street = street;
@@ -22,6 +36,7 @@ const editAddressHandler = [
           addressToUpdate.postalCode = postalCode;
           addressToUpdate.telephone = telephone;
           addressToUpdate.extra = extra;
+          addressToUpdate.country = country
           addressToUpdate.isDefault = isDefault;
       
           await addressToUpdate.save();

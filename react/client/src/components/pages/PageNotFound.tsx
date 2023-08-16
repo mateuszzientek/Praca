@@ -12,7 +12,7 @@ function PageNotFound() {
     const navigate = useNavigate();
     const { t } = useTranslation()
     return (
-        <div className='bg-[#ECF8F9] dark:bg-[#4f4f4f]  h-[100vh] w-[100vw] flex flex-col  justify-start items-center '>
+        <div className='bg-[#ECF8F9] dark:bg-[#4f4f4f]  flex flex-col  justify-start items-center pb-16 min-h-screen'>
 
             <LazyLoadImage
                 alt="404 Page not found"

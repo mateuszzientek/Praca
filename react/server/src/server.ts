@@ -10,14 +10,18 @@ import multer from "multer";
 import i18next from "i18next";
 import i18nextMiddleware from "i18next-http-middleware";
 import Backend from "i18next-node-fs-backend";
+
+import Order from "./schemas/order";
 import Shoes from "./schemas/shoes";
 import FavoriteShoes from "./schemas/favoriteShoes";
 import User, { IUser } from "./schemas/user";
 import Address from "./schemas/address";
 import Cart from "./schemas/cart";
-const fs = require("fs");
-const { v4: uuidv4 } = require('uuid');
+import Discount from "./schemas/discount";
+import DiscountUser from "./schemas/discountUser";
 
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 dotenv.config();
 
@@ -54,6 +58,17 @@ import getAddressesHandler from "./controllers/getAddresses";
 import deleteAddressHandler from "./controllers/deleteAddress";
 import editAddressHandler from "./controllers/editAddress";
 import changeDefaultAddressHandler from "./controllers/changeDefaultAddress";
+import deleteDiscountHandler from "./controllers/deleteDiscount";
+import getDiscountHandler from "./controllers/getDiscount";
+import saveDiscountHandler from "./controllers/saveDiscount";
+import deleteCartHandler from "./controllers/deleteCart";
+import updateQuantityCartHandler from "./controllers/updateQuantityCart";
+import getShoesCartHandler from "./controllers/getShoesCart";
+import getQuantityCartHandler from "./controllers/getQuantityCart";
+import addToCartHandler from "./controllers/addToCart";
+import changeCartHandler from "./controllers/changeCart";
+import saveOrderHandler from "./controllers/saveOrder";
+import getOrdersHandler from "./controllers/getOrders";
 
 //-------------i18next----------------------------------
 
@@ -99,11 +114,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 3 * 24 * 60 * 60 * 1000,
+      maxAge: 48 * 60 * 60 * 1000, // 2 dni (48 godzin * 60 minut * 60 sekund * 1000 milisekund)
     },
   })
 );
-
 const uploadsFolder = "./uploads";
 if (!fs.existsSync(uploadsFolder)) {
   fs.mkdirSync(uploadsFolder);
@@ -138,47 +152,126 @@ mongoose
   });
 
 //---------------------routes----------------------------
+app.get("/getOrdersAdmin", async (req, res) => {
+  const page = parseInt(req.query.page as string);
+  const pageSize = parseInt(req.query.limit as string || '3');
+  const sort= req.query.sort as string
 
-app.post("/addToCart", async (req, res) => {
   try {
-    const { shoeId, selectedSize, quantity, userId } = req.body;
+    
+    let query = Order.find().lean()
 
-    // Sprawdzamy, czy użytkownik ma już zapisany identyfikator sesji w pliku cookie
-    let sessionId = req.cookies.sessionId;
-
-    console.log(sessionId)
-
-    // Jeśli użytkownik nie ma zapisanego identyfikatora sesji, generujemy nowy
-    if (!sessionId) {
-      sessionId = uuidv4();
-      // Zapisujemy identyfikator sesji w pliku cookie na stronie klienta
-      res.cookie("sessionId", sessionId, { httpOnly: true });
+    if (sort) {
+      query = query.where('status').equals(sort);
     }
 
-    const cartData = {
-      productId: shoeId,
-      sessionId: userId ? null : sessionId,
-      quantity: quantity,
-      size: selectedSize,
-      userId: userId ? userId : null
-    };
+    const total = await Order.countDocuments(query);
 
-    const cart = new Cart(cartData);
+    if (total === 0) { // Sprawdź, czy jest równa 0, aby poprawnie obsłużyć brak użytkowników
+      res.status(200).json({ orders: [] });
+    } else {
+      
+      const pages = Math.ceil(total / pageSize);
 
-    await cart.save();
+      let correctedPage = page;
+      if (page > pages) {
+        correctedPage = pages;
+      }
+  
+      const result = await query
+        .skip((correctedPage - 1) * pageSize)
+        .limit(pageSize)
+        .exec(); // Dodaj .exec() aby wykonać zapytanie
 
-    return res.status(200).json({ message: "Zapisano koszyk" });
+
+      const shoeIds = result.flatMap((order) =>
+      order.products.map((product) => product.shoeId)
+    );
+
+    // Retrieve shoe objects based on shoeIds
+    const shoes = await Shoes.find({ _id: shoeIds });
+
+    res.status(200).json({
+      status: 'success',
+      count: result.length,
+      page: correctedPage,
+      pages,
+      orders: result,
+      shoes:shoes
+    });
+    }
+    
   } catch (error) {
-    console.error("Błąd podczas zapisywania koszyka", error);
-    return res
-      .status(500)
-      .json({ error: "Wystąpił błąd podczas zapisywania koszyka" });
+    console.error("Błąd podczas pobierania zamówien", error);
+    res.status(500).json({ error: "Wystąpił błąd podczas pobierania zamówien" });
   }
 });
+
+
+app.delete("/deleteUser/:userId", async (req, res) => {
+  
+  const userId = req.params.userId;
+  
+  try {
+    await User.findOneAndRemove({ _id: userId});
+   
+    res.status(200).json({ message: "Usuniete uzytkownika" });
+  } catch (error) {
+    console.error("Błąd podczas usuwania użytkowników", error);
+    res.status(500).json({ error: "Błąd podczas usuwania użytkowników" });
+  }
+});
+
+
+app.get("/getUsers", async (req, res) => {
+  const page = parseInt(req.query.page as string);
+  const pageSize = parseInt(req.query.limit as string || '11');
+  
+  try {
+    const query = User.find().lean();
+
+    const total = await User.countDocuments(query);
+
+    if (total === 0) { // Sprawdź, czy jest równa 0, aby poprawnie obsłużyć brak użytkowników
+      res.status(404).json({ error: "Nie znaleziono użytkowników" });
+    } else {
+      const pages = Math.ceil(total / pageSize);
+
+      let correctedPage = page;
+      if (page > pages) {
+        correctedPage = pages;
+      }
+  
+      const result = await query
+        .skip((correctedPage - 1) * pageSize)
+        .limit(pageSize)
+        .exec(); // Dodaj .exec() aby wykonać zapytanie
+      
+      res.status(200).json({
+        status: 'success',
+        count: result.length,
+        page: correctedPage,
+        pages,
+        users: result,
+      });
+    }
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkowników", error);
+    res.status(500).json({ error: "Wystąpił błąd podczas pobierania użytkowników" });
+  }
+});
+
 
 app.delete("/deleteAddress/:addressId", deleteAddressHandler);
 app.delete("/removeFavoriteShoe/:userId/:shoeId", removeFavoriteShoeHandler);
 
+app.get("/getOrders", getOrdersHandler);
+
+
+
+app.get("/getQuantityCart", getQuantityCartHandler);
+app.get("/getShoesCart", getShoesCartHandler);
+app.get("/getDiscount", getDiscountHandler);
 app.get("/getAddresses", getAddressesHandler);
 app.get("/getFavoriteShoes", getFavoriteShoesHandler);
 app.get("/getFavoriteShoesById", getFavoriteShoesByIdHandler);
@@ -197,7 +290,14 @@ app.get("/user", (req, res) => {
   res.send(req.user);
 });
 
-app.post("/changeDefaultAddress",changeDefaultAddressHandler );
+app.post("/saveOrder", saveOrderHandler);
+app.post("/changeCart", changeCartHandler);
+app.post("/addToCart", addToCartHandler);
+app.post("/updateQuantityCart", updateQuantityCartHandler);
+app.post("/deleteCart", deleteCartHandler);
+app.post("/saveDiscount", saveDiscountHandler);
+app.post("/deleteDiscount", deleteDiscountHandler);
+app.post("/changeDefaultAddress", changeDefaultAddressHandler);
 app.post("/editAddress", editAddressHandler);
 app.post("/saveAddress", saveAddressHandler);
 app.post("/uploadImage", upload.single("avatar"), uploadImageHandler);

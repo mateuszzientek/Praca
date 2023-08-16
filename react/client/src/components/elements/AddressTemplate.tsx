@@ -12,6 +12,7 @@ interface Address {
   postalCode: string;
   telephone: string;
   extra: string;
+  country: string
   isDefault: boolean;
 }
 
@@ -23,6 +24,7 @@ interface AddressTemplateProps {
   postalCode: string;
   telephone: string;
   extra: string;
+  country: string
   addressId: string;
   isDefault: boolean;
   onDelete: (addressId: string) => void;
@@ -56,16 +58,15 @@ function AddressTemplate(props: AddressTemplateProps) {
       postalCode: props.postalCode,
       telephone: props.telephone,
       extra: props.extra,
+      country: props.country,
       isDefault: props.isDefault,
     });
   };
 
-
   return (
 
-
     <div
-      className={`relative w-[25rem] h-[15rem]  ${props.isDefault
+      className={`relative w-[25rem] h-[16rem]  ${props.isDefault
         ? "border-black dark:border-white border-2"
         : "border-black/30 dark:border-white/30 border-[1px]"
         }  `}
@@ -88,7 +89,7 @@ function AddressTemplate(props: AddressTemplateProps) {
         <p>{props.street.toUpperCase()}</p>
         <p>
           {" "}
-          {props.city.toUpperCase()}, {props.postalCode}
+          {props.city.toUpperCase()}, {props.postalCode}, {t(`country.${props.country}`).toUpperCase()}
         </p>
         <p> {props.telephone}</p>
 
