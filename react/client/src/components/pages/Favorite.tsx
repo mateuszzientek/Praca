@@ -8,22 +8,15 @@ import { ref, getDownloadURL, listAll } from "firebase/storage";
 import storage from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ShoeInterface } from "src/types";
 
-interface Shoe {
-  _id: string;
-  name: string;
-  category: string;
-  price: number;
-  discountPrice: number;
-  image: string;
-  imageUrl?: string;
+interface Shoe extends ShoeInterface {
   isHearted: boolean;
 }
 
 function Favorite() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [isLoadingImages, setIsLoadingImages] = useState(true); // Nowy stan
   const { user, isUserLoggedIn, isUserDataLoaded } = useContext(UserContext);
   const [favoriteShoes, setFavoriteShoes] = useState<Shoe[]>([]);
@@ -34,11 +27,9 @@ function Favorite() {
         if (isUserDataLoaded && !user?._id) {
           navigate("/login");
         } else {
-          setLoading(true);
           const response = await axios.get(
             `/getFavoriteShoes/?userId=${user?._id}`
           );
-          setFavoriteShoes(response.data.favoriteShoes);
 
           const fetchedShoes: any[] = response.data.favoriteShoes || [];
           const shoeImages = await Promise.all(
@@ -60,15 +51,12 @@ function Favorite() {
         }
       } catch (error) {
         console.log("blad");
-      } finally {
-        setLoading(false);
+        setIsLoadingImages(false);
       }
     };
 
     fetchFavoriteShoes();
   }, [user]);
-
-  console.log(favoriteShoes);
 
   const handleHeartClick = (shoe: Shoe) => {
     axios
@@ -97,11 +85,7 @@ function Favorite() {
         </p>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-[60vh]">
-          <LoadingAnimationSmall />{" "}
-        </div>
-      ) : isLoadingImages ? ( // Dodany warunek ładowania zdjęć
+      {isLoadingImages ? (
         <div className="flex justify-center items-center h-[60vh]">
           <LoadingAnimationSmall />
         </div>

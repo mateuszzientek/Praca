@@ -2,19 +2,8 @@ import React, { useContext } from "react";
 import { FaCheck } from "react-icons/fa";
 import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { AddressInterface } from "src/types";
 
-interface Address {
-  _id: string;
-  name: string;
-  surname: string;
-  street: string;
-  city: string;
-  postalCode: string;
-  telephone: string;
-  extra: string;
-  country: string
-  isDefault: boolean;
-}
 
 interface AddressTemplateProps {
   name: string;
@@ -30,7 +19,7 @@ interface AddressTemplateProps {
   onDelete: (addressId: string) => void;
   onDefaultChange: (addressId: string) => void
   setShowDiv: (showDiv: boolean) => void;
-  onEditClick: (address: Address) => void;
+  onEditClick: (address: AddressInterface) => void;
 }
 
 function AddressTemplate(props: AddressTemplateProps) {

@@ -12,14 +12,7 @@ import image_dark from '../../assets/images/expired_dark.png'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import CircleSvg from '../elements/CircleSvg';
-
-interface Error {
-    msg: string;
-    type: string;
-    value: string;
-    path: string;
-    location: string;
-}
+import { ErrorInterface } from 'src/types';
 
 function ResetPassword() {
 
@@ -32,7 +25,7 @@ function ResetPassword() {
     const [secPassword, setSecPassword] = useState("")
     const [message, setMessage] = useState("");
     const [showForm, setShowForm] = useState(false);
-    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
+    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<ErrorInterface[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordSec, setShowPasswordSec] = useState(false);

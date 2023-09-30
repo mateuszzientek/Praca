@@ -18,7 +18,7 @@ const uploadImageHandler = [
             .json({ error: "Użytkownik nie został znaleziony" });
         }
 
-        user.avatar = req.file.filename;
+        user.avatar = userId + '_' + req.file.filename;
         await user.save();
 
         console.log('Pole "avatar" zostało zaktualizowane');

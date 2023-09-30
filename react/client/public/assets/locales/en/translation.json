@@ -212,7 +212,8 @@
     "text8": "Registration completed successfully!",
     "text9": "Thank you for joining our community",
     "text10": "Login successful!",
-    "text11": "Now you can freely explore our store"
+    "text11": "Now you can freely explore our store",
+    "text12": "Continue"
   },
   "loginError": {
     "name": "Name must contains only letters",
@@ -404,6 +405,7 @@
     "text15": "Shipping:"
   },
   "status": {
+    "all":"All",
     "submitted": "Order Submitted",
     "preparing": "Preparing",
     "shipped": "Shipped",
@@ -413,6 +415,19 @@
     "text1": "Users",
     "text2": "Orders",
     "text3": "Delete",
-    "text4": "User deleted"
- } 
+    "text4": "User deleted",
+    "text5": "Status saved!",
+    "text6": "There are currently no orders that meet the criteria"
+ },
+ "design": {
+  "text1": "How Does CUSTOMIZATION Work?",
+  "text2": "Create unique shoes that match your tastes!",
+  "text3": "You can choose a specific footwear model from the available options, allowing you to tailor them to your preferences",
+  "text4": "There's an option to change the color of a specific footwear element, so you can customize them to your liking",
+  "text5": "We provide the possibility to add your own graphics, allowing you to personalize shoes according to your own idea",
+  "text6": "Add your own text and personalize your shoes, creating a unique look tailored to your style",
+  "text7": "You can save the project after creating it to access it later",
+  "text8": "Get started now",
+  "text9": "Choose Shoe Model" 
+  }
 }

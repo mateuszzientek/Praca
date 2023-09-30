@@ -24,6 +24,10 @@ import validator from "validator";
 import CircleSvg from "../elements/CircleSvg";
 import { ErrorInterface, AddressInterface, ProductInterface } from "src/types";
 
+interface Address extends AddressInterface {
+  email: string;
+}
+
 function Checkout() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -88,8 +92,8 @@ function Checkout() {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  const [addresses, setAddresses] = useState<AddressInterface[]>([]);
-  const [defaultAddress, setDefaultAddress] = useState<AddressInterface | null>(
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [defaultAddress, setDefaultAddress] = useState<Address | null>(
     null
   );
   const [dataFetched, setDataFetched] = useState(true);

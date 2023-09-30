@@ -15,52 +15,14 @@ import InfoDivBottom from "../elements/InfoDivBottom";
 import { AiOutlineClose } from "react-icons/ai";
 import CheckoutProductTemplate from "../elements/CheckoutProductTemplate";
 import { formatPrice } from "src/currencyUtils";
+import { OrderInterface, ShoeInterface } from "src/types";
 
-interface Shoe {
-  _id: string;
-  name: string;
+
+interface Shoe extends ShoeInterface {
   brand: string;
-  category: string;
-  price: number;
-  imageUrl?: string;
-  discountPrice: number;
-  image: string;
   size?: string;
   quantity?: number;
   _idProduct?: string;
-}
-
-interface Address {
-  email: string;
-  name: string;
-  surname: string;
-  street: string;
-  city: string;
-  postalCode: string;
-  telephone: string;
-  extra: string;
-  country: string;
-}
-
-interface Products {
-  _id: string;
-  shoeId: string;
-  size: string;
-  quantity: number;
-}
-
-interface Order {
-  _id: string;
-  orderNumber: string;
-  userId: string;
-  address: Address;
-  products: Products[];
-  price: number;
-  paymentMethod: string;
-  deliveryMethod: string;
-  orderDate: Date;
-  status: string;
-  discount: number
 }
 
 function Order() {
@@ -75,8 +37,8 @@ function Order() {
   const [errorsServer, setErrorsServer] = useState("");
 
   const [shoes, setShoes] = useState<Shoe[]>([]);
-  const [orders, setOrders] = useState<Order[] | null>(null);
-  const [singleOrder, setSingleOrder] = useState<Order | null>(null);
+  const [orders, setOrders] = useState<OrderInterface[] | null>(null);
+  const [singleOrder, setSingleOrder] = useState<OrderInterface | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
 
@@ -413,19 +375,19 @@ function Order() {
             ) : (
               <>
                 {orders?.map((order) => (
-                  <>
-                    <div key={order._id}>
-                      <OrderTemplate
-                        orderId={order._id}
-                        orderNumber={order.orderNumber}
-                        orderProducts={order.products}
-                        shoes={shoes}
-                        price={order.price}
-                        status={order.status}
-                        clickDetails={clickDetails}
-                      />
-                    </div>
-                  </>
+
+                  <div key={order._id}>
+                    <OrderTemplate
+                      orderId={order._id}
+                      orderNumber={order.orderNumber}
+                      orderProducts={order.products}
+                      shoes={shoes}
+                      price={order.price}
+                      status={order.status}
+                      clickDetails={clickDetails}
+                    />
+                  </div>
+
                 ))}
               </>
             )}

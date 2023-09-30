@@ -8,7 +8,6 @@ export interface ErrorInterface {
 
 export interface AddressInterface {
   _id: string;
-  email: string;
   name: string;
   surname: string;
   street: string;
@@ -18,6 +17,31 @@ export interface AddressInterface {
   extra: string;
   isDefault: boolean;
   country: string;
+}
+
+interface Address extends AddressInterface {
+  email: string;
+}
+
+interface Products {
+  _id: string;
+  shoeId: string;
+  size: string;
+  quantity: number;
+}
+
+export interface OrderInterface {
+  _id: string;
+  orderNumber: string;
+  userId: string;
+  address: Address;
+  products: Products[];
+  price: number;
+  paymentMethod: string;
+  deliveryMethod: string;
+  orderDate: Date;
+  status: string;
+  discount: number
 }
 
 export interface SizesInterface {

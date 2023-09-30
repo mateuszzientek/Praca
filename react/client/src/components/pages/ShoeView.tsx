@@ -13,24 +13,17 @@ import { CartContext } from "../elements/CartProvider";
 import { UserContext } from "../elements/UserProvider";
 import { useNavigate } from "react-router-dom";
 import tick from "../../assets/images/tick.png"
-import { AiOutlineClose } from "react-icons/ai";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import CircleSvg from "../elements/CircleSvg";
 import { formatPrice } from 'src/currencyUtils';
+import { ShoeInterface } from "src/types";
 
 interface ShoeSize {
   size: string;
   quantity: number;
 }
 
-interface Shoe {
-  _id: string;
-  name: string;
-  category: string;
-  price: number;
-  discountPrice: number;
-  image: string;
-  imageUrl?: string; // Dodane pole imageUrl
+interface Shoe extends ShoeInterface {
   isHearted: boolean;
   sizes: ShoeSize[];
 }
@@ -70,7 +63,7 @@ function ShoeView() {
 
         const response = await axios.get(`/getShoeById?id=${id}`);
         setShoe(response.data);
-        setIsLoading(false);
+
 
         if (response.data) {
           const folderRef = ref(
@@ -96,10 +89,15 @@ function ShoeView() {
             const favoriteShoesResponse = await axios.get(
               `/getFavoriteShoesById?userId=${user._id}`
             );
-            const favoriteShoeIds = favoriteShoesResponse.data;
+            const favoriteShoeIds = favoriteShoesResponse.data.favoriteShoes;
+
+            console.log(favoriteShoesResponse.data)
 
             const isFavorite = favoriteShoeIds.includes(response.data._id);
             setShoe((prevShoe) => ({ ...prevShoe, isHearted: isFavorite }));
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
           }
         }
       } catch (error) {

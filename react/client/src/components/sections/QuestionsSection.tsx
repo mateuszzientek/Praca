@@ -5,14 +5,8 @@ import axios from 'axios';
 import validator from 'validator';
 import InfoDivBottom from '../elements/InfoDivBottom';
 import CircleSvg from '../elements/CircleSvg';
+import { AddressInterface, ErrorInterface } from "src/types";
 
-interface Error {
-    msg: string;
-    type: string;
-    value: string;
-    path: string;
-    location: string;
-}
 
 function QuestionsSection() {
 
@@ -26,7 +20,7 @@ function QuestionsSection() {
     const [message, setMessage] = useState("");
     const [showInfo, setshowInfo] = useState(false);
     const [showLoading, setLoading] = useState(false);
-    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
+    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<ErrorInterface[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {

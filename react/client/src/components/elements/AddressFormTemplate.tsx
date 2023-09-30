@@ -3,20 +3,8 @@ import { AiOutlineClose, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
 import CircleSvg from "../elements/CircleSvg";
+import { AddressInterface } from "src/types";
 
-
-interface Address {
-    _id: string;
-    name: string;
-    surname: string;
-    street: string;
-    city: string;
-    postalCode: string;
-    telephone: string;
-    extra: string;
-    country: string
-    isDefault: boolean;
-}
 
 interface AddressFormTemplateProps {
     text: string
@@ -32,7 +20,7 @@ interface AddressFormTemplateProps {
     isDefault: boolean;
     isLoading: boolean
     setShowDiv: () => void;
-    onSubmit: (address: Address) => void;
+    onSubmit: (address: AddressInterface) => void;
 }
 
 function AddressFormTemplate(props: AddressFormTemplateProps) {
@@ -212,7 +200,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
 
         if (isValid) {
 
-            const editedAddress: Address = {
+            const editedAddress: AddressInterface = {
                 name,
                 surname,
                 street,

@@ -10,15 +10,8 @@ import photo from '../../assets/images/newslatter.png';
 import photo_black from '../../assets/images/newslatter-black.png';
 import axios from 'axios';
 import validator from 'validator';
+import { ErrorInterface } from 'src/types';
 
-
-interface Error {
-    msg: string;
-    type: string;
-    value: string;
-    path: string;
-    location: string;
-}
 
 function Newslatter() {
 
@@ -28,7 +21,7 @@ function Newslatter() {
     const { user, setUser, isUserLoggedIn, setIsUserLoggedIn } = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
-    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<Error[]>([]);
+    const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<ErrorInterface[]>([]);
     const [errorsServer, setErrorsServer] = useState("");
 
 
@@ -156,7 +149,7 @@ function Newslatter() {
 
                                 {errorsServer && <p className="text-red-500 text-sm mt-2 ml-2">{errorsServer}</p>}
 
-                                {errorsVadlidationServer.map((error: Error, index: number) => (
+                                {errorsVadlidationServer.map((error: ErrorInterface, index: number) => (
                                     <p key={index} className="text-red-500 text-sm mt-2 ml-2">{error.msg}</p>
                                 ))}
                             </form>

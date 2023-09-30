@@ -13,27 +13,8 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import AddressTemplate from "../elements/AddressTemplate";
 import AddressFormTemplate from "../elements/AddressFormTemplate";
+import { AddressInterface, ErrorInterface } from "src/types";
 
-interface Error {
-  msg: string;
-  type: string;
-  value: string;
-  path: string;
-  location: string;
-}
-
-interface Address {
-  _id: string;
-  name: string;
-  surname: string;
-  street: string;
-  city: string;
-  postalCode: string;
-  telephone: string;
-  extra: string;
-  isDefault: boolean;
-  country: string;
-}
 
 function Address() {
   const { t } = useTranslation();
@@ -43,14 +24,14 @@ function Address() {
   const [openEditDiv, setOpenEditDiv] = useState(false);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
-  const [singleAddress, setSingleAddress] = useState<Address | null>(null);
-  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [singleAddress, setSingleAddress] = useState<AddressInterface | null>(null);
+  const [addresses, setAddresses] = useState<AddressInterface[]>([]);
   const [openDiv, setOpenDiv] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<
-    Error[]
+    ErrorInterface[]
   >([]);
   const [errorsServer, setErrorsServer] = useState("");
 
@@ -123,7 +104,7 @@ function Address() {
     }
   }, [user]);
 
-  const handleClickSubmit = (address: Address) => {
+  const handleClickSubmit = (address: AddressInterface) => {
     const data = {
       userId: user?._id,
       name: address.name,
@@ -242,11 +223,11 @@ function Address() {
       });
   };
 
-  const handleEditClick = (address: Address) => {
+  const handleEditClick = (address: AddressInterface) => {
     setSingleAddress(address);
   };
 
-  const handleEditAddress = (address: Address) => {
+  const handleEditAddress = (address: AddressInterface) => {
     const data = {
       addressId: address._id,
       name: address.name,

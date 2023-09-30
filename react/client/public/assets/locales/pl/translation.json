@@ -211,7 +211,8 @@
     "text8": "Rejestracja zakończona sukcesem!",
     "text9": "Dziękujemy za dołączenie do naszej społeczności",
     "text10": "Logowanie powiodło się!",
-    "text11": "Teraz swobodnie możesz odkrywać nasz sklep"
+    "text11": "Teraz swobodnie możesz odkrywać nasz sklep",
+    "text12": "Przejdź dalej"
   },
   "loginError": {
     "name": "Imię może zawierać tylko litery",
@@ -404,6 +405,7 @@
 
   },
   "status": {
+    "all":"Wszystkie",
     "submitted": "Złożono zamówienie",
     "preparing": "W przygotowaniu",
     "shipped": "Wysłano",
@@ -413,6 +415,19 @@
    "text1": "Użytkownicy",
    "text2": "Zamówienia",
    "text3": "Usuń",
-   "text4": "Usunięto użytkownika"
-  }
+   "text4": "Usunięto użytkownika",
+   "text5": "Zapisano status!",
+   "text6": "Aktualnie nie ma żadnych zamówień spełniających kryteria"
+  },
+  "design": {
+    "text1": "Jak Działa PERSONALIZACJA?",
+    "text2": "Stwórz unikalne obuwie, które wpasuje się w twoje gusta!",
+    "text3": "Możesz wybrać konkretny model obuwia spośród dostępnych opcji, co pozwoli Ci dopasować je do swojego gustu",
+    "text4": "Dostępna jest opcja zmiany koloru konkretnego elementu obuwia, abyś mógł dostosować je do swoich preferencji",
+    "text5": "Zapewniamy możliwość dodania własnej grafiki, abyś mógł spersonalizować buty według własnego pomysłu",
+    "text6": "Dodaj swój własny tekst i spersonalizuj swoje buty, tworząc unikalny wygląd dostosowany do Twojego stylu",
+    "text7": "Projekt możesz zapisać po stworzeniu, aby mieć do niego później dostęp",
+    "text8": "Zacznij teraz",
+    "text9": "Wybierz Model Buta"
+  } 
 }

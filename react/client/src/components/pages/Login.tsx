@@ -21,6 +21,7 @@ import { UserContext } from "../elements/UserProvider";
 import ResetPasswordDiv from "../elements/ResetPasswordDiv";
 import CircleSvg from "../elements/CircleSvg";
 import { ErrorInterface } from "src/types";
+import { CartContext } from "../elements/CartProvider";
 
 function Login() {
   const navigate = useNavigate();
@@ -30,10 +31,12 @@ function Login() {
 
   const changeCart = localStorage.getItem("changeCart");
 
+
   useEffect(() => {
     window.history.replaceState(null, "", "/");
   }, []);
 
+  const { setQuantityCart } = useContext(CartContext);
   const { theme, setTheme } = useContext(ThemeContext);
   const { isLoginSelected, setLoginSelected } = useContext(LoginContext);
   const [showPassword, setShowPassword] = useState(false);
@@ -247,20 +250,37 @@ function Login() {
             setUser(user);
 
             if (changeCart === "true") {
-              console.log("1");
+              const userIdParam = user?._id || "";
               axios
                 .post("/changeCart", { userId: _id })
                 .then(() => {
-                  console.log("2");
+
                   localStorage.removeItem("changeCart");
 
-                  setTimeout(() => {
-                    if (lastVisitedPath) {
-                      navigate(lastVisitedPath);
-                    } else {
-                      navigate("/");
-                    }
-                  }, 1500);
+                  axios
+                    .get(`/getQuantityCart?userId=${userIdParam}`)
+                    .then((response) => {
+                      setQuantityCart(response.data.itemCount);
+
+                      setTimeout(() => {
+                        if (lastVisitedPath) {
+                          navigate(lastVisitedPath);
+                        } else {
+                          navigate("/");
+                        }
+                      }, 1500);
+                    })
+                    .catch((error) => {
+                      if (
+                        error.response &&
+                        error.response.data &&
+                        error.response.data.error
+                      ) {
+                        setErrorsServer(error.response.data.error);
+                      } else {
+                        console.log(error);
+                      }
+                    })
                 })
                 .catch((error) => {
                   if (

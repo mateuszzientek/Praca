@@ -11,11 +11,7 @@ import { ThemeContext } from "../elements/ThemeContext";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { useTranslation } from "react-i18next";
 import { formatPrice } from "src/currencyUtils";
-
-interface Sizes {
-  size: string;
-  quantity: number;
-}
+import { SizesInterface } from "src/types";
 
 interface CartProductTemplateProps {
   _id: string;
@@ -26,7 +22,7 @@ interface CartProductTemplateProps {
   cartSize: string;
   price: number;
   discountPrice: number;
-  sizes: Sizes[];
+  sizes: SizesInterface[];
   cartQuantity: number;
   updateQuantityInShoes: (
     shoeId: string,
@@ -173,8 +169,8 @@ function CartProductTemplate(props: CartProductTemplateProps) {
               <div className={`flex md:hidden space-x-2`}>
                 <p
                   className={`text-lg ' ${props.discountPrice !== 0
-                      ? "text-red-500"
-                      : "text-black dark:text-white"
+                    ? "text-red-500"
+                    : "text-black dark:text-white"
                     } `}
                 >
                   {formatPrice(shoePrice, t)}
@@ -265,8 +261,8 @@ function CartProductTemplate(props: CartProductTemplateProps) {
             >
               <p
                 className={`text-lg ' ${props.discountPrice !== 0
-                    ? "text-red-500"
-                    : "text-black dark:text-white"
+                  ? "text-red-500"
+                  : "text-black dark:text-white"
                   } `}
               >
                 {formatPrice(shoePrice, t)}

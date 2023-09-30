@@ -69,6 +69,10 @@ import addToCartHandler from "./controllers/addToCart";
 import changeCartHandler from "./controllers/changeCart";
 import saveOrderHandler from "./controllers/saveOrder";
 import getOrdersHandler from "./controllers/getOrders";
+import getUsersHandler from "./controllers/getUsers";
+import deleteUserHandler from "./controllers/deleteUser";
+import getOrdersAdminHandler from "./controllers/getOrderAdmin";
+import updateStatusHandler from "./controllers/updateStatus";
 
 //-------------i18next----------------------------------
 
@@ -152,123 +156,14 @@ mongoose
   });
 
 //---------------------routes----------------------------
-app.get("/getOrdersAdmin", async (req, res) => {
-  const page = parseInt(req.query.page as string);
-  const pageSize = parseInt(req.query.limit as string || '3');
-  const sort= req.query.sort as string
 
-  try {
-    
-    let query = Order.find().lean()
-
-    if (sort) {
-      query = query.where('status').equals(sort);
-    }
-
-    const total = await Order.countDocuments(query);
-
-    if (total === 0) { // Sprawdź, czy jest równa 0, aby poprawnie obsłużyć brak użytkowników
-      res.status(200).json({ orders: [] });
-    } else {
-      
-      const pages = Math.ceil(total / pageSize);
-
-      let correctedPage = page;
-      if (page > pages) {
-        correctedPage = pages;
-      }
-  
-      const result = await query
-        .skip((correctedPage - 1) * pageSize)
-        .limit(pageSize)
-        .exec(); // Dodaj .exec() aby wykonać zapytanie
-
-
-      const shoeIds = result.flatMap((order) =>
-      order.products.map((product) => product.shoeId)
-    );
-
-    // Retrieve shoe objects based on shoeIds
-    const shoes = await Shoes.find({ _id: shoeIds });
-
-    res.status(200).json({
-      status: 'success',
-      count: result.length,
-      page: correctedPage,
-      pages,
-      orders: result,
-      shoes:shoes
-    });
-    }
-    
-  } catch (error) {
-    console.error("Błąd podczas pobierania zamówien", error);
-    res.status(500).json({ error: "Wystąpił błąd podczas pobierania zamówien" });
-  }
-});
-
-
-app.delete("/deleteUser/:userId", async (req, res) => {
-  
-  const userId = req.params.userId;
-  
-  try {
-    await User.findOneAndRemove({ _id: userId});
-   
-    res.status(200).json({ message: "Usuniete uzytkownika" });
-  } catch (error) {
-    console.error("Błąd podczas usuwania użytkowników", error);
-    res.status(500).json({ error: "Błąd podczas usuwania użytkowników" });
-  }
-});
-
-
-app.get("/getUsers", async (req, res) => {
-  const page = parseInt(req.query.page as string);
-  const pageSize = parseInt(req.query.limit as string || '11');
-  
-  try {
-    const query = User.find().lean();
-
-    const total = await User.countDocuments(query);
-
-    if (total === 0) { // Sprawdź, czy jest równa 0, aby poprawnie obsłużyć brak użytkowników
-      res.status(404).json({ error: "Nie znaleziono użytkowników" });
-    } else {
-      const pages = Math.ceil(total / pageSize);
-
-      let correctedPage = page;
-      if (page > pages) {
-        correctedPage = pages;
-      }
-  
-      const result = await query
-        .skip((correctedPage - 1) * pageSize)
-        .limit(pageSize)
-        .exec(); // Dodaj .exec() aby wykonać zapytanie
-      
-      res.status(200).json({
-        status: 'success',
-        count: result.length,
-        page: correctedPage,
-        pages,
-        users: result,
-      });
-    }
-  } catch (error) {
-    console.error("Błąd podczas pobierania użytkowników", error);
-    res.status(500).json({ error: "Wystąpił błąd podczas pobierania użytkowników" });
-  }
-});
-
-
+app.delete("/deleteUser/:userId", deleteUserHandler);
 app.delete("/deleteAddress/:addressId", deleteAddressHandler);
 app.delete("/removeFavoriteShoe/:userId/:shoeId", removeFavoriteShoeHandler);
 
+app.get("/getOrdersAdmin", getOrdersAdminHandler);
 app.get("/getOrders", getOrdersHandler);
-
-
-
+app.get("/getUsers", getUsersHandler);
 app.get("/getQuantityCart", getQuantityCartHandler);
 app.get("/getShoesCart", getShoesCartHandler);
 app.get("/getDiscount", getDiscountHandler);
@@ -290,6 +185,7 @@ app.get("/user", (req, res) => {
   res.send(req.user);
 });
 
+app.post("/updateStatus", updateStatusHandler);
 app.post("/saveOrder", saveOrderHandler);
 app.post("/changeCart", changeCartHandler);
 app.post("/addToCart", addToCartHandler);

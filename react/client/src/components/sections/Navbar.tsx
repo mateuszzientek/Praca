@@ -239,21 +239,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         >
           {/* switcher -show mobile menu */}
           <div
-            onClick={() => setNav(!nav)}
-            className=" md:hidden cursor-pointer pl-8 hover:scale-125 transition ease-in-out duration-300"
+            className=" md:hidden pl-8"
           >
             <AiOutlineMenu
+              onClick={() => setNav(!nav)}
               size={25}
               color={theme === "dark" ? "white" : "black"}
+              className="cursor-pointer  hover:scale-125 transition ease-in-out duration-300"
             />
           </div>
 
           {/* logo */}
-          <div onClick={() => navigate("/")} className="cursor-pointer">
+          <div>
             <LazyLoadImage
+              onClick={() => navigate("/")}
               src={theme === "dark" ? logo2 : logo}
               alt="Logo firmy"
-              className="dark:h-20 h-16 w-48 -rotate-6 ml-20 mr-16 sm:ml-40 sm:mr-32 md:mx-0 "
+              className="dark:h-20 h-16 w-48 -rotate-6 ml-20 mr-16 sm:ml-40 sm:mr-32 md:mx-0 cursor-pointer"
               effect="blur"
               placeholderSrc={theme === "dark" ? logo2 : logo}
             />
@@ -263,7 +265,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
           <div className="hidden xl:flex  mx-auto font-roboto text-xl ">
             <HeroLink text={t("navbar.home")} link="/" />
             <HeroLink text={t("navbar.shop")} link="/shop" />
-            <HeroLink text={t("navbar.custom")} link="/cfd" />
+            <HeroLink text={t("navbar.custom")} link="/design" />
             <HeroLink text={t("navbar.contact")} link="/contact" />
           </div>
 
@@ -373,11 +375,11 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                 <div className="border-b border-black/50 w-full"></div>
 
-                {user?.role === "user" && <ProfileLink text="Admin Panel" link="/adminPanel" />}
+                {user?.role === "admin" && <ProfileLink text="Admin Panel" link="/adminPanel" />}
                 <ProfileLink text={t("profile.myprofile")} link="/profile" />
                 <ProfileLink text={t("profile.address")} link="/address" />
                 <ProfileLink text={t("profile.orders")} link="/order" />
-                <ProfileLink text={t("profile.projects")} link="/abra" />
+                <ProfileLink text={t("profile.projects")} link="/fds" />
                 <ProfileLink text={t("profile.help")} link="/contact" />
 
                 {isUserLoggedIn && (
@@ -501,7 +503,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
               <MobileLink
                 text={t("navbar.custom")}
                 icon={<FaPencilAlt size={25} className="mr-4" />}
-                link="/fds"
+                link="/design"
               />
               <MobileLink
                 text={t("navbar.contact")}

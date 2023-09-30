@@ -17,16 +17,11 @@ import { useTranslation } from "react-i18next";
 import validator from "validator";
 import { UserContext } from "../elements/UserProvider";
 import { ThemeContext } from '../elements/ThemeContext';
+import { ShoeInterface } from "src/types";
 
-interface Shoe {
-  _id: string;
-  name: string;
-  category: string;
-  price: number;
-  discountPrice: number;
-  image: string;
-  imageUrl?: string; // Dodane pole imageUrl
-  isHearted: boolean; // Dodane pole isHearted
+
+interface Shoe extends ShoeInterface {
+  isHearted: boolean;
 }
 
 function Shop() {
@@ -52,7 +47,11 @@ function Shop() {
     selectedSort,
     setSelectedSort,
     searchTerm,
-    setSearchTerm
+    setSearchTerm,
+    currentMax,
+    setCurrentMax,
+    currentMin,
+    setCurrentMin
   } = useContext(FilterContext);
 
 
@@ -82,8 +81,6 @@ function Shop() {
   const [message, setMessage] = useState("");
   const [page, setPage] = useState(getInitialPage());
   const [pages, setPages] = useState(1);
-  const [currentMin, setCurrentMin] = useState("");
-  const [currentMax, setCurrentMax] = useState("");
   const [showSort, setShowSort] = useState(false);
   const [favoriteShoesFetched, setFavoriteShoesFetched] = useState(false);
 
@@ -106,13 +103,19 @@ function Shop() {
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedPrice = event.target.value;
     setSelectedPrice(selectedPrice);
+    setSelectedMin("")
+    setSelectedMax("")
+    setCurrentMax("")
+    setCurrentMin("")
   };
 
   const handleMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMax(event.target.value);
+    setSelectedPrice("")
   };
   const handleMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMin(event.target.value);
+    setSelectedPrice("")
   };
 
   const handleSizesChange = (
@@ -175,14 +178,16 @@ function Shop() {
       selectedBrand,
       selectedCategory,
       selectedPrice,
-      selectedMin,
+      currentMin,
+      currentMax,
       selectedMax,
+      selectedMin,
       selectedSizes,
       selectedSort,
       page,
     };
     localStorage.setItem("shopFilters", JSON.stringify(filters));
-  }, [selectedBrand, selectedCategory, selectedPrice, selectedMin, selectedMax, selectedSizes, selectedSort, page]);
+  }, [selectedBrand, selectedCategory, selectedMax, selectedMin, selectedPrice, currentMin, currentMax, selectedSizes, selectedSort, page]);
 
 
   useEffect(() => {
@@ -221,8 +226,6 @@ function Shop() {
 
         setPage(response.data.page)
         setPages(totalPages);
-        setShoes(shoeImages);
-        setLoading(false);
         setFavoriteShoesFetched(true);
 
         if (user?._id) {
@@ -239,12 +242,20 @@ function Shop() {
                   return shoe;
                 });
                 setShoes(updatedShoes);
+                setLoading(false);
+
+              } else {
+                setShoes(shoeImages);
+                setLoading(false);
               }
 
             })
             .catch((error) => {
               console.error("Błąd podczas pobierania ulubionych butów", error);
             });
+        } else {
+          setShoes(shoeImages);
+          setLoading(false);
         }
       } catch (error) {
         console.log(error);

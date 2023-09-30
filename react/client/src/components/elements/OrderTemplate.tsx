@@ -4,17 +4,10 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatPrice } from "src/currencyUtils";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ShoeInterface, ProductInterface } from "src/types";
+import { ShoeInterface } from "src/types";
 
-interface Shoe {
-  _id: string;
-  name: string;
+interface Shoe extends ShoeInterface {
   brand: string;
-  category: string;
-  price: number;
-  imageUrl?: string;
-  discountPrice: number;
-  image: string;
   _idProduct?: string;
 }
 
@@ -44,15 +37,15 @@ function OrderTemplate(props: OrderTemplateProps) {
   const getStatusColor = () => {
     switch (props.status) {
       case "submitted":
-        return "text-blue-500"; // Przykładowy kolor dla "Order Submitted"
+        return "text-blue-500";
       case "preparing":
-        return "text-yellow-500"; // Przykładowy kolor dla "Preparing"
+        return "text-yellow-500";
       case "shipped":
-        return "text-green-500"; // Przykładowy kolor dla "Shipped"
+        return "text-[#8c03fc]";
       case "delivered":
-        return "text-gray-500"; // Przykładowy kolor dla "Delivered"
+        return "text-green-500";
       default:
-        return "text-black/80"; // Domyślny kolor
+        return "text-black/80";
     }
   };
 

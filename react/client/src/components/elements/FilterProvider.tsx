@@ -6,6 +6,8 @@ interface FilterContextType {
     selectedPrice: string;
     selectedMin: string;
     selectedMax: string;
+    currentMin: string;
+    currentMax: string;
     selectedSort: string;
     searchTerm: string;
     selectedSizes: Array<String>;
@@ -14,6 +16,8 @@ interface FilterContextType {
     setSelectedPrice: React.Dispatch<React.SetStateAction<string>>;
     setSelectedMin: React.Dispatch<React.SetStateAction<string>>;
     setSelectedMax: React.Dispatch<React.SetStateAction<string>>;
+    setCurrentMin: React.Dispatch<React.SetStateAction<string>>;
+    setCurrentMax: React.Dispatch<React.SetStateAction<string>>;
     setSelectedSort: React.Dispatch<React.SetStateAction<string>>;
     setSelectedSizes: React.Dispatch<React.SetStateAction<Array<string>>>;
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
@@ -32,8 +36,12 @@ export const FilterContext = createContext<FilterContextType>({
     selectedSizes: [],
     selectedSort: "",
     searchTerm: '',
+    currentMin: "",
+    currentMax: '',
     setSelectedMin: () => { },
     setSelectedMax: () => { },
+    setCurrentMin: () => { },
+    setCurrentMax: () => { },
     setSelectedBrand: () => { },
     setSelectedCategory: () => { },
     setSelectedPrice: () => { },
@@ -48,6 +56,8 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     const [selectedPrice, setSelectedPrice] = useState('');
     const [selectedMin, setSelectedMin] = useState("");
     const [selectedMax, setSelectedMax] = useState("");
+    const [currentMin, setCurrentMin] = useState("");
+    const [currentMax, setCurrentMax] = useState("");
     const [selectedSort, setSelectedSort] = useState("");
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSizes, setSelectedSizes] = useState<Array<string>>([]);
@@ -62,8 +72,10 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
             setSelectedBrand(parsedFilters.selectedBrand || 'All');
             setSelectedCategory(parsedFilters.selectedCategory || '');
             setSelectedPrice(parsedFilters.selectedPrice || '');
-            setSelectedMin(parsedFilters.selectedMin || '');
-            setSelectedMax(parsedFilters.selectedMax || '');
+            setCurrentMax(parsedFilters.currentMax || '')
+            setCurrentMin(parsedFilters.currentMin || '')
+            setSelectedMax(parsedFilters.selectedMax || '')
+            setSelectedMin(parsedFilters.selectedMin || '')
             setSelectedSizes(parsedFilters.selectedSizes || []);
             setSelectedSort(parsedFilters.selectedSort || '');
         }
@@ -89,7 +101,11 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
                 selectedSort,
                 setSelectedSort,
                 searchTerm,
-                setSearchTerm
+                setSearchTerm,
+                currentMax,
+                setCurrentMax,
+                currentMin,
+                setCurrentMin
             }}
         >
             {children}

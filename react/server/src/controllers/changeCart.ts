@@ -6,7 +6,7 @@ const changeCartHandler = [
   async (req: Request, res: Response) => {
     try {
       const { userId } = req.body;
-      console.log("user" + userId);
+      console.log("user ta" + userId);
       let sessionId = req.cookies.sessionId;
 
       if (!sessionId) {

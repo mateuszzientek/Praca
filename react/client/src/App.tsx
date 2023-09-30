@@ -22,8 +22,11 @@ const ShoeView = lazy(() => import("./components/pages/ShoeView"));
 const Favorite = lazy(() => import("./components/pages/Favorite"));
 const Address = lazy(() => import("./components/pages/Address"));
 const Cart = lazy(() => import("./components/pages/Cart"));
+const Customization = lazy(() => import("./components/pages/Customization"));
 const Checkout = lazy(() => import("./components/pages/Checkout"));
 const Profile = lazy(() => import("./components/pages/Profile"));
+const Design = lazy(() => import("./components/pages/Design"));
+const ShoeType = lazy(() => import("./components/pages/ShoeType"));
 const RedirectAfterGoogleLogin = lazy(
   () => import("./components/pages/RedirectAfterGoogleLogin")
 );
@@ -78,10 +81,34 @@ const App: React.FC = () => {
                   }
                 />
                 <Route
+                  path="/customization/:type"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Customization />
+                    </Suspense>
+                  }
+                />
+                <Route
                   path="/redirectAfterGoogleLogin"
                   element={
                     <Suspense fallback={<LoadingAnimation />}>
                       <RedirectAfterGoogleLogin />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/design"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <Design />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/shoeType"
+                  element={
+                    <Suspense fallback={<LoadingAnimation />}>
+                      <ShoeType />
                     </Suspense>
                   }
                 />

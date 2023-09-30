@@ -17,18 +17,21 @@ import CircleSvg from "../elements/CircleSvg";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { useTranslation } from "react-i18next";
 import storage from "../../firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import ReactCrop, { Crop } from "react-image-crop";
+import { ref, uploadBytes, getDownloadURL, listAll, deleteObject } from "firebase/storage";
 import "react-image-crop/dist/ReactCrop.css";
 import { Link } from "react-router-dom";
 import { ErrorInterface } from "src/types";
-
-interface CropDemoProps {
-  src: string;
-  onImageUpload: (croppedImage: Blob) => void; // Nowy prop dla funkcji handleImageUpload
-}
+import Cropper from "react-easy-crop";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
 function Profile() {
+  const inputRef = useRef(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [croppedArea, setCroppedArea] = useState<Blob | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+
   const { t } = useTranslation();
   const { user, isUserLoggedIn, isUserDataLoaded, fetchUserData } =
     useContext(UserContext);
@@ -37,7 +40,6 @@ function Profile() {
   const [showEditEmail, setShowEditEmail] = useState(false);
   const [showEditPassword, setShowEditPassword] = useState(false);
   const genders = ["man", "woman", "other"];
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isLoadingEditData, setIsLoadingEditData] = useState(false);
   const [errorsValidationServer, setErrorsValidationServer] = useState<
     ErrorInterface[]
@@ -82,6 +84,18 @@ function Profile() {
   }, []);
 
   useEffect(() => {
+    if (image) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [image]);
+
+  useEffect(() => {
     if (user?.dateOfBirth && isUserDataLoaded) {
       const dateOfBirth = new Date(user.dateOfBirth);
       const day = dateOfBirth.getDate().toString().padStart(2, "0");
@@ -107,7 +121,7 @@ function Profile() {
         setIsImageLoaded(true);
       } catch (error) {
         console.log("Błąd podczas pobierania zdjęcia:", error);
-        setIsImageLoaded(false);
+        setIsImageLoaded(true);
       }
     }
   };
@@ -255,12 +269,12 @@ function Profile() {
     return (
       Object.keys(
         newErrors.name ||
-          newErrors.surname ||
-          newErrors.day ||
-          newErrors.month ||
-          newErrors.year ||
-          newErrorsPassword.old ||
-          newErrorsPassword.new
+        newErrors.surname ||
+        newErrors.day ||
+        newErrors.month ||
+        newErrors.year ||
+        newErrorsPassword.old ||
+        newErrorsPassword.new
       ).length === 0
     );
   };
@@ -442,86 +456,120 @@ function Profile() {
 
   //---------------------images---------------------------
 
-  function image64toCanvasRef(canvasRef: any, image64: any, pixelCrop: Crop) {
-    canvasRef.width = pixelCrop.width; // Set canvas width to cropped area width
-    canvasRef.height = pixelCrop.height; // Set canvas height to cropped area height
-    const ctx = canvasRef.getContext("2d");
-    const image = new Image();
-    image.src = image64;
-    image.onload = function () {
-      ctx?.drawImage(
-        image,
-        pixelCrop.x,
-        pixelCrop.y,
-        pixelCrop.width,
-        pixelCrop.height,
-        0,
-        0,
-        pixelCrop.width,
-        pixelCrop.height
-      );
-      console.log(pixelCrop.x);
-    };
-  }
+  const onCropComplete = (
+    croppedAreaPercentage: any,
+    croppedAreaPixels: any
+  ) => {
+    setCroppedArea(croppedAreaPixels);
+  };
 
-  const [croppedImage, setCroppedImage] = useState<Blob | null>(null);
-
-  const imageRef = useRef<HTMLCanvasElement | null>(null);
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedImage(file);
-    if (file) {
+  const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewUrl(null);
+      reader.readAsDataURL(event.target.files[0]);
+      reader.addEventListener("load", () => {
+        const result = reader.result as string | null;
+        setImage(result); // Assuming setImage accepts a string | null type
+      });
     }
   };
 
+  async function getCroppedImageFile(
+    imageSrc: string,
+    croppedAreaPixels: any
+  ): Promise<File> {
+    const img = new Image();
+    img.src = imageSrc;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = croppedAreaPixels.width;
+    canvas.height = croppedAreaPixels.height;
+
+    const ctx = canvas.getContext("2d");
+
+    if (ctx) {
+      ctx.drawImage(
+        img,
+        croppedAreaPixels.x,
+        croppedAreaPixels.y,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height,
+        0,
+        0,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height
+      );
+
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], "cropped-image.jpg", {
+              type: "image/jpeg",
+            });
+            resolve(file);
+          }
+        }, "image/jpeg");
+      });
+    } else {
+      throw new Error("Canvas context is null");
+    }
+  }
+
+  async function deleteAvatarFiles(userId: any) {
+    const avatarFolderRef = ref(storage, `avatars/`);
+    const avatarFilesList = await listAll(avatarFolderRef);
+
+    const deletePromises = avatarFilesList.items
+      .filter(item => item.name.startsWith(`${userId}_`))
+      .map(item => deleteObject(item));
+
+    await Promise.all(deletePromises);
+  }
+
   const handleImageUpload = async () => {
     try {
-      if (!selectedImage) {
+      if (!image || !croppedArea) {
         throw new Error("Proszę wybrać zdjęcie");
       }
       setIsLoadingEditData(true);
 
+      const croppedImageFile: File = await getCroppedImageFile(
+        image,
+        croppedArea
+      );
+
+      // Create FormData with the File
       const data = new FormData();
-      data.append("avatar", selectedImage);
+      data.append("avatar", croppedImageFile);
       data.append("id", user?._id || "");
 
+      // Use the FormData in the uploadImageHandler
       const response = await axios.post("/uploadImage", data);
 
-      if (user && selectedImage) {
-        const storageRef = ref(storage, `avatars/${response.data.filename}`);
-        await uploadBytes(storageRef, selectedImage);
+      if (user && croppedImageFile) {
 
-        console.log("Zdjęcie zapisane w Firebase Storage");
+        await deleteAvatarFiles(user._id);
+
+        const storageRef = ref(storage, `avatars/${user._id}_${response.data.filename}`);
+        await uploadBytes(storageRef, croppedImageFile);
+
+        console.log("Zdjęcie zapisane w Firebase Storage")
       }
 
       const message = t("profile.text13");
       setMessage(message);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 700);
     } catch (error) {
-      setErrorsServer(error as string);
+      console.error("Error uploading image:", error);
     } finally {
       setIsLoadingEditData(false);
     }
   };
 
-  const [crop, setCrop] = useState<Crop>();
-
-  const handleOnCropComplete = (crop: Crop, pixelCrop: any) => {
-    const canvasRef = imageRef.current;
-    const imageSrc = previewUrl;
-    image64toCanvasRef(canvasRef, imageSrc, pixelCrop);
-  };
-
-  const handleOnCropChange = (crop: Crop) => {
-    setCrop(crop);
+  const handleZoomChange = (event: any) => {
+    setZoom(event.target.value);
   };
 
   return (
@@ -543,55 +591,51 @@ function Profile() {
 
       {/* --------------- AVATAR ------------------*/}
 
-      {previewUrl && (
-        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-[2] flex justify-center items-center ">
-          <div className="relative flex flex-col items-start pl-10 pb-10 px-10 bg-white dark:bg-black  rounded-lg w-[30rem]">
-            <p className="text-3xl text-black/80 dark:text-white/80 font-bold mt-6 mb-10">
-              {t("profile.text14")}
-            </p>
-            {previewUrl && (
-              <ReactCrop
-                crop={crop}
-                onComplete={handleOnCropComplete}
-                onChange={handleOnCropChange}
-              >
-                <img src={previewUrl} />
-              </ReactCrop>
-            )}
+      {image && (
+        <div className="fixed w-full h-screen flex flex-col items-center pl-10 pb-10 px-10 z-[2] bg-white dark:bg-black  rounded-lg overflow-y-auto">
+          <p className="text-3xl text-black/80 dark:text-white/80 font-bold mt-10 mb-10">
+            {t("profile.text14")}
+          </p>
 
-            <canvas ref={imageRef}></canvas>
+          <div className="relative w-full h-full ">
+            <Cropper
+              image={image || ""}
+              crop={crop}
+              zoom={zoom}
+              aspect={1}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+            />
+          </div>
 
-            <div className="flex mt-6 space-x-4">
-              <button
-                onClick={() => {
-                  setPreviewUrl("");
-                }}
-                className="py-2 px-4 border-2 border-black/80 dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300"
-              >
-                {" "}
-                {t("profile.cancel")}
-              </button>
+          <input className="w-full lg:w-[60%] mt-6" type="range" value={zoom} step={0.01} onChange={handleZoomChange} min={1} max={3} />
 
-              <div
-                className={`flex items-center justify-center py-2 px-4 border-2 border-black/80 ${
-                  isLoadingEditData ? "bg-[#c9c9c9]" : "bg-transparent"
+          <div className="flex mt-6 space-x-4 ">
+            <button
+              onClick={() => {
+                setImage("");
+              }}
+              className="py-2 px-4 border-2 border-black/80 dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300"
+            >
+              {" "}
+              {t("profile.cancel")}
+            </button>
+
+            <button
+              disabled={isLoadingEditData}
+              onClick={handleImageUpload}
+              className={`flex items-center justify-center py-2 px-4 border-2 border-black/80 ${isLoadingEditData ? "bg-[#c9c9c9]" : "bg-transparent"
                 } dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300`}
-              >
-                {isLoadingEditData && (
-                  <CircleSvg
-                    color={theme === "dark" ? "white" : "black"}
-                    secColor={theme === "dark" ? "white" : "black"}
-                  />
-                )}
-                <button
-                  disabled={isLoadingEditData}
-                  onClick={handleImageUpload}
-                >
-                  {" "}
-                  {t("profile.save")}
-                </button>
-              </div>
-            </div>
+            >
+              {isLoadingEditData && (
+                <CircleSvg
+                  color={theme === "dark" ? "white" : "black"}
+                  secColor={theme === "dark" ? "white" : "black"}
+                />
+              )}
+              <div> {t("profile.save")}</div>
+            </button>
           </div>
         </div>
       )}
@@ -614,9 +658,8 @@ function Profile() {
 
             <form className="w-[90%]" onSubmit={handleEditEmail}>
               <input
-                className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                  errorEmail ? "border-red-500" : "border-black/50"
-                } `}
+                className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorEmail ? "border-red-500" : "border-black/50"
+                  } `}
                 value={email}
                 type="email"
                 onChange={handleEmailChange}
@@ -669,9 +712,8 @@ function Profile() {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                    errorsPassword.old ? "border-red-500" : "border-black/50"
-                  } `}
+                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorsPassword.old ? "border-red-500" : "border-black/50"
+                    } `}
                   value={oldPassword}
                   onChange={handleOldPasswordChange}
                   onBlur={handleBlur}
@@ -701,9 +743,8 @@ function Profile() {
               )}
               <div className="relative">
                 <input
-                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                    errorsPassword.new ? "border-red-500" : "border-black/50"
-                  } `}
+                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorsPassword.new ? "border-red-500" : "border-black/50"
+                    } `}
                   type={showPasswordSec ? "text" : "password"}
                   value={newPassword}
                   onChange={handleNewPasswordChange}
@@ -774,9 +815,8 @@ function Profile() {
 
             <form className="w-[90%]" onSubmit={handleSubmitEditData}>
               <input
-                className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                  errors.name ? "border-red-500" : "border-black/50"
-                } `}
+                className={`mt-10 w-full px-2 h-[3rem] border-2 ${errors.name ? "border-red-500" : "border-black/50"
+                  } `}
                 value={name}
                 onChange={handleNameChange}
                 onBlur={handleBlur}
@@ -787,9 +827,8 @@ function Profile() {
               )}
 
               <input
-                className={`mt-6 w-full  px-2 h-[3rem] border-2 ${
-                  errors.surname ? "border-red-500" : "border-black/50"
-                } `}
+                className={`mt-6 w-full  px-2 h-[3rem] border-2 ${errors.surname ? "border-red-500" : "border-black/50"
+                  } `}
                 value={surname}
                 onChange={handleSurnameChange}
                 onBlur={handleBlur}
@@ -806,9 +845,8 @@ function Profile() {
               <div className="flex w-full  mt-6 space-x-4">
                 <div className="w-[33%] ">
                   <input
-                    className={`w-full px-2 h-[3rem]  border-2 ${
-                      errors.day ? "border-red-500" : "border-black/50"
-                    }`}
+                    className={`w-full px-2 h-[3rem]  border-2 ${errors.day ? "border-red-500" : "border-black/50"
+                      }`}
                     value={day}
                     onChange={handleDayChange}
                     onBlur={handleBlur}
@@ -822,9 +860,8 @@ function Profile() {
 
                 <div className="w-[33%] ">
                   <input
-                    className={`w-full px-2 h-[3rem]  border-2 ${
-                      errors.month ? "border-red-500" : "border-black/50"
-                    }`}
+                    className={`w-full px-2 h-[3rem]  border-2 ${errors.month ? "border-red-500" : "border-black/50"
+                      }`}
                     value={month}
                     onChange={handleMonthChange}
                     onBlur={handleBlur}
@@ -838,9 +875,8 @@ function Profile() {
 
                 <div className="w-[33%] ">
                   <input
-                    className={`w-full px-2 h-[3rem]  border-2 ${
-                      errors.year ? "border-red-500" : "border-black/50"
-                    }`}
+                    className={`w-full px-2 h-[3rem]  border-2 ${errors.year ? "border-red-500" : "border-black/50"
+                      }`}
                     value={year}
                     onChange={handleYearChange}
                     onBlur={handleBlur}
@@ -973,8 +1009,9 @@ function Profile() {
                   type="file"
                   name="avatar"
                   accept="image/jpeg, image/jpg"
+                  ref={inputRef}
+                  onChange={onSelectFile}
                   className="hidden"
-                  onChange={handleImageChange}
                 />
               </label>
             </div>

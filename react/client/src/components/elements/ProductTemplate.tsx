@@ -6,16 +6,10 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { useNavigate } from "react-router-dom";
 import { formatPrice } from "src/currencyUtils";
+import { ShoeInterface } from "src/types";
 
-interface Shoe {
-  _id: string;
-  name: string;
-  category: string;
-  price: number;
-  discountPrice: number;
-  image: string;
-  imageUrl?: string; // Dodane pole imageUrl
-  isHearted: boolean; // Dodane pole isHearted
+interface Shoe extends ShoeInterface {
+  isHearted: boolean;
 }
 
 interface ProductTemplateProps {
