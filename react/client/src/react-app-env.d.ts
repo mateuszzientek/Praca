@@ -7,3 +7,5 @@ declare module "react-scroll";
 declare module "validator";
 declare module "classnames";
 declare module "cooperjs";
+declare module "cloudinary-react"
+declare module "react-color"
