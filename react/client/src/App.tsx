@@ -83,7 +83,7 @@ const App: React.FC = () => {
                     }
                   />
                   <Route
-                    path="/customization/:type"
+                    path="/customization"
                     element={
                       <Suspense fallback={<LoadingAnimation />}>
                         <Customization />

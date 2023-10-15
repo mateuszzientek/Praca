@@ -28,13 +28,14 @@ function Design() {
             <div className=' w-screen md:w-[43rem] lg:w-[55rem] 2xl:w-[65rem] text-black/80 dark:text-white/80 mt-16 mx-auto flex flex-col md:flex-row md:justify-between items-center '>
 
                 <div className='flex flex-row md:flex-col md:items-center md:space-y-16 space-x-10 md:space-x-0'>
-                    <div className='flex flex-col items-center w-[10rem] text-center space-y-2'>
-                        <TbShoe size={30} />
-                        <p >{t("design.text3")}</p>
-                    </div>
+
                     <div className='flex flex-col items-center w-[10rem] text-center space-y-2'>
                         <IoColorFillOutline size={30} />
                         <p >{t("design.text4")}</p>
+                    </div>
+                    <div className='flex flex-col items-center w-[10rem] text-center space-y-2'>
+                        <FiSave size={30} />
+                        <p >{t("design.text7")}</p>
                     </div>
                 </div>
 
@@ -56,13 +57,9 @@ function Design() {
                 </div>
 
             </div>
-            <div className='flex flex-col items-center text-black/80 dark:text-white/80 mt-4 lg:mt-10 space-y-10'>
-                <div className='flex flex-col items-center w-[10rem] text-center space-y-2'>
-                    <FiSave size={30} />
-                    <p >{t("design.text7")}</p>
-                </div>
+            <div className='flex justify-center items-center text-black/80 dark:text-white/80 mt-6 lg:mt-10 space-y-10'>
 
-                <button onClick={() => navigate("/shoeType")} className='px-4 py-3 bg-black/80 dark:bg-black/60 text-white rounded-full hover:scale-105 ease-in-out duration-500'>
+                <button onClick={() => navigate("/customization")} className='px-4 py-3 bg-black/80 dark:bg-black/60 text-white rounded-full hover:scale-105 ease-in-out duration-500'>
                     <p className='text-xl'>{t("design.text8")}</p>
 
                 </button>

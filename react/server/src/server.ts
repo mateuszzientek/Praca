@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import session from "express-session";
+import session, {SessionData} from "express-session";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import multer from "multer";
@@ -156,6 +156,52 @@ mongoose
   });
 
 //---------------------routes----------------------------
+app.post("/saveColorsDesign", (req, res) => {
+  const { selectedColors } = req.body;
+
+  let sessionId = req.cookies.sessionId;
+
+  if (!sessionId) {
+    sessionId = uuidv4();
+
+    res.cookie("sessionId", sessionId, { httpOnly: true });
+  }
+
+  const colorKey = `selectedColor_${sessionId}`;
+
+  const sessionData = req.session as SessionData & Record<string, any>;
+  sessionData[colorKey] = selectedColors;
+
+  console.log(`Dane selectedColors zostały zapisane w sesji pod kluczem ${colorKey}:`, selectedColors);
+
+  res.sendStatus(200);
+});
+
+app.get("/getColorsDesign", (req, res) => {
+  
+  const sessionId = req.cookies.sessionId;
+
+  const colorKey = `selectedColor_${sessionId}`;
+
+  const sessionData = req.session as SessionData & Record<string, any>;
+  const selectedColors = sessionData[colorKey];
+
+  if (selectedColors) {
+    res.json({ selectedColors });
+  } 
+});
+
+app.delete("/clearColorsDesign", (req, res) => {
+  const sessionId = req.cookies.sessionId;
+  const colorKey = `selectedColor_${sessionId}`;
+
+  const sessionData = req.session as SessionData & Record<string, any>;
+
+  if (sessionData[colorKey]) {
+    delete sessionData[colorKey];
+    res.sendStatus(200);
+  }
+});
 
 app.delete("/deleteUser/:userId", deleteUserHandler);
 app.delete("/deleteAddress/:addressId", deleteAddressHandler);

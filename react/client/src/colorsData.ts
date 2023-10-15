@@ -1,7 +1,7 @@
 const colorsData = [
   {
-    color: { r: 255, g: 0, b: 0 },
-    background: "bg-[#D83F31]",
+    color: { r: 253, g: 94, b: 94 },
+    background: "bg-[#FD5E5E]",
   },
   {
     color: { r: 186, g: 215, b: 233 },
