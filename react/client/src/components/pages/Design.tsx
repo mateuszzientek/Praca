@@ -14,6 +14,7 @@ function Design() {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
+
     return (
         <div className=' min-h-screen bg-[#F5EFE7] dark:bg-[#5c5c5c] pb-20'>
             <Navbar background="bg-white" shadow="shadow-lg" />

@@ -19,6 +19,8 @@ import Address from "./schemas/address";
 import Cart from "./schemas/cart";
 import Discount from "./schemas/discount";
 import DiscountUser from "./schemas/discountUser";
+import CustomShoeTemporary from "./schemas/customShoeTemporary";
+import DesignProject from "./schemas/designProject";
 
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
@@ -156,50 +158,126 @@ mongoose
   });
 
 //---------------------routes----------------------------
-app.post("/saveColorsDesign", (req, res) => {
-  const { selectedColors } = req.body;
+app.get("/getProjects", async (req, res) => {
+  const userId = req.query.userId;
 
-  let sessionId = req.cookies.sessionId;
+  try{
+     if(!userId){
+      res.status(400).json({error: "User ID is missing"})
+     }
 
-  if (!sessionId) {
-    sessionId = uuidv4();
+     const projects = await DesignProject.findOne({ userId: userId })
 
-    res.cookie("sessionId", sessionId, { httpOnly: true });
+     res.status(200).json({ projects: projects });
+
+  }catch (error){
+    console.error("Error while saving project", error);
+    return res.status(500).json({ error: "An error occurred while saving the project" });
   }
 
-  const colorKey = `selectedColor_${sessionId}`;
-
-  const sessionData = req.session as SessionData & Record<string, any>;
-  sessionData[colorKey] = selectedColors;
-
-  console.log(`Dane selectedColors zostały zapisane w sesji pod kluczem ${colorKey}:`, selectedColors);
-
-  res.sendStatus(200);
 });
 
-app.get("/getColorsDesign", (req, res) => {
+
+app.post("/saveDesignProject", async (req, res) => {
+  const { customContextData, userId } = req.body;
+
+  try {
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is missing" });
+    }
+
+    // Tworzymy nowy projekt na podstawie danych z żądania
+    const newProject = {
+      designName: customContextData.designName,
+      selectedColors: customContextData.selectedColors,
+      selectedColorsText: customContextData.selectedColorsText,
+      selectedPatches: customContextData.selectedPatches,
+      swooshVisibility: customContextData.swooshVisibility,
+      sideText: customContextData.sideText,
+    };
+
+    // Wyszukujemy dokument `DesignProject` dla danego użytkownika
+    const existingProject = await DesignProject.findOne({ userId });
+
+    if (existingProject) {
+      // Dodaj nowy projekt do tablicy projektów użytkownika
+      existingProject.projects.push(newProject);
+      await existingProject.save();
+    } else {
+      // Jeśli użytkownik nie ma jeszcze żadnych projektów, utwórz nowy dokument `DesignProject`
+      const newDesignProject = new DesignProject({
+        userId,
+        projects: [newProject],
+      });
+      await newDesignProject.save();
+    }
+
+    await CustomShoeTemporary.findOneAndRemove({ userId });
+
+    return res.status(200).json({ message: "Project saved successfully" });
+  } catch (error) {
+    console.error("Error while saving project", error);
+    return res.status(500).json({ error: "An error occurred while saving the project" });
+  }
+});
+
+
+app.delete("/deleteExpiredCustomDesign", async (req,res) =>{
   
-  const sessionId = req.cookies.sessionId;
+  const currentTime = new Date();
+  currentTime.setDate(currentTime.getDate() - 2); 
 
-  const colorKey = `selectedColor_${sessionId}`;
+  try {
+    await CustomShoeTemporary.deleteMany({ expireDate: { $lte: currentTime } });
+  } catch (error) {
+    console.error('Błąd podczas usuwania dokumentów:', error);
+  }
+})
 
-  const sessionData = req.session as SessionData & Record<string, any>;
-  const selectedColors = sessionData[colorKey];
+app.post("/saveCustomShoeTemporary", async (req, res) => {
+  const { customContextData, userId } = req.body
 
-  if (selectedColors) {
-    res.json({ selectedColors });
-  } 
+  try {
+    if (userId) {
+      const existingUser = await CustomShoeTemporary.findOne({ userId: userId });
+      if (existingUser) {
+        await CustomShoeTemporary.updateOne({ userId: userId }, customContextData);
+      } else{
+        customContextData.userId = userId;
+        const customShoeTemporary = new CustomShoeTemporary(customContextData);
+        customShoeTemporary.expireDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); 
+     await customShoeTemporary.save();
+      }
+    } else{
+      res.status(400).send("Wystąpił błąd podczas zapisywania danych w bazie");
+    }
+
+    const id = userId 
+    console.log("Dane zostały zapisane w bazie danych.");
+    res.status(200).json({ id: id });
+  } catch (error) {
+    console.error("Błąd podczas zapisywania danych w bazie", error);
+    res.status(500).send("Wystąpił błąd podczas zapisywania danych w bazie");
+  }
 });
 
-app.delete("/clearColorsDesign", (req, res) => {
-  const sessionId = req.cookies.sessionId;
-  const colorKey = `selectedColor_${sessionId}`;
 
-  const sessionData = req.session as SessionData & Record<string, any>;
+app.get("/getCustomShoeTemporary", async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    
+    if (userId) {
+      // Sprawdź, czy istnieje dokument o danym userId
+      const userDocument = await CustomShoeTemporary.findOne({ userId });
 
-  if (sessionData[colorKey]) {
-    delete sessionData[colorKey];
-    res.sendStatus(200);
+      if (userDocument) {
+        // Jeśli dokument istnieje po userId, zwróć go
+        return res.status(200).json({ userDocument: userDocument })
+      }
+    }
+  } catch (error) {
+    console.error("Błąd podczas pobierania danych z bazy", error);
+    res.status(500).send("Wystąpił błąd podczas pobierania danych z bazy");
   }
 });
 

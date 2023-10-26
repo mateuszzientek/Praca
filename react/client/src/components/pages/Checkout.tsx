@@ -552,7 +552,6 @@ function Checkout() {
     }
   };
 
-  console.log(shoes);
 
   return (
     <>

@@ -8,9 +8,10 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 
+import { UserContext } from "../elements/UserProvider";
+import { ref, uploadBytes, deleteObject, listAll, getDownloadURL } from "firebase/storage";
+import storage from "../../firebase";
 import RoundedColor from "../elements/RoundedColor";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
 import { CloudinaryContext } from "cloudinary-react";
 import { ChromePicker } from "react-color";
 import TransformedImage from "../elements/TransformedImage";
@@ -28,6 +29,7 @@ import {
 } from "../../colorsUtlils";
 import { onSelectFile, getCroppedImageFile } from "src/graphicsUtils";
 import axios from "axios";
+import { ThemeContext } from "../elements/ThemeContext";
 import side_left from "../../assets/images/side_left.png"
 import side_right from "../../assets/images/side_right.png"
 import "react-image-crop/dist/ReactCrop.css";
@@ -46,18 +48,32 @@ import {
 } from '../../textArraysCustom';
 import ColoPickerTextDiv from "../elements/ColoPickerTextDiv";
 import PatchesDiv from "../elements/PatchesDiv";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import CircleSvg from "../elements/CircleSvg";
+import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
+import InfoDivBottom from "../elements/InfoDivBottom";
+import renderPatch from "src/renderPatch";
 
 
 interface DesignSectionProps {
-  onDesignFinish: () => void;
-  photos: string[];
-  patches: { url: string; name: string }[];
+  photos: string[]
+  patches: Array<{ url: string; name: string }>
 }
 
 function DesignSection(props: DesignSectionProps) {
+  const { theme, setTheme } = useContext(ThemeContext);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { user } = useContext(UserContext);
+  const [errorsServer, setErrorsServer] = useState("");
   const [croppedArea, setCroppedArea] = useState<Blob | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [deleteLeftImage, setDeleteLeftImage] = useState(false);
+  const [deleteRightImage, setDeleteRightImage] = useState(false);
+  const [isDataFetched, setIsDataFetched] = useState(false);
   const [isColorChanging, setIsColorChanging] = useState(false);
   const [sideView, setSideView] = useState("");
   const [showColorPicker, setShowColorPicker] = useState("");
@@ -68,29 +84,48 @@ function DesignSection(props: DesignSectionProps) {
   const [rightSideImage, setRightSideImage] = useState<string | null>(null);
   const { selectedColors, setSelectedColors, setLeftSideImageCropped,
     setRightSideImageCropped, leftSideImageCropped,
-    rightSideImageCropped, isLeftSwooshVisible,
-    isRightSwooshVisible, setIsLeftSwooshVisible,
-    setIsRightSwooshVisible, leftSideText, setLeftSideText,
-    rightSideText, setRightSideText, setSelectedColorsText, selectedColorsText,
-    selectedPatches, setSelectedPatches } = useContext(CustomContext);
+    rightSideImageCropped, swooshVisibility, setSwooshVisibility, setSelectedColorsText, selectedColorsText, sideText, setSideText,
+    selectedPatches, setSelectedPatches, setImagesUrls, imagesUrls } = useContext(CustomContext);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
   const textArray = (() => {
-    if (leftSideImageCropped && rightSideImageCropped && !isLeftSwooshVisible && !isRightSwooshVisible) {
+    if (
+      (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) &&
+      (rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) &&
+      !swooshVisibility.isLeftSwooshVisible &&
+      !swooshVisibility.isRightSwooshVisible
+    ) {
       return textArrayWithBothCroppedImageWithoutSwoosh;
-    } else if (leftSideImageCropped && rightSideImageCropped && !isLeftSwooshVisible) {
-      return textArrayWithBothCroppedImageWithoutSwooshLeft
-    } else if (leftSideImageCropped && rightSideImageCropped && !isRightSwooshVisible) {
-      return textArrayWithBothCroppedImageWithoutSwooshRight
-    } else if (leftSideImageCropped && !isLeftSwooshVisible) {
+    } else if (
+      (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) &&
+      (rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) &&
+      !swooshVisibility.isLeftSwooshVisible
+    ) {
+      return textArrayWithBothCroppedImageWithoutSwooshLeft;
+    } else if (
+      (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) &&
+      (rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) &&
+      !swooshVisibility.isRightSwooshVisible
+    ) {
+      return textArrayWithBothCroppedImageWithoutSwooshRight;
+    } else if (
+      (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) &&
+      !swooshVisibility.isLeftSwooshVisible
+    ) {
       return textArrayWithCroppedImageLeftWithoutSwoosh;
-    } else if (rightSideImageCropped && !isRightSwooshVisible) {
+    } else if (
+      (rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) &&
+      !swooshVisibility.isRightSwooshVisible
+    ) {
       return textArrayWithCroppedImageRightWithoutSwoosh;
-    } else if (leftSideImageCropped && rightSideImageCropped) {
+    } else if (
+      (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) &&
+      (rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl)
+    ) {
       return textArrayWithBothCroppedImage;
-    } else if (leftSideImageCropped) {
+    } else if (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) {
       return textArrayWithCroppedImageLeft;
-    } else if (rightSideImageCropped) {
+    } else if (rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) {
       return textArrayWithCroppedImageRight;
     } else {
       return defaultTextArray;
@@ -101,13 +136,21 @@ function DesignSection(props: DesignSectionProps) {
 
   const handleChangeTextLeft = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setLeftSideText(newValue); // Aktualizacja stanu po zmianie wartości pola tekstowego
-    setSideView("left")
+    setSideText({
+      ...sideText,
+      leftText: newValue,
+    });
+
+    setSideView("left");
   };
 
   const handleChangeTextRight = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setRightSideText(newValue);
+
+    setSideText({
+      ...sideText,
+      rightText: newValue,
+    });
     setSideView("right") // Aktualizacja stanu po zmianie wartości pola tekstowego
   };
 
@@ -150,59 +193,71 @@ function DesignSection(props: DesignSectionProps) {
 
   const buttonVisible = shouldShowButton(currentTextIndex, selectedColors, isColorChanging, textArray);
 
-  // const restartDesign = () => {
-  //   const newSelectedColors = {
-  //     selectedColorSwosh_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorTip_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorHill_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorQuarter_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorHeel_logo_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorToe_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorEyestay_1: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorQuarter_2: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorSwosh_2: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorHeel_2: { rgb: { r: 255, g: 255, b: 255 } },
-  //     selectedColorEyestay_2: { rgb: { r: 255, g: 255, b: 255 } },
-  //   };
+  async function deleteCustomImages(id: any) {
+    const customImagesFolderRef = ref(storage, `customImages/${id}`);
+    const avatarFilesList = await listAll(customImagesFolderRef);
 
-  //   setSelectedColors(newSelectedColors);
+    console.log(deleteLeftImage, deleteRightImage)
 
-  //   axios
-  //     .delete(`/clearColorsDesign`)
-  //     .then((response) => {
-  //       console.log(response)
-  //     })
-  //     .catch((error) => {
-  //       console.error("Błąd podczas zapisywania kolorow", error);
-  //     });
-
-  //   props.onDesignFinish()
-  // }
-
-  const saveDesign = () => {
-    axios
-      .post(`/saveColorsDesign`, { selectedColors })
-      .then((response) => {
+    const deletePromises = avatarFilesList.items
+      .filter(item => {
+        if (deleteLeftImage && deleteRightImage) {
+          // Jeśli oba URL-i istnieją, usuwaj tylko pliki, które zaczynają się od "left" lub "right"
+          return item.name.startsWith(`left`) || item.name.startsWith(`right`);
+        } else if (deleteLeftImage) {
+          // Jeśli istnieje tylko leftSideImageCroppedUrl, usuwaj tylko pliki, które zaczynają się od "left"
+          return item.name.startsWith(`left`);
+        } else if (deleteRightImage) {
+          // Jeśli istnieje tylko rightSideImageCroppedUrl, usuwaj tylko pliki, które zaczynają się od "right"
+          return item.name.startsWith(`right`);
+        }
+        // Jeśli żadne z URL-i nie istnieje, nie usuwaj żadnych plików
+        return false;
       })
-      .catch((error) => {
-        console.error("Błąd podczas zapisywania kolorow", error);
-      });
+      .map(item => deleteObject(item));
 
-    props.onDesignFinish()
+    await Promise.all(deletePromises);
   }
 
-  const closeDesign = () => {
-    axios
-      .get("/getColorsDesign")
-      .then((response) => {
-        const { selectedColors } = response.data;
-        setSelectedColors(selectedColors)
-      })
-      .catch((error) => {
-        console.error("Błąd podczas pobierania selectedColors", error);
-      });
+  const saveDesign = async () => {
+    const userId = user ? user._id : "";
 
-    props.onDesignFinish()
+    const customContextData = {
+      selectedColors,
+      selectedColorsText,
+      selectedPatches,
+      swooshVisibility,
+      sideText,
+    };
+
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`/saveCustomShoeTemporary`, { customContextData, userId });
+
+      // Usuń pliki
+      await deleteCustomImages(response.data.id);
+
+      if (leftSideImageCropped) {
+        const storageRef = ref(storage, `customImages/${response.data.id}/left_${leftSideImageCropped.name}`);
+        await uploadBytes(storageRef, leftSideImageCropped);
+      }
+      if (rightSideImageCropped) {
+        const storageRef = ref(storage, `customImages/${response.data.id}/right_${rightSideImageCropped.name}`);
+        await uploadBytes(storageRef, rightSideImageCropped);
+      }
+    } catch (error) {
+      const text = t("shop.error")
+      setErrorsServer(text);
+    }
+
+    setLoading(false);
+    window.location.reload();
+  };
+
+  const closeDesign = () => {
+    localStorage.removeItem('showDesignPanel'); // Usuń klucz 'showDesignPanel' z Local Storage
+    window.location.reload();
   }
 
   const handleZoomChange = (event: any) => {
@@ -219,10 +274,10 @@ function DesignSection(props: DesignSectionProps) {
   const processImage = async (image: any, setCroppedImage: (file: any) => void, setImage: (image: any) => void, area: any, side: string) => {
     try {
       if (!image || !area) {
-        throw new Error("Proszę wybrać zdjęcie");
+        return null
       }
 
-      const croppedImageFile = await getCroppedImageFile(image, area);
+      const croppedImageFile: File = await getCroppedImageFile(image, area);
 
       setCroppedImage(croppedImageFile);
 
@@ -234,41 +289,55 @@ function DesignSection(props: DesignSectionProps) {
     }
   };
 
-  const deleteImageCropped = (setImageCropped: any, setIsSwooshVisible: any) => {
+  const deleteImageCropped = (setImageCropped: any, setIsSwooshVisible: any, side: string) => {
     setIsSwooshVisible(true)
+
+    if (side === "left") {
+
+      setImagesUrls({
+        ...imagesUrls,
+        leftSideImageCroppedUrl: "",
+      });
+
+      setDeleteLeftImage(true)
+
+      setSwooshVisibility({
+        ...swooshVisibility,
+        isLeftSwooshVisible: true,
+      });
+    }
+
+    if (side === "right") {
+      setDeleteRightImage(true)
+
+      setImagesUrls({
+        ...imagesUrls,
+        rightSideImageCroppedUrl: "",
+      });
+
+      setSwooshVisibility({
+        ...swooshVisibility,
+        isRightSwooshVisible: true,
+      });
+    }
     setImageCropped(null);
   }
 
   useEffect(() => {
-    if (!rightSideText || !leftSideText) {
+    if (!sideText.rightText || !sideText.leftText) {
       const updatedColors = { ...selectedColorsText };
 
-      if (!rightSideText) {
+      if (!sideText.rightText) {
         updatedColors.selectedColorRightText = { rgb: { r: 0, g: 0, b: 0 } };
       }
 
-      if (!leftSideText) {
+      if (!sideText.leftText) {
         updatedColors.selectedColorLeftText = { rgb: { r: 0, g: 0, b: 0 } };
       }
 
       setSelectedColorsText(updatedColors);
     }
-  }, [rightSideText, leftSideText]);
-
-  const renderPatch = (selectedPatch: any, style: string) => {
-    const patch = props.patches.find(patch => patch.name === selectedPatch);
-
-    if (patch) {
-      return (
-        <img
-          src={patch.url}
-          alt="Patch"
-          className={style}
-
-        />
-      );
-    }
-  }
+  }, [sideText.rightText, sideText.leftText]);
 
   useEffect(() => {
 
@@ -283,10 +352,15 @@ function DesignSection(props: DesignSectionProps) {
 
   }, [textArray, sideView]);
 
-  console.log(sideView)
 
   return (
     <>
+
+      <div className="flex justify-center items-center">
+        {errorsServer && <InfoDivBottom color="bg-red-500" text={errorsServer} />}
+      </div>
+
+
       {showPatchesDiv === "left" && (
         <PatchesDiv setShowDiv={setShowPatchesDiv}
           setPatche={(patchName) => setSelectedPatches({ ...selectedPatches, selectedLeftPatch: patchName })}
@@ -356,16 +430,16 @@ function DesignSection(props: DesignSectionProps) {
       {isDivBackVisible && (
         <div className='bg-black/50 backdrop-blur-sm fixed w-full h-screen z-20 flex justify-center items-center '>
           <div className="bg-white rounded-lg w-[45rem] text-center py-8">
-            <p className="text-3xl text-black">Czy na pewno chcesz wyjść?</p>
-            <p className="text-2xl text-black/80 mt-4">Wyjście spowoduje utrate dotychczasowych zmian projektu</p>
+            <p className="text-3xl text-black">{t("designSection.text24")}</p>
+            <p className="text-2xl text-black/80 mt-4">{t("designSection.text25")}</p>
 
             <div className="flex justify-center items-center space-x-10 mt-10">
               <button onClick={() => setIsDivBackVisible(!isDivBackVisible)} className="border-2 border-black/80 rounded-full px-10 py-3 hover:bg-black/80 hover:text-white">
-                <p className="text-lg">NIE</p>
+                <p className="text-lg">{t("designSection.text27")}</p>
               </button>
 
               <button onClick={closeDesign} className="border-2 border-black/80 rounded-full  px-10 py-3 hover:bg-black/80 hover:text-white">
-                <p className="text-lg">TAK</p>
+                <p className="text-lg">{t("designSection.text26")}</p>
               </button>
 
             </div>
@@ -375,170 +449,201 @@ function DesignSection(props: DesignSectionProps) {
         </div>
       )}
 
-      <div className="w-full ">
-        <div className="flex flex-col absolute top-10 left-10 z-10 space-y-4">
+      <div className=" min-h-screen bg-white dark:bg-[#3b3b3b]">
+        <div className="flex justify-between pt-6 px-10 lg:px-20  xl:px-0 xl:absolute top-10 2xl:top-4 left-10 z-10  space-x-4">
           <button
             onClick={() => setIsDivBackVisible(!isDivBackVisible)}
             className={`px-8 py-3 ${buttonStyle} `}
           >
-            <p className="text-lg">Back</p>
+            <p className="text-lg">{t("designSection.text1")}</p>
           </button>
 
           <button
             onClick={saveDesign}
-            className={`px-8 py-3 bg-black/80 dark:bg-white/80 text-white dark:text-black rounded-full hover:bg-black hover:dark:bg-white`}
+            disabled={loading}
+            className={`px-8 py-3 bg-black/80 dark:bg-white/80 disabled:bg-[#c9c9c9] text-white dark:text-black rounded-full ${!loading ? 'hover:bg-black hover:dark:bg-white' : ''}`}
           >
-            <p className="text-lg">Save</p>
+            <div className="flex items-center justify-center">
+              {loading && <CircleSvg color={theme === "dark" ? "black" : "white"} secColor={theme === "dark" ? "black" : "white"} />}
+              <p className="text-lg">{t("designSection.text2")}</p>
+            </div>
           </button>
         </div>
 
-        <div className="flex bg-white dark:bg-[#3b3b3b] h-[45rem] border-b-2 border-black/20 dark:border-white/30">
-          <div className="flex justify-center items-center w-[70%] border-r-2 border-black/20 dark:border-white/30">
-            <div className="relative">
-              <img
-                className="h-[35rem] rounded-xl"
-                src={renderImageSource()}
-              />
+        <div className="flex flex-col xl:flex-row items-center justify-center  bg-white dark:bg-[#3b3b3b] xl:h-[50rem] border-b-2 border-black/20 dark:border-white/30">
 
-              <>
-                <CloudinaryContext cloudName="dlrhphkcb">
-                  {["tip_1", "quarter_1", "swoosh_1", "heel_1", "heel_logo", "toe", "eyestay_1"].includes(textArray[currentTextIndex]) ? (
-                    <>
+          <div className="flex  justify-center items-center xl:w-[50%] 2xl:w-[60%]  xl:border-r-2 border-black/20 dark:border-white/30 xl:h-[50rem] ">
+            <div className="flex justify-center items-center mt-6 md:w-[30rem] md:h-[25rem] xl:pr-10 ">
+              <div className="relative md:scale-[130%] xl:scale-[160%] 2xl:scale-[200%]">
+                <img
+                  className="h-[17rem] rounded-xl"
+                  src={renderImageSource()}
+                />
 
-                      <img
-                        src={leftSideImageCropped ? URL.createObjectURL(leftSideImageCropped) : ""}
-                        className="h-[16rem] absolute top-[10rem] left-[22rem] opacity-80"
-                      />
-                      <img
-                        src={side_left}
-                        className="h-[35rem] rounded-xl absolute top-0 left-0 "
-                      />
-                      {!leftSideImageCropped && (
-                        <>
-                          <TransformedImage
-                            publicId="elements/quarter_1_ycvbpt.png"
-                            rgb={selectedColors.selectedColorQuarter_1.rgb}
-                            opacity="opacity-70"
-                          />
-                          <TransformedImage
-                            publicId="elements/hill_1_h370h8.png"
-                            rgb={selectedColors.selectedColorHill_1.rgb}
-                            opacity="opacity-70"
-                          />
-                        </>
-                      )}
+                <>
+                  <CloudinaryContext cloudName="dlrhphkcb">
+                    {["tip_1", "quarter_1", "swoosh_1", "heel_1", "heel_logo", "toe", "eyestay_1"].includes(textArray[currentTextIndex]) ? (
+                      <>
+                        <img
+                          src={leftSideImageCropped ? URL.createObjectURL(leftSideImageCropped) : imagesUrls.leftSideImageCroppedUrl ? imagesUrls.leftSideImageCroppedUrl : ""}
 
-                      <TransformedImage
-                        publicId="elements/tip_1_jxccem.png"
-                        rgb={selectedColors.selectedColorTip_1.rgb}
-                        opacity="opacity-70"
-                      />
-                      {isLeftSwooshVisible && (
-                        <TransformedImage
-                          publicId="elements/swosh_1_pxffyd.png"
-                          rgb={selectedColors.selectedColorSwosh_1.rgb}
-                          opacity={leftSideImageCropped ? "opacity-100" : "opacity-70"}
+                          className="h-[8rem]  absolute top-[4.7rem] left-[10.3rem] opacity-80"
                         />
-                      )}
-
-                      <TransformedImage
-                        publicId="elements/heel_logo_1_nowlsy.png"
-                        rgb={selectedColors.selectedColorHeel_logo_1.rgb}
-                        opacity="opacity-70"
-                      />
-                      <TransformedImage
-                        publicId="elements/toe_1_uz2weu.png"
-                        rgb={selectedColors.selectedColorToe_1.rgb}
-                        opacity="opacity-70"
-                      />
-                      <TransformedImage
-                        publicId="elements/Eyestay_1_z5b6jc.png"
-                        rgb={selectedColors.selectedColorEyestay_1.rgb}
-                        opacity="opacity-70"
-                      />
-
-                      {leftSideText && (
-                        <div className="absolute  w-[10rem] bottom-[12rem] left-[14rem] text-center">
-                          <p className="text-2xl"
-                            style={{
-                              color: `rgb(${selectedColorsText.selectedColorLeftText.rgb.r}, ${selectedColorsText.selectedColorLeftText.rgb.g}, ${selectedColorsText.selectedColorLeftText.rgb.b})`,
-                            }}
-                          >{leftSideText}</p>
-                        </div>
-                      )}
-                      {renderPatch(selectedPatches.selectedLeftPatch, "absolute bottom-[14rem] right-[6.5rem] max-w-[5rem] max-h-[4rem]")}
-                    </>
-                  ) : (
-                    <>
-                      <img
-                        src={rightSideImageCropped ? URL.createObjectURL(rightSideImageCropped) : ""}
-                        className="h-[16rem] absolute top-[10rem] left-[3.5rem] opacity-80"
-                      />
-                      <img
-                        src={side_right}
-                        className="h-[35rem] rounded-xl absolute top-0 left-0 "
-                      />
-                      <TransformedImage
-                        publicId="elements/toe_2_enco6w.png"
-                        rgb={selectedColors.selectedColorToe_1.rgb}
-                        opacity="opacity-70"
-                      />
-                      <TransformedImage
-                        publicId="elements/tip_2_bmjg7i.png"
-                        rgb={selectedColors.selectedColorTip_1.rgb}
-                        opacity="opacity-70"
-                      />
-                      {!rightSideImageCropped && (
-                        <>
-                          <TransformedImage
-                            publicId="elements/quarter_2_kjcplp.png"
-                            rgb={selectedColors.selectedColorQuarter_2.rgb}
-                            opacity="opacity-70"
-                          />
-                          <TransformedImage
-                            publicId="elements/heel_2_xtnwp2.png"
-                            rgb={selectedColors.selectedColorHeel_2.rgb}
-                            opacity="opacity-70"
-                          />
-                        </>
-                      )}
-
-                      {isRightSwooshVisible && (
-                        <TransformedImage
-                          publicId="elements/swosh_2_twgxvt.png"
-                          rgb={selectedColors.selectedColorSwosh_2.rgb}
-                          opacity={rightSideImageCropped ? "opacity-100" : "opacity-70"}
+                        <img
+                          src={side_left}
+                          className="h-[17rem] rounded-xl absolute top-0 left-0 "
                         />
-                      )}
+                        {(!imagesUrls.leftSideImageCroppedUrl && !leftSideImageCropped) && (
+                          <>
+                            <TransformedImage
+                              publicId="elements/quarter_1_ycvbpt.png"
+                              rgb={selectedColors.selectedColorQuarter_1.rgb}
+                              opacity="opacity-70"
+                            />
+                            <TransformedImage
+                              publicId="elements/hill_1_h370h8.png"
+                              rgb={selectedColors.selectedColorHill_1.rgb}
+                              opacity="opacity-70"
+                            />
+                          </>
+                        )}
+                        <TransformedImage
+                          publicId="elements/tip_1_jxccem.png"
+                          rgb={selectedColors.selectedColorTip_1.rgb}
+                          opacity="opacity-70"
+                        />
+                        {swooshVisibility.isLeftSwooshVisible && (
+                          <TransformedImage
+                            publicId="elements/swosh_1_pxffyd.png"
+                            rgb={selectedColors.selectedColorSwosh_1.rgb}
+                            opacity={(imagesUrls.leftSideImageCroppedUrl || leftSideImageCropped) ? "opacity-100" : "opacity-70"}
+                          />
+                        )}
 
-                      <TransformedImage
-                        publicId="elements/heel_logo_2_j4oj49.png"
-                        rgb={selectedColors.selectedColorHeel_logo_1.rgb}
-                        opacity="opacity-70"
-                      />
-                      <TransformedImage
-                        publicId="elements/eyestay_2_ciar70.png"
-                        rgb={selectedColors.selectedColorEyestay_2.rgb}
-                        opacity="opacity-70"
-                      />
-                      {rightSideText && (
-                        <div className="absolute  w-[10rem] bottom-[12.5rem] right-[14rem] text-center">
-                          <p
-                            className="text-2xl"
-                            style={{
-                              color: `rgb(${selectedColorsText.selectedColorRightText.rgb.r}, ${selectedColorsText.selectedColorRightText.rgb.g}, ${selectedColorsText.selectedColorRightText.rgb.b})`,
-                            }}
-                          >{rightSideText}</p>
-                        </div>
-                      )}
-                      {renderPatch(selectedPatches.selectedRightPatch, "absolute bottom-[14.5rem] left-[6.5rem] max-w-[5rem] max-h-[4rem]")}
-                    </>
-                  )}
-                </CloudinaryContext>
-              </>
+                        <TransformedImage
+                          publicId="elements/heel_logo_1_nowlsy.png"
+                          rgb={selectedColors.selectedColorHeel_logo_1.rgb}
+                          opacity="opacity-70"
+                        />
+                        <TransformedImage
+                          publicId="elements/toe_1_uz2weu.png"
+                          rgb={selectedColors.selectedColorToe_1.rgb}
+                          opacity="opacity-70"
+                        />
+                        <TransformedImage
+                          publicId="elements/Eyestay_1_z5b6jc.png"
+                          rgb={selectedColors.selectedColorEyestay_1.rgb}
+                          opacity="opacity-70"
+                        />
+
+                        {sideText.leftText && (
+                          <div className="absolute w-[10rem] bottom-[5.8rem] left-[4.3rem]  text-center opacity-80">
+                            <p className="text-xs"
+                              style={{
+                                color: `rgb(${selectedColorsText.selectedColorLeftText.rgb.r}, ${selectedColorsText.selectedColorLeftText.rgb.g}, ${selectedColorsText.selectedColorLeftText.rgb.b})`,
+                              }}
+                            >{sideText.leftText}</p>
+                          </div>
+                        )}
+                        {renderPatch(selectedPatches.selectedLeftPatch, "absolute bottom-[6.8rem] right-[3rem] max-w-[3rem] max-h-[2rem] opacity-90", props.patches)}
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          src={rightSideImageCropped ? URL.createObjectURL(rightSideImageCropped) : imagesUrls.rightSideImageCroppedUrl ? imagesUrls.rightSideImageCroppedUrl : ""}
+                          className="h-[8rem] absolute top-[4.7rem] left-[1.7rem] opacity-80"
+                        />
+                        <img
+                          src={side_right}
+                          className="h-[17rem] rounded-xl absolute top-0 left-0 "
+                        />
+                        <TransformedImage
+                          publicId="elements/toe_2_enco6w.png"
+                          rgb={selectedColors.selectedColorToe_1.rgb}
+                          opacity="opacity-70"
+                        />
+                        <TransformedImage
+                          publicId="elements/tip_2_bmjg7i.png"
+                          rgb={selectedColors.selectedColorTip_1.rgb}
+                          opacity="opacity-70"
+                        />
+                        {(!imagesUrls.rightSideImageCroppedUrl && !rightSideImageCropped) && (
+                          <>
+                            <TransformedImage
+                              publicId="elements/quarter_2_kjcplp.png"
+                              rgb={selectedColors.selectedColorQuarter_2.rgb}
+                              opacity="opacity-70"
+                            />
+                            <TransformedImage
+                              publicId="elements/heel_2_xtnwp2.png"
+                              rgb={selectedColors.selectedColorHeel_2.rgb}
+                              opacity="opacity-70"
+                            />
+                          </>
+                        )}
+
+                        {swooshVisibility.isRightSwooshVisible && (
+                          <TransformedImage
+                            publicId="elements/swosh_2_twgxvt.png"
+                            rgb={selectedColors.selectedColorSwosh_2.rgb}
+                            opacity={(imagesUrls.rightSideImageCroppedUrl || rightSideImageCropped) ? "opacity-100" : "opacity-70"}
+                          />
+                        )}
+
+                        <TransformedImage
+                          publicId="elements/heel_logo_2_j4oj49.png"
+                          rgb={selectedColors.selectedColorHeel_logo_1.rgb}
+                          opacity="opacity-70"
+                        />
+                        <TransformedImage
+                          publicId="elements/eyestay_2_ciar70.png"
+                          rgb={selectedColors.selectedColorEyestay_2.rgb}
+                          opacity="opacity-70"
+                        />
+                        {sideText.rightText && (
+                          <div className="absolute w-[10rem] bottom-[6rem] right-[4.2rem]  text-center opacity-80">
+                            <p
+                              className="text-xs"
+                              style={{
+                                color: `rgb(${selectedColorsText.selectedColorRightText.rgb.r}, ${selectedColorsText.selectedColorRightText.rgb.g}, ${selectedColorsText.selectedColorRightText.rgb.b})`,
+                              }}
+                            >{sideText.rightText}</p>
+                          </div>
+                        )}
+                        {renderPatch(selectedPatches.selectedRightPatch, "absolute bottom-[7rem] left-[3rem] max-w-[3rem] max-h-[2rem]  opacity-90", props.patches)}
+                      </>
+                    )}
+                  </CloudinaryContext>
+                </>
+              </div>
+
             </div>
+
           </div>
-          <div className="w-30% mx-auto mt-10">
+
+          <div className="flex xl:hidden w-[24rem]  mx-auto justify-between items-center  mt-10 text-black dark:text-white">
+            <AiOutlineArrowLeft
+              size={30}
+              className="cursor-pointer"
+              onClick={handlePreviousText}
+            />
+
+            <div className="flex space-x-2 text-xl font-medium">
+              <p className=" text-black dark:text-white">
+                {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
+              </p>
+              <p className=" text-black/50 dark:text-white/60">{`${currentTextIndex + 1
+                }/${textArray.length}`}</p>
+            </div>
+
+            <AiOutlineArrowRight
+              size={30}
+              className="cursor-pointer"
+              onClick={handleNextText}
+            />
+          </div>
+
+          <div className=" mt-10 pb-16 xl:pb-0 h-[45rem] xl:pl-10">
             <div className="flex space-x-4">
               <TypeButtonDesign
                 index={0}
@@ -571,7 +676,7 @@ function DesignSection(props: DesignSectionProps) {
 
             {selectedType === 0 && (
               <div className="flex flex-col mt-10 text-black dark:text-white">
-                <p className="text-xl ">Popularne kolory</p>
+                <p className="text-xl ">{t("designSection.text3")}</p>
 
                 <div className="flex flex-wrap w-[25rem] items-start ">
                   {colorsData.map((color, index) => (
@@ -598,7 +703,7 @@ function DesignSection(props: DesignSectionProps) {
                   ))}
                 </div>
 
-                <p className="text-xl mt-10 ">Wybierz swój własny kolor</p>
+                <p className="text-xl mt-10 ">{t("designSection.text4")}</p>
 
                 <div className="flex space-x-10 items-center">
                   <ChromePicker
@@ -620,7 +725,7 @@ function DesignSection(props: DesignSectionProps) {
                     style={{ display: buttonVisible ? "block" : "none" }}
                     onClick={() => handleDeleteColor(currentTextIndex, selectedColors, setSelectedColors, textArray)}
                     className={`px-4 h-[3.5rem] ${buttonStyle} `}>
-                    <p className="text-xl">Usuń kolor</p>
+                    <p className="text-xl">{t("designSection.text5")}</p>
                   </button>
                 </div>
 
@@ -631,21 +736,21 @@ function DesignSection(props: DesignSectionProps) {
               <div className="flex flex-col mt-6 ">
 
                 <div className="flex flex-col mt-6">
-                  <p className="text-xl text-black dark:text-white ">Wpisz tekst po <span className="text-red-500">zewnetrznej</span> stronie</p>
+                  <p className="text-xl text-black dark:text-white ">{t("designSection.text7")} <span className="text-red-500">{t("designSection.text8")}</span> {t("designSection.text9")}</p>
                   <input
                     type="text"
-                    value={leftSideText}
+                    value={sideText.leftText}
                     maxLength={12}
                     onChange={handleChangeTextLeft}
                     className="mt-2 w-full px-2 h-[4rem] text-xl bg-white dark:bg-white/70 border-2 border-black/50 rounded-lg outline-none"
                   ></input>
                   <p className="text-lg mt-2 text-black/60 dark:text-white/60">
-                    Możesz wpisać do 12 znaków
+                    {t("designSection.text10")}
                   </p>
 
 
-                  {leftSideText && (<div className="flex items-center mt-10 space-x-8">
-                    <p className="text-xl text-black dark:text-white ">Wybierz kolor tekstu</p>
+                  {sideText.leftText && (<div className="flex items-center mt-10 space-x-8">
+                    <p className="text-xl text-black dark:text-white ">{t("designSection.text12")}</p>
                     <div onClick={() => setShowColorPicker("left")}
                       className="cursor-pointer rounded-lg h-[2rem] w-[4rem] bg-black"
                       style={{
@@ -657,20 +762,20 @@ function DesignSection(props: DesignSectionProps) {
                 </div>
                 <div className="h-[2px] w-full bg-black/30 dark:bg-white/50 mt-10"></div>
                 <div className="flex flex-col mt-6">
-                  <p className="text-xl text-black dark:text-white ">Wpisz tekst po <span className="text-red-500">wewnętrznej</span> stronie</p>
+                  <p className="text-xl text-black dark:text-white ">{t("designSection.text7")} <span className="text-red-500">{t("designSection.text11")}</span> {t("designSection.text9")}</p>
                   <input
                     type="text"
-                    value={rightSideText}
+                    value={sideText.rightText}
                     maxLength={12}
                     onChange={handleChangeTextRight}
                     className="mt-2 w-full px-2 h-[4rem] text-xl bg-white dark:bg-white/70 border-2 border-black/50 rounded-lg outline-none"
                   ></input>
                   <p className="text-lg mt-2 text-black/60 dark:text-white/60">
-                    Możesz wpisać do 12 znaków
+                    {t("designSection.text10")}
                   </p>
 
-                  {rightSideText && (<div className="flex items-center mt-10 space-x-8">
-                    <p className="text-xl text-black dark:text-white ">Wybierz kolor tekstu</p>
+                  {sideText.rightText && (<div className="flex items-center mt-10 space-x-8">
+                    <p className="text-xl text-black dark:text-white ">{t("designSection.text12")}</p>
                     <div onClick={() => setShowColorPicker("right")}
                       className="cursor-pointer rounded-lg h-[2rem] w-[4rem]"
                       style={{
@@ -685,13 +790,13 @@ function DesignSection(props: DesignSectionProps) {
 
             {selectedType === 2 && (
               <div className="flex flex-col mt-10 ">
-                <p className="text-xl text-black dark:text-white ">Dodaj zdjęcie na <span className="text-red-500">zewnetrzna</span> strone buta</p>
+                <p className="text-xl text-black dark:text-white ">{t("designSection.text14")} <span className="text-red-500">{t("designSection.text8")}</span> {t("designSection.text9")}</p>
 
                 <div className="flex items-center mt-6">
 
-                  {!leftSideImageCropped ? (
+                  {(!leftSideImageCropped && !imagesUrls.leftSideImageCroppedUrl) ? (
                     <label className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
-                      Dodaj zdjecie
+                      {t("designSection.text15")}
                       <input
                         type="file"
                         name="left_side_graphicDesign"
@@ -703,28 +808,29 @@ function DesignSection(props: DesignSectionProps) {
                   ) : (
                     <>
                       <img
-                        src={leftSideImageCropped ? URL.createObjectURL(leftSideImageCropped) : ""}
+                        src={imagesUrls.leftSideImageCroppedUrl ? imagesUrls.leftSideImageCroppedUrl : (leftSideImageCropped ? URL.createObjectURL(leftSideImageCropped) : "")}
+
                         className="h-[5rem] rounded-lg"
                       />
                       <div onClick={() => {
-                        deleteImageCropped(setLeftSideImageCropped, setIsLeftSwooshVisible)
+                        deleteImageCropped(setLeftSideImageCropped, setSwooshVisibility, "left")
                         setSideView("left")
                       }
                       } className="flex items-center ml-4 cursor-pointer text-balck/80 dark:text-white/80">
                         <AiOutlineClose size={25} />
-                        <p className="text-xl ">Usuń zdjęcie</p>
+                        <p className="text-xl ">{t("designSection.text16")}</p>
                       </div>
                     </>
                   )}
 
                 </div>
 
-                <p className="text-xl text-black dark:text-white mt-10">Dodaj zdjęcie na <span className="text-red-500">wewnętrzna</span> strone buta</p>
+                <p className="text-xl text-black dark:text-white mt-10">{t("designSection.text14")} <span className="text-red-500">{t("designSection.text11")}</span> {t("designSection.text9")}</p>
 
                 <div className="flex items-center mt-6">
-                  {!rightSideImageCropped ? (
+                  {(!rightSideImageCropped && !imagesUrls.rightSideImageCroppedUrl) ? (
                     <label className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
-                      Dodaj zdjecie
+                      {t("designSection.text15")}
                       <input
                         type="file"
                         name="right_side_graphicDesign"
@@ -736,31 +842,44 @@ function DesignSection(props: DesignSectionProps) {
                   ) : (
                     <>
                       <img
-                        src={rightSideImageCropped ? URL.createObjectURL(rightSideImageCropped) : ""}
+                        src={imagesUrls.rightSideImageCroppedUrl ? imagesUrls.rightSideImageCroppedUrl : (rightSideImageCropped ? URL.createObjectURL(rightSideImageCropped) : "")}
                         className="h-[5rem] rounded-lg"
                       />
                       <div onClick={() => {
-                        deleteImageCropped(setRightSideImageCropped, setIsRightSwooshVisible)
+                        deleteImageCropped(setRightSideImageCropped, setSwooshVisibility, "right")
                         setSideView("right")
                       }} className="flex items-center ml-4 cursor-pointer text-balck/80 dark:text-white/80">
                         <AiOutlineClose size={25} />
-                        <p className="text-xl">Usuń zdjęcie</p>
+                        <p className="text-xl">{t("designSection.text16")}</p>
                       </div>
                     </>
                   )}
                 </div>
 
-                {leftSideImageCropped && (
+                {(leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) && (
                   <div className="flex items-center mt-10">
-                    <p className="text-xl text-balck/80 dark:text-white/80 ">Zewnętrzny swoosh</p>
-                    <ToogleButtonSwosh isSwooshVisible={isLeftSwooshVisible} setIsSwooshVisible={setIsLeftSwooshVisible} side="left" setSideView={setSideView} />
+                    <p className="text-xl text-black/80 dark:text-white/80 ">{t("designSection.text17")}</p>
+                    <ToogleButtonSwosh
+                      isSwooshVisible={swooshVisibility.isLeftSwooshVisible}
+                      setIsSwooshVisible={setSwooshVisibility}
+                      side="left"
+                      setSideView={setSideView}
+                      swooshVisibility={swooshVisibility}
+                    />
                   </div>
                 )}
 
-                {rightSideImageCropped && (
+                {(rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) && (
                   <div className="flex items-center mt-10">
-                    <p className="text-xl text-balck/80 dark:text-white/80">Wewnętrzny swoosh</p>
-                    <ToogleButtonSwosh isSwooshVisible={isRightSwooshVisible} setIsSwooshVisible={setIsRightSwooshVisible} side="right" setSideView={setSideView} />
+                    <p className="text-xl text-black/80 dark:text-white/80">{t("designSection.text18")}</p>
+                    <ToogleButtonSwosh
+                      isSwooshVisible={swooshVisibility.isRightSwooshVisible}
+                      setIsSwooshVisible={setSwooshVisibility}
+                      side="right"
+                      setSideView={setSideView}
+                      swooshVisibility={swooshVisibility}
+                    />
+
                   </div>
                 )}
 
@@ -770,46 +889,46 @@ function DesignSection(props: DesignSectionProps) {
             {selectedType === 3 && (
               <div className="flex flex-col mt-10">
                 <p className="text-xl text-black dark:text-white">
-                  Wybierz naszywkę na <span className="text-red-500">zewnetrzna</span> strone buta
+                  {t("designSection.text19")} <span className="text-red-500">{t("designSection.text8")}</span> {t("designSection.text9")}
                 </p>
 
                 {!selectedPatches.selectedLeftPatch ? (
                   <div className="flex items-center mt-6">
                     <button onClick={() => setShowPatchesDiv("left")} className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
-                      <p>Dodaj naszywke</p>
+                      <p>{t("designSection.text20")}</p>
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center mt-8">
-                    {renderPatch(selectedPatches.selectedLeftPatch, "max-w-[6rem] max-h-[5rem]")}
+                    {renderPatch(selectedPatches.selectedLeftPatch, "max-w-[6rem] max-h-[5rem]", props.patches)}
                     <div onClick={() => {
                       setSelectedPatches({ ...selectedPatches, selectedLeftPatch: "" })
                       setSideView("left")
                     }} className="flex items-center ml-4 cursor-pointer text-black/80 dark:text-white/80">
                       <AiOutlineClose size={25} />
-                      <p className="text-xl">Usuń naszywke</p>
+                      <p className="text-xl">{t("designSection.text21")}</p>
                     </div>
                   </div>)}
 
 
                 <p className="text-xl text-black dark:text-white mt-10">
-                  Wybierz naszywkę na <span className="text-red-500">wewnetrzna</span> strone buta
+                  {t("designSection.text19")} <span className="text-red-500">{t("designSection.text11")}</span> {t("designSection.text9")}
                 </p>
 
                 {!selectedPatches.selectedRightPatch ? (
                   <div className="flex items-center mt-6">
                     <button onClick={() => setShowPatchesDiv("right")} className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
-                      <p>Dodaj naszywke</p>
+                      <p>{t("designSection.text20")}</p>
                     </button>
                   </div>) : (
                   <div className="flex items-center mt-8">
-                    {renderPatch(selectedPatches.selectedRightPatch, "max-w-[6rem] max-h-[5rem]")}
+                    {renderPatch(selectedPatches.selectedRightPatch, "max-w-[6rem] max-h-[5rem]", props.patches)}
                     <div onClick={() => {
                       setSelectedPatches({ ...selectedPatches, selectedRightPatch: "" })
                       setSideView("right")
                     }} className="flex items-center ml-4 cursor-pointer text-black/80 dark:text-white/80">
                       <AiOutlineClose size={25} />
-                      <p className="text-xl">Usuń naszywke</p>
+                      <p className="text-xl">{t("designSection.text21")}</p>
                     </div>
                   </div>)}
 
@@ -818,7 +937,7 @@ function DesignSection(props: DesignSectionProps) {
           </div>
         </div>
 
-        <div className="flex w-[24rem]  mx-auto justify-between items-center  mt-10 text-black dark:text-white">
+        <div className="hidden xl:flex w-[24rem] pb-20  mx-auto justify-between items-center  mt-10 text-black dark:text-white">
           <AiOutlineArrowLeft
             size={30}
             className="cursor-pointer"
@@ -827,7 +946,7 @@ function DesignSection(props: DesignSectionProps) {
 
           <div className="flex space-x-2 text-xl font-medium">
             <p className=" text-black dark:text-white">
-              {textArray[currentTextIndex]}
+              {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
             </p>
             <p className=" text-black/50 dark:text-white/60">{`${currentTextIndex + 1
               }/${textArray.length}`}</p>

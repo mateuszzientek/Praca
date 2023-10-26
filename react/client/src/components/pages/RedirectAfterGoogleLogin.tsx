@@ -62,6 +62,7 @@ const RedirectAfterGoogleLogin = () => {
         }
     }
 
+
     return (
         <>
             <div className="flex justify-center">

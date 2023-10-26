@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChromePicker } from "react-color";
 import { AiOutlineClose } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 interface ColoPickerTextDivProps {
     setShowDiv: (newState: string) => void;
@@ -12,6 +13,7 @@ interface ColoPickerTextDivProps {
 }
 
 function ColoPickerTextDiv(props: ColoPickerTextDivProps) {
+    const { t } = useTranslation();
     const [selectedColorTemporary, setSelectedColorTemporary] = useState({ rgb: props.color });
 
     const handleColorChange = (newColor: any) => {
@@ -42,7 +44,7 @@ function ColoPickerTextDiv(props: ColoPickerTextDivProps) {
                 />
 
                 <button onClick={handleSubmit} className='mt-10 px-4 py-3 rounded-lg text-black bg-white dark:bg-[#3b3b3b] dark:text-white border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white '>
-                    <p className='text-xl'>Zatwierdz</p>
+                    <p className='text-xl'>{t("designSection.text22")}</p>
                 </button>
             </div>
         </div>

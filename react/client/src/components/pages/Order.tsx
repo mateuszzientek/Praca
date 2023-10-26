@@ -46,8 +46,6 @@ function Order() {
     fetchUserData();
   }, []);
 
-
-
   const clickDetails = (orderId: string) => {
     setShowDiv(!showDiv);
 
@@ -163,8 +161,6 @@ function Order() {
       document.body.classList.remove("overflow-hidden");
     };
   }, [showDiv]);
-
-
 
 
 

@@ -232,7 +232,6 @@ function Cart() {
       });
   };
 
-  console.log(shoes);
 
   return (
     <div className="bg-white dark:bg-black/80 pb-[8rem] xl:pb-[16rem] min-h-screen ">

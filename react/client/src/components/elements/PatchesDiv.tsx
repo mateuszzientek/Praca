@@ -57,7 +57,7 @@ function PatchesDiv(props: PatchesDivProps) {
 
     return (
         <div className='bg-black/50 backdrop-blur-sm fixed w-full h-screen z-20 flex justify-center items-center '>
-            <div className='relative flex flex-col justify-center items-center w-[30rem] h-[35rem] bg-white dark:bg-[#757575] rounded-lg text-dark dark:text-white'>
+            <div className='relative flex flex-col justify-center items-center w-[30rem] h-[35rem] bg-white dark:bg-[#757575] rounded-lg text-dark dark:text-white '>
                 <AiOutlineClose onClick={() => props.setShowDiv("")} className='cursor-pointer absolute top-6 right-6' size={30} />
                 {!isDataFetched ? (
                     <div className="flex justify-center items-center">

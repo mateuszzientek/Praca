@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>, setImage: (result: string | null) => void) => {
     if (event.target.files && event.target.files.length > 0) {
       const reader = new FileReader();
@@ -38,7 +40,7 @@ export const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>, setImag
       return new Promise((resolve) => {
         canvas.toBlob((blob) => {
           if (blob) {
-            const file = new File([blob], "cropped-image.jpg", {
+            const file = new File([blob], "cropped-customImage.jpg", {
               type: "image/jpeg",
             });
             resolve(file);

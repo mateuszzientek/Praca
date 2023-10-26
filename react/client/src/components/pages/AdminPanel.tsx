@@ -453,10 +453,10 @@ function AdminPanel() {
                                 <div className='relative '>
                                     <p className='text-2xl text-black/80 dark:text-white/80 mb-10'>{t("adminPanel.text2")}</p>
 
-                                    <div className="absolute top-0 right-0 flex h-[3rem] border-[2px] border-black/10 dark:border-white dark:text-white text-black/60 rounded-md">
+                                    <div className="md:absolute w-[60%] mx-auto md:w-auto top-0 right-0 flex h-[3rem] border-[2px] border-black/10 dark:border-white dark:text-white text-black/60 rounded-md">
                                         <button
                                             onClick={() => setShowSort(!showSort)}
-                                            className="flex items-center space-x-1 px-2"
+                                            className="flex items-center space-x-1 px-2 w-full "
                                         >
                                             <p>
                                                 {t(`status.${selectedSort}`)}

@@ -69,3 +69,35 @@ export interface ProductInterface {
   quantity: number;
   imageUrl?: string;
 }
+
+export interface SelectedColors {
+  selectedColorSwosh_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorTip_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorHill_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorQuarter_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorHeel_logo_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorToe_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorEyestay_1: { rgb: { r: number; g: number; b: number } };
+  selectedColorQuarter_2: { rgb: { r: number; g: number; b: number } };
+  selectedColorSwosh_2: { rgb: { r: number; g: number; b: number } };
+  selectedColorHeel_2: { rgb: { r: number; g: number; b: number } };
+  selectedColorEyestay_2: { rgb: { r: number; g: number; b: number } };
+}
+
+export interface SelectedColorsText{
+  selectedColorLeftText: { rgb: { r: number; g: number; b: number } };
+  selectedColorRightText: { rgb: { r: number; g: number; b: number } };
+}
+
+export interface SelectedPatches{
+  selectedLeftPatch: string;
+  selectedRightPatch: string;
+}
+export interface SwooshVisibility{
+  isLeftSwooshVisible: boolean;
+  isRightSwooshVisible: boolean;
+}
+export interface SideText{
+  leftText: string;
+  rightText: string;
+}

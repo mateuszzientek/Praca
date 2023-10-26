@@ -218,6 +218,7 @@ function ShoeView() {
 
   }
 
+
   return (
     <>
       <div className="flex justify-center">

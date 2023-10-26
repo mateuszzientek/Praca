@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
+import axios from "axios";
 import Footer from "./components/sections/Footer";
 import Home from "./components/pages/Home";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
@@ -34,6 +35,8 @@ const RedirectAfterGoogleLogin = lazy(
 const SubmitOrder = lazy(() => import("./components/pages/SubmitOrder"));
 const Order = lazy(() => import("./components/pages/Order"));
 const AdminPanel = lazy(() => import("./components/pages/AdminPanel"));
+const MyProjects = lazy(() => import("./components/pages/MyProjects"));
+
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -50,10 +53,14 @@ const App: React.FC = () => {
     }
   }, [location]);
 
+  useEffect(() => {
+    axios.delete("/deleteExpiredCustomDesign")
+  }, [])
+
   return (
-    <CustomProvider>
-      <FilterProvider>
-        <UserProvider>
+    <FilterProvider>
+      <UserProvider>
+        <CustomProvider>
           <ThemeContextProvider>
             <CartProvider>
               <LoginProvider>
@@ -63,6 +70,8 @@ const App: React.FC = () => {
                     <Route element={<Profile />} path="/profile" />
                     <Route element={<Address />} path="/address" />
                     <Route element={<Order />} path="/order" />
+                    <Route element={<MyProjects />} path="/myProjects" />
+                    <Route element={<Customization />} path="/customization" />
                   </Route>
                   <Route element={<CheckoutRoute />}>
                     <Route element={<Checkout />} path="/checkout" />
@@ -79,14 +88,6 @@ const App: React.FC = () => {
                     element={
                       <Suspense fallback={<LoadingAnimation />}>
                         <Favorite />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/customization"
-                    element={
-                      <Suspense fallback={<LoadingAnimation />}>
-                        <Customization />
                       </Suspense>
                     }
                   />
@@ -188,9 +189,9 @@ const App: React.FC = () => {
               </LoginProvider>
             </CartProvider>
           </ThemeContextProvider>
-        </UserProvider>
-      </FilterProvider>
-    </CustomProvider>
+        </CustomProvider>
+      </UserProvider>
+    </FilterProvider>
   );
 };
 

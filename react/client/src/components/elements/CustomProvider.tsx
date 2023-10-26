@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { ref, getDownloadURL, listAll } from "firebase/storage";
+import storage from "../../firebase";
 
 interface CustomContextProps {
   selectedColors: {
@@ -43,19 +45,28 @@ interface CustomContextProps {
     selectedColorLeftText: { rgb: { r: number; g: number; b: number } };
     selectedColorRightText: { rgb: { r: number; g: number; b: number } };
   }) => void;
+  sideText: {
+    leftText: string;
+    rightText: string;
+  };
+  swooshVisibility: {
+    isLeftSwooshVisible: boolean,
+    isRightSwooshVisible: boolean,
+  };
+  imagesUrls: {
+    leftSideImageCroppedUrl: string,
+    rightSideImageCroppedUrl: string,
+  };
+  setImagesUrls: (url: { leftSideImageCroppedUrl: string; rightSideImageCroppedUrl: string }) => void;
+  setSwooshVisibility: (visibility: { isLeftSwooshVisible: boolean; isRightSwooshVisible: boolean }) => void;
+  setSideText: (text: { leftText: string; rightText: string }) => void;
   leftSideImageCropped: File | null;
   rightSideImageCropped: File | null;
   setLeftSideImageCropped: (image: File | null) => void;
   setRightSideImageCropped: (image: File | null) => void;
-  isLeftSwooshVisible: boolean
-  isRightSwooshVisible: boolean
-  setIsLeftSwooshVisible: (newState: boolean) => void;
-  setIsRightSwooshVisible: (newState: boolean) => void;
-  leftSideText: string
-  rightSideText: string
-  setLeftSideText: (newState: string) => void;
-  setRightSideText: (newState: string) => void;
-
+  photos: string[]; // Dodaj photos
+  patches: Array<{ url: string; name: string }> // Dodaj patches
+  isPhotos_Patches: boolean
 }
 interface CustomContextProviderChildren {
   children: ReactNode;
@@ -69,6 +80,53 @@ const CustomContext = createContext<CustomContextProps>(
 const CustomProvider: React.FC<CustomContextProviderChildren> = ({
   children,
 }) => {
+
+  const [isPhotos_Patches, setIsPhotos_Patches] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const folderRef = ref(storage, `shoeType/low`);
+        const res = await listAll(folderRef);
+        const urls: string[] = [];
+
+        for (const itemRef of res.items) {
+          try {
+            const url = await getDownloadURL(itemRef);
+            urls.push(url);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        setPhotos(urls);
+
+        const folderPatchesRef = ref(storage, `patches`);
+        const resPatches = await listAll(folderPatchesRef);
+        const patchInfoArray = [];
+
+        for (const itemRef of resPatches.items) {
+          try {
+            const url = await getDownloadURL(itemRef);
+            const name = itemRef.name;
+            const patchInfo = { url, name };
+            patchInfoArray.push(patchInfo);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+        setPatches(patchInfoArray);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+    setIsPhotos_Patches(true)
+  }, []);
+
+  const [photos, setPhotos] = useState<string[]>([]); // Dodaj photos
+  const [patches, setPatches] = useState<Array<{ url: string; name: string }>>([]);
   const [selectedColors, setSelectedColors] = useState({
     selectedColorSwosh_1: { rgb: { r: 255, g: 255, b: 255 } },
     selectedColorTip_1: { rgb: { r: 255, g: 255, b: 255 } },
@@ -82,6 +140,7 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
     selectedColorHeel_2: { rgb: { r: 255, g: 255, b: 255 } },
     selectedColorEyestay_2: { rgb: { r: 255, g: 255, b: 255 } },
   });
+
   const [selectedColorsText, setSelectedColorsText] = useState({
     selectedColorLeftText: { rgb: { r: 0, g: 0, b: 0 } },
     selectedColorRightText: { rgb: { r: 0, g: 0, b: 0 } },
@@ -96,10 +155,16 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
   const [rightSideImageCropped, setRightSideImageCropped] = useState<File | null>(
     null
   );
-  const [isLeftSwooshVisible, setIsLeftSwooshVisible] = useState(true);
-  const [isRightSwooshVisible, setIsRightSwooshVisible] = useState(true);
-  const [leftSideText, setLeftSideText] = useState("");
-  const [rightSideText, setRightSideText] = useState("");
+  const [swooshVisibility, setSwooshVisibility] = useState({
+    isLeftSwooshVisible: true,
+    isRightSwooshVisible: true,
+  });
+  const [sideText, setSideText] = useState<{ leftText: string; rightText: string }>({ leftText: "", rightText: "" });
+  const [imagesUrls, setImagesUrls] = useState({
+    leftSideImageCroppedUrl: "",
+    rightSideImageCroppedUrl: "",
+  });
+
 
   return (
     <CustomContext.Provider value={{
@@ -109,18 +174,19 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
       setLeftSideImageCropped,
       rightSideImageCropped,
       setRightSideImageCropped,
-      isLeftSwooshVisible,
-      isRightSwooshVisible,
-      setIsLeftSwooshVisible,
-      setIsRightSwooshVisible,
-      leftSideText,
-      setLeftSideText,
-      rightSideText,
-      setRightSideText,
+      setSwooshVisibility,
+      swooshVisibility,
       setSelectedColorsText,
       selectedColorsText,
       selectedPatches,
-      setSelectedPatches
+      setSelectedPatches,
+      setSideText,
+      sideText,
+      imagesUrls,
+      setImagesUrls,
+      photos,
+      patches,
+      isPhotos_Patches
     }}>
       {children}
     </CustomContext.Provider>

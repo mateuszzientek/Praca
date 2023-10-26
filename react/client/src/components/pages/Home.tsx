@@ -11,8 +11,6 @@ import Newslatter from "../elements/Newslatter";
 
 function Home() {
 
-
-
     return (
         <>
             <Newslatter />

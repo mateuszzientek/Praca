@@ -379,7 +379,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 <ProfileLink text={t("profile.myprofile")} link="/profile" />
                 <ProfileLink text={t("profile.address")} link="/address" />
                 <ProfileLink text={t("profile.orders")} link="/order" />
-                <ProfileLink text={t("profile.projects")} link="/fds" />
+                <ProfileLink text={t("profile.projects")} link="/myProjects" />
                 <ProfileLink text={t("profile.help")} link="/contact" />
 
                 {isUserLoggedIn && (
@@ -649,7 +649,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                       />
                       <ProfileLinkMobile
                         text={t("profile.projects")}
-                        link="/abra"
+                        link="/myProjects"
                       />
                       <ProfileLinkMobile
                         text={t("profile.help")}

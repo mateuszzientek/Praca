@@ -76,6 +76,7 @@ function Favorite() {
       });
   };
 
+
   return (
     <div className="bg-white dark:bg-black/80 min-h-screen">
       <Navbar background="bg-white" shadow="shadow-lg" />

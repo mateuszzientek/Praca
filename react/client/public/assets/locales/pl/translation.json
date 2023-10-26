@@ -429,5 +429,67 @@
     "text7": "Projekt możesz zapisać po stworzeniu, aby mieć do niego później dostęp",
     "text8": "Zacznij teraz",
     "text9": "Wybierz Model Buta"
-  } 
+  }, 
+  "customization": {
+    "text1": "Custom Nike Air Force 1 Low",
+    "text2": "Sneakersy unisex niskie",
+    "text3": "Stwórz swoje ulubione buty, zmieniając kolor odpowiednich elementów, dodajać napisy,naszywki oraz grafikę",
+    "text4": "Personalizuj",
+    "text5": "Rozmiar:",
+    "text6": "Wybierz rozmiar",
+    "text7": "Dodaj do koszyka",
+    "text8": "Szacowany czas dostawy 3-4 tygodnie",
+    "text9": "Zapisz Projekt",
+    "text10": "Podaj nazwę projektu",
+    "text11": "Wpisz nazwę projektu",
+    "text12": "Wystąpił błąd",
+    "text13": "Projekt pomyślnie zapisany"
+  },
+  "designSection": {
+    "text1": "Powrót",
+    "text2": "Zapisz",
+    "text3": "Popularne kolory",
+    "text4": "Wybierz swój własny kolor",
+    "text5": "Usuń kolor",
+    "text6": "Usuń kolor",
+    "text7": "Wpisz tekst po",
+    "text8": "zewnętrznej",
+    "text9": "stronie buta",
+    "text10": "Możesz wpisać do 12 znaków",
+    "text11": "wewnętrznej",
+    "text12": "Wybierz kolor tekstu",
+    "text14": "Dodaj zdjęcie na",
+    "text15": "Dodaj zdjecie",
+    "text16": "Usuń zdjęcie",
+    "text17": "Zewnętrzny swoosh",
+    "text18": "Wewnętrzny swoosh",
+    "text19": "Wybierz naszywkę na",
+    "text20": "Dodaj naszywkę",
+    "text21": "Usuń naszywkę",
+    "text22": "Zatwierdź",
+    "text23": "Przytnij zdjęcie",
+    "text24": "Czy na pewno chcesz wyjść?",
+    "text25": "Wyjście spowoduje utratę dotychczasowych zmian projektu",
+    "text26": "TAK",
+    "text27": "NIE"
+  },
+  "textArrayCustom": {
+    "tip_1":"Przód",
+    "quarter_1":"Bok",
+    "swoosh_1":"Znaczek",
+    "heel_1":"Tył",
+    "heel_logo":"Tył Logo",
+    "eyestay_1":"Góra Sznurówki",
+    "toe":"Góra",
+    "quarter_2":"Drugi bok",
+    "swoosh_2":"Drugi znaczek",
+    "heel_2":"Drugi tył",
+    "eyestay_2":"Druga góra sznurówek"
+  },
+  "myProjects":{
+      "text1": "Moje Projekty",
+      "text2": "Aktualnie nie masz żadnych projektów",
+      "text3": "Nazwa projektu"
+  }
+   
 }
