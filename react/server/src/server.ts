@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import session, {SessionData} from "express-session";
+import session, { SessionData } from "express-session";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import multer from "multer";
@@ -21,6 +21,7 @@ import Discount from "./schemas/discount";
 import DiscountUser from "./schemas/discountUser";
 import CustomShoeTemporary from "./schemas/customShoeTemporary";
 import DesignProject from "./schemas/designProject";
+const path = require("path");
 
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
@@ -75,6 +76,16 @@ import getUsersHandler from "./controllers/getUsers";
 import deleteUserHandler from "./controllers/deleteUser";
 import getOrdersAdminHandler from "./controllers/getOrderAdmin";
 import updateStatusHandler from "./controllers/updateStatus";
+import saveSpecificProjectHandler from "./controllers/saveSpecificProject";
+import deleteProjectHandler from "./controllers/deleteProject";
+import getSpecificProjectHandler from "./controllers/getSpecificProject";
+import saveDesignProjectHandler from "./controllers/saveDesignProject";
+import getProjectsHandler from "./controllers/getProjects";
+import deleteExpiredCustomDesignHandler from "./controllers/deleteExpiredCustomDesign";
+import saveCustomShoeTemporaryHandler from "./controllers/saveCustomShoeTemporary";
+import getCustomShoeTemporaryHandler from "./controllers/getCustomShoeTemporary";
+
+app.use(express.static(path.join(__dirname, "client", "build")));
 
 //-------------i18next----------------------------------
 
@@ -118,7 +129,7 @@ app.use(
   session({
     secret,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       maxAge: 48 * 60 * 60 * 1000, // 2 dni (48 godzin * 60 minut * 60 sekund * 1000 milisekund)
     },
@@ -138,7 +149,7 @@ const upload = multer({
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);
     },
-  }),
+  }), 
 });
 
 app.use(cookieParser("secret_key"));
@@ -158,133 +169,16 @@ mongoose
   });
 
 //---------------------routes----------------------------
-app.get("/getProjects", async (req, res) => {
-  const userId = req.query.userId;
 
-  try{
-     if(!userId){
-      res.status(400).json({error: "User ID is missing"})
-     }
-
-     const projects = await DesignProject.findOne({ userId: userId })
-
-     res.status(200).json({ projects: projects });
-
-  }catch (error){
-    console.error("Error while saving project", error);
-    return res.status(500).json({ error: "An error occurred while saving the project" });
-  }
-
-});
-
-
-app.post("/saveDesignProject", async (req, res) => {
-  const { customContextData, userId } = req.body;
-
-  try {
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is missing" });
-    }
-
-    // Tworzymy nowy projekt na podstawie danych z żądania
-    const newProject = {
-      designName: customContextData.designName,
-      selectedColors: customContextData.selectedColors,
-      selectedColorsText: customContextData.selectedColorsText,
-      selectedPatches: customContextData.selectedPatches,
-      swooshVisibility: customContextData.swooshVisibility,
-      sideText: customContextData.sideText,
-    };
-
-    // Wyszukujemy dokument `DesignProject` dla danego użytkownika
-    const existingProject = await DesignProject.findOne({ userId });
-
-    if (existingProject) {
-      // Dodaj nowy projekt do tablicy projektów użytkownika
-      existingProject.projects.push(newProject);
-      await existingProject.save();
-    } else {
-      // Jeśli użytkownik nie ma jeszcze żadnych projektów, utwórz nowy dokument `DesignProject`
-      const newDesignProject = new DesignProject({
-        userId,
-        projects: [newProject],
-      });
-      await newDesignProject.save();
-    }
-
-    await CustomShoeTemporary.findOneAndRemove({ userId });
-
-    return res.status(200).json({ message: "Project saved successfully" });
-  } catch (error) {
-    console.error("Error while saving project", error);
-    return res.status(500).json({ error: "An error occurred while saving the project" });
-  }
-});
-
-
-app.delete("/deleteExpiredCustomDesign", async (req,res) =>{
-  
-  const currentTime = new Date();
-  currentTime.setDate(currentTime.getDate() - 2); 
-
-  try {
-    await CustomShoeTemporary.deleteMany({ expireDate: { $lte: currentTime } });
-  } catch (error) {
-    console.error('Błąd podczas usuwania dokumentów:', error);
-  }
-})
-
-app.post("/saveCustomShoeTemporary", async (req, res) => {
-  const { customContextData, userId } = req.body
-
-  try {
-    if (userId) {
-      const existingUser = await CustomShoeTemporary.findOne({ userId: userId });
-      if (existingUser) {
-        await CustomShoeTemporary.updateOne({ userId: userId }, customContextData);
-      } else{
-        customContextData.userId = userId;
-        const customShoeTemporary = new CustomShoeTemporary(customContextData);
-        customShoeTemporary.expireDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); 
-     await customShoeTemporary.save();
-      }
-    } else{
-      res.status(400).send("Wystąpił błąd podczas zapisywania danych w bazie");
-    }
-
-    const id = userId 
-    console.log("Dane zostały zapisane w bazie danych.");
-    res.status(200).json({ id: id });
-  } catch (error) {
-    console.error("Błąd podczas zapisywania danych w bazie", error);
-    res.status(500).send("Wystąpił błąd podczas zapisywania danych w bazie");
-  }
-});
-
-
-app.get("/getCustomShoeTemporary", async (req, res) => {
-  try {
-    const userId = req.query.userId;
-    
-    if (userId) {
-      // Sprawdź, czy istnieje dokument o danym userId
-      const userDocument = await CustomShoeTemporary.findOne({ userId });
-
-      if (userDocument) {
-        // Jeśli dokument istnieje po userId, zwróć go
-        return res.status(200).json({ userDocument: userDocument })
-      }
-    }
-  } catch (error) {
-    console.error("Błąd podczas pobierania danych z bazy", error);
-    res.status(500).send("Wystąpił błąd podczas pobierania danych z bazy");
-  }
-});
-
+app.delete("/deleteExpiredCustomDesign", deleteExpiredCustomDesignHandler);
+app.delete("/deleteProject/:userId/:projectId",deleteProjectHandler);
 app.delete("/deleteUser/:userId", deleteUserHandler);
 app.delete("/deleteAddress/:addressId", deleteAddressHandler);
 app.delete("/removeFavoriteShoe/:userId/:shoeId", removeFavoriteShoeHandler);
 
+app.get("/getCustomShoeTemporary", getCustomShoeTemporaryHandler);
+app.get("/getProjects", getProjectsHandler );
+app.get("/getSpecificProject", getSpecificProjectHandler );
 app.get("/getOrdersAdmin", getOrdersAdminHandler);
 app.get("/getOrders", getOrdersHandler);
 app.get("/getUsers", getUsersHandler);
@@ -309,6 +203,9 @@ app.get("/user", (req, res) => {
   res.send(req.user);
 });
 
+app.post("/saveCustomShoeTemporary", saveCustomShoeTemporaryHandler);
+app.post("/saveDesignProject", saveDesignProjectHandler);
+app.post("/saveSpecificProject", saveSpecificProjectHandler);
 app.post("/updateStatus", updateStatusHandler);
 app.post("/saveOrder", saveOrderHandler);
 app.post("/changeCart", changeCartHandler);
@@ -334,6 +231,8 @@ app.post("/saveFavoriteShoe", saveFavoriteShoeHandler);
 app.post("/editEmail", editEmailHandler);
 app.post("/editPassword", editPasswordHandler);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+server.timeout = 60000;

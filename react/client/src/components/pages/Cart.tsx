@@ -182,7 +182,7 @@ function Cart() {
   };
 
   useEffect(() => {
-    const userId = user?._id ? user?._id : "";
+    const userId = user ? user._id : "";
 
     setDataFetched(false);
 
@@ -231,7 +231,6 @@ function Cart() {
         }
       });
   };
-
 
   return (
     <div className="bg-white dark:bg-black/80 pb-[8rem] xl:pb-[16rem] min-h-screen ">

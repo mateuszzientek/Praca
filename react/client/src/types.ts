@@ -101,3 +101,17 @@ export interface SideText{
   leftText: string;
   rightText: string;
 }
+
+export interface ProjectItem {
+  designName: string,
+  selectedColors: SelectedColors
+  selectedColorsText: SelectedColorsText
+  selectedPatches: SelectedPatches
+  swooshVisibility: SwooshVisibility
+  sideText: SideText
+  _id: string
+}
+export interface DesignProjectInterface {
+  userId: string;
+  projects: ProjectItem[];
+}

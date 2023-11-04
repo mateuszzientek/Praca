@@ -59,6 +59,7 @@ import renderPatch from "src/renderPatch";
 interface DesignSectionProps {
   photos: string[]
   patches: Array<{ url: string; name: string }>
+  param: string | undefined
 }
 
 function DesignSection(props: DesignSectionProps) {
@@ -194,10 +195,17 @@ function DesignSection(props: DesignSectionProps) {
   const buttonVisible = shouldShowButton(currentTextIndex, selectedColors, isColorChanging, textArray);
 
   async function deleteCustomImages(id: any) {
-    const customImagesFolderRef = ref(storage, `customImages/${id}`);
-    const avatarFilesList = await listAll(customImagesFolderRef);
 
-    console.log(deleteLeftImage, deleteRightImage)
+    const projectName = props.param
+    let customImagesFolderRef;
+
+    if (props.param) {
+      customImagesFolderRef = ref(storage, `designProject/${user?._id}/${projectName}`);
+    } else {
+      customImagesFolderRef = ref(storage, `customImages/${id}`);
+    }
+
+    const avatarFilesList = await listAll(customImagesFolderRef);
 
     const deletePromises = avatarFilesList.items
       .filter(item => {
@@ -221,43 +229,91 @@ function DesignSection(props: DesignSectionProps) {
 
   const saveDesign = async () => {
     const userId = user ? user._id : "";
+    const projectName = props.param
 
-    const customContextData = {
-      selectedColors,
-      selectedColorsText,
-      selectedPatches,
-      swooshVisibility,
-      sideText,
-    };
+    if (props.param) {
 
-    setLoading(true);
+      const customContextData = {
+        selectedColors,
+        selectedColorsText,
+        selectedPatches,
+        swooshVisibility,
+        sideText,
+      };
 
-    try {
-      const response = await axios.post(`/saveCustomShoeTemporary`, { customContextData, userId });
+      setLoading(true);
 
-      // Usuń pliki
-      await deleteCustomImages(response.data.id);
+      try {
+        const response = await axios.post(`/saveSpecificProject`, { customContextData, userId, projectName });
 
-      if (leftSideImageCropped) {
-        const storageRef = ref(storage, `customImages/${response.data.id}/left_${leftSideImageCropped.name}`);
-        await uploadBytes(storageRef, leftSideImageCropped);
+        // Usuń pliki
+        await deleteCustomImages(response.data.id);
+
+        if (leftSideImageCropped) {
+          const storageRef = ref(storage, `designProject/${user?._id}/${projectName}/left_${leftSideImageCropped.name}`);
+          await uploadBytes(storageRef, leftSideImageCropped);
+        }
+        if (rightSideImageCropped) {
+          const storageRef = ref(storage, `designProject/${user?._id}/${projectName}/right_${rightSideImageCropped.name}`);
+          await uploadBytes(storageRef, rightSideImageCropped);
+        }
+      } catch (error) {
+        const text = t("shop.error")
+        setErrorsServer(text);
       }
-      if (rightSideImageCropped) {
-        const storageRef = ref(storage, `customImages/${response.data.id}/right_${rightSideImageCropped.name}`);
-        await uploadBytes(storageRef, rightSideImageCropped);
+
+      setImagesUrls({
+        leftSideImageCroppedUrl: "",
+        rightSideImageCroppedUrl: ""
+      })
+      setLeftSideImageCropped(null)
+      setRightSideImageCropped(null)
+      setLoading(false);
+      navigate("/myProjects")
+
+    } else {
+      const customContextData = {
+        selectedColors,
+        selectedColorsText,
+        selectedPatches,
+        swooshVisibility,
+        sideText,
+      };
+
+      setLoading(true);
+
+      try {
+        const response = await axios.post(`/saveCustomShoeTemporary`, { customContextData, userId });
+
+        // Usuń pliki
+        await deleteCustomImages(response.data.id);
+
+        if (leftSideImageCropped) {
+          const storageRef = ref(storage, `customImages/${response.data.id}/left_${leftSideImageCropped.name}`);
+          await uploadBytes(storageRef, leftSideImageCropped);
+        }
+        if (rightSideImageCropped) {
+          const storageRef = ref(storage, `customImages/${response.data.id}/right_${rightSideImageCropped.name}`);
+          await uploadBytes(storageRef, rightSideImageCropped);
+        }
+      } catch (error) {
+        const text = t("shop.error")
+        setErrorsServer(text);
       }
-    } catch (error) {
-      const text = t("shop.error")
-      setErrorsServer(text);
+
+      setLoading(false);
+      window.location.reload();
     }
-
-    setLoading(false);
-    window.location.reload();
   };
 
   const closeDesign = () => {
-    localStorage.removeItem('showDesignPanel'); // Usuń klucz 'showDesignPanel' z Local Storage
-    window.location.reload();
+    if (props.param) {
+      setLeftSideImageCropped(null)
+      setRightSideImageCropped(null)
+      navigate("/myProjects")
+    } else {
+      window.location.reload();
+    }
   }
 
   const handleZoomChange = (event: any) => {
@@ -351,7 +407,6 @@ function DesignSection(props: DesignSectionProps) {
     }
 
   }, [textArray, sideView]);
-
 
   return (
     <>

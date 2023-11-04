@@ -9,3 +9,4 @@ declare module "classnames";
 declare module "cooperjs";
 declare module "cloudinary-react"
 declare module "react-color"
+

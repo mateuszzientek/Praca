@@ -402,22 +402,21 @@
     "text13": "Zamówione produkty",
     "text14": "Kod rabatowy:",
     "text15": "Wysyłka:"
-
   },
   "status": {
-    "all":"Wszystkie",
+    "all": "Wszystkie",
     "submitted": "Złożono zamówienie",
     "preparing": "W przygotowaniu",
     "shipped": "Wysłano",
     "deliverd": "Dostarczono"
   },
   "adminPanel": {
-   "text1": "Użytkownicy",
-   "text2": "Zamówienia",
-   "text3": "Usuń",
-   "text4": "Usunięto użytkownika",
-   "text5": "Zapisano status!",
-   "text6": "Aktualnie nie ma żadnych zamówień spełniających kryteria"
+    "text1": "Użytkownicy",
+    "text2": "Zamówienia",
+    "text3": "Usuń",
+    "text4": "Usunięto użytkownika",
+    "text5": "Zapisano status!",
+    "text6": "Aktualnie nie ma żadnych zamówień spełniających kryteria"
   },
   "design": {
     "text1": "Jak Działa PERSONALIZACJA?",
@@ -429,7 +428,7 @@
     "text7": "Projekt możesz zapisać po stworzeniu, aby mieć do niego później dostęp",
     "text8": "Zacznij teraz",
     "text9": "Wybierz Model Buta"
-  }, 
+  },
   "customization": {
     "text1": "Custom Nike Air Force 1 Low",
     "text2": "Sneakersy unisex niskie",
@@ -437,13 +436,15 @@
     "text4": "Personalizuj",
     "text5": "Rozmiar:",
     "text6": "Wybierz rozmiar",
-    "text7": "Dodaj do koszyka",
+    "text7": "Zamów",
     "text8": "Szacowany czas dostawy 3-4 tygodnie",
     "text9": "Zapisz Projekt",
     "text10": "Podaj nazwę projektu",
     "text11": "Wpisz nazwę projektu",
     "text12": "Wystąpił błąd",
-    "text13": "Projekt pomyślnie zapisany"
+    "text13": "Projekt pomyślnie zapisany",
+    "text14": "Istnieje już projekt o takiej nazwie",
+    "text15": "Możesz wpisać do 20 znaków"
   },
   "designSection": {
     "text1": "Powrót",
@@ -474,22 +475,27 @@
     "text27": "NIE"
   },
   "textArrayCustom": {
-    "tip_1":"Przód",
-    "quarter_1":"Bok",
-    "swoosh_1":"Znaczek",
-    "heel_1":"Tył",
-    "heel_logo":"Tył Logo",
-    "eyestay_1":"Góra Sznurówki",
-    "toe":"Góra",
-    "quarter_2":"Drugi bok",
-    "swoosh_2":"Drugi znaczek",
-    "heel_2":"Drugi tył",
-    "eyestay_2":"Druga góra sznurówek"
+    "tip_1": "Przód",
+    "quarter_1": "Bok",
+    "swoosh_1": "Znaczek",
+    "heel_1": "Tył",
+    "heel_logo": "Tył Logo",
+    "eyestay_1": "Góra Sznurówki",
+    "toe": "Góra",
+    "quarter_2": "Drugi bok",
+    "swoosh_2": "Drugi znaczek",
+    "heel_2": "Drugi tył",
+    "eyestay_2": "Druga góra sznurówek"
   },
-  "myProjects":{
-      "text1": "Moje Projekty",
-      "text2": "Aktualnie nie masz żadnych projektów",
-      "text3": "Nazwa projektu"
+  "myProjects": {
+    "text1": "Moje Projekty",
+    "text2": "Aktualnie nie masz żadnych projektów",
+    "text3": "Nazwa projektu",
+    "text4": "Więcej szczegółów",
+    "text5": "Edytuj",
+    "text6": "Usuń Projekt",
+    "text7": "Dodaj do koszyka",
+    "text8": "Czy na pewno chcesz usunąć projekt?",
+    "text9": "Usunięcie projektu jest nieodwracalne"
   }
-   
 }

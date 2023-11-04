@@ -31,7 +31,13 @@ function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userStorageRef = ref(storage, `/designProject/${user?._id}/${props.designName}`);
+                let userStorageRef;
+
+                if (props.designName) {
+                    userStorageRef = ref(storage, `/designProject/${user?._id}/${props.designName}`);
+                } else {
+                    userStorageRef = ref(storage, `/customImages/${user?._id}`);
+                }
 
                 const data = await listAll(userStorageRef);
 
@@ -58,7 +64,7 @@ function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
     return (
         <>
             {isReady && isPhotos_Patches &&
-                (<div className="relative ml-8">
+                (<div className="relative ">
                     <img
                         className="h-[10rem] rounded-xl"
                         src={photos[0]}
@@ -72,7 +78,6 @@ function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
                         src={side_left}
                         className="h-[10rem] rounded-xl absolute top-0 left-0 "
                     />
-
 
                     <CloudinaryContext cloudName="dlrhphkcb">
 

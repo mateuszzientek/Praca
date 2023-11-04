@@ -93,9 +93,7 @@ function Checkout() {
   };
 
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [defaultAddress, setDefaultAddress] = useState<Address | null>(
-    null
-  );
+  const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [dataFetched, setDataFetched] = useState(true);
   const [shoes, setShoes] = useState<ProductInterface[]>([]);
   const [selectedTypeAddress, setSelectedTypeAddress] = useState("individual");
@@ -514,7 +512,7 @@ function Checkout() {
         telephone,
         extra,
         country,
-        discount: discountAmount
+        discount: discountAmount,
       };
 
       axios
@@ -525,8 +523,8 @@ function Checkout() {
             return;
           }
           setQuantityCart(0);
-          setDiscountAmount(0)
-          setDiscountName("")
+          setDiscountAmount(0);
+          setDiscountName("");
           navigate("/submitOrder");
         })
         .catch((error) => {
@@ -551,7 +549,6 @@ function Checkout() {
         });
     }
   };
-
 
   return (
     <>

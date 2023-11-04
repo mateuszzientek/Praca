@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
 import axios from "axios";
 import Footer from "./components/sections/Footer";
@@ -37,7 +37,6 @@ const Order = lazy(() => import("./components/pages/Order"));
 const AdminPanel = lazy(() => import("./components/pages/AdminPanel"));
 const MyProjects = lazy(() => import("./components/pages/MyProjects"));
 
-
 const App: React.FC = () => {
   const location = useLocation();
 
@@ -54,8 +53,8 @@ const App: React.FC = () => {
   }, [location]);
 
   useEffect(() => {
-    axios.delete("/deleteExpiredCustomDesign")
-  }, [])
+    axios.delete("/deleteExpiredCustomDesign");
+  }, []);
 
   return (
     <FilterProvider>
@@ -71,7 +70,7 @@ const App: React.FC = () => {
                     <Route element={<Address />} path="/address" />
                     <Route element={<Order />} path="/order" />
                     <Route element={<MyProjects />} path="/myProjects" />
-                    <Route element={<Customization />} path="/customization" />
+                    <Route element={<Customization />} path="/customization/:projectName?" />
                   </Route>
                   <Route element={<CheckoutRoute />}>
                     <Route element={<Checkout />} path="/checkout" />

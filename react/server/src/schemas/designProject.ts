@@ -6,6 +6,7 @@ export interface DesignProjectInterface extends Document {
 }
 
 interface ProjectItem {
+    _id? : string,
     designName: string,
     selectedColors: {
         selectedColorSwosh_1: { rgb: { r: number; g: number; b: number } };

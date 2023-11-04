@@ -67,6 +67,7 @@ interface CustomContextProps {
   photos: string[]; // Dodaj photos
   patches: Array<{ url: string; name: string }> // Dodaj patches
   isPhotos_Patches: boolean
+  initialValuesLoaded: boolean
 }
 interface CustomContextProviderChildren {
   children: ReactNode;
@@ -82,6 +83,7 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
 }) => {
 
   const [isPhotos_Patches, setIsPhotos_Patches] = useState(false);
+  const [initialValuesLoaded, setInitialValuesLoaded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,7 +116,7 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
             console.log(error);
           }
         }
-
+        setInitialValuesLoaded(true)
         setPatches(patchInfoArray);
       } catch (error) {
         console.log(error);
@@ -186,7 +188,8 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
       setImagesUrls,
       photos,
       patches,
-      isPhotos_Patches
+      isPhotos_Patches,
+      initialValuesLoaded
     }}>
       {children}
     </CustomContext.Provider>
