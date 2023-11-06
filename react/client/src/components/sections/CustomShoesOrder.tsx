@@ -9,7 +9,7 @@ import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../elements/UserProvider";
-import { ErrorInterface, AddressInterface, ProductInterface, ProjectItem } from "src/types";
+import { ErrorInterface, AddressInterface, ProjectItem } from "src/types";
 import axios from "axios";
 import validator from "validator";
 import InputCheckout from "../elements/InputCheckout";
@@ -17,6 +17,18 @@ import { formatPrice } from "src/currencyUtils";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import AddressTemplateCheckout from "../elements/AddressTemplateCheckout";
 import LeftViewDesignShoe from "../sections/LeftViewDesignShoe";
+import CircleSvg from "../elements/CircleSvg";
+import {
+    ref,
+    getDownloadURL,
+    listAll,
+    updateMetadata,
+    getMetadata,
+    deleteObject,
+    uploadBytes,
+} from "firebase/storage";
+import storage from "../../firebase";
+import orderPlaced from "../../assets/images/orderPlaced.png";
 
 interface Address extends AddressInterface {
     email: string;
@@ -43,6 +55,8 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
     const [selectedTypeAddress, setSelectedTypeAddress] = useState("individual");
     const [selectedPayment, setSelectedPayment] = useState({ name: "" });
     const [terms, setTerms] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [showAfterOrder, setShowAfterOrder] = useState(false);
     const [selectedDelivery, setSelectedDelivery] = useState({
         name: "Kurier Inpost",
         price: 0,
@@ -151,8 +165,6 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
                 price: selectedDeliveryData.price,
             });
         } else {
-            // Jeśli selectedDeliveryData jest undefined, można podjąć odpowiednie działanie,
-            // np. ustawić wartość domyślną lub wyświetlić błąd
             console.log("Nie znaleziono pasującej dostawy!");
         }
     };
@@ -325,24 +337,128 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
         }
     }, [defaultAddress]);
 
+    const handleSubmit = async () => {
+        const isValid = validateData();
+
+        if (!email || !name || !surname || !street || !city || !postalCode || !telephone || !country) {
+            // Przynajmniej jedno z pól jest puste
+            setErrors({
+                email: !email ? t("loginError.emailReq") : "",
+                name: !name ? t("loginError.nameReq") : "",
+                surname: !surname ? t("loginError.surnameReq") : "",
+                street: !street ? t("address.streetReq") : "",
+                city: !city ? t("address.cityReq") : "",
+                postalCode: !postalCode ? t("address.postalCodeReq") : "",
+                telephone: !telephone ? t("address.telephoneReq") : "",
+                country: !country ? t("address.countryReq") : "",
+            });
+            return;
+        }
+
+        if (selectedPayment.name === "" || !terms) {
+            setErrorsChecked({
+                terms: !terms ? t("checkout.text27") : "",
+                payment: selectedPayment.name === "" ? t("checkout.text27") : "",
+            });
+            return;
+        }
+
+        if (isValid) {
+            setLoading(true);
+            const userId = user ? user._id : "";
+
+            const customContextData = {
+                selectedColors: props.project?.selectedColors,
+                selectedColorsText: props.project?.selectedColorsText,
+                selectedPatches: props.project?.selectedPatches,
+                swooshVisibility: props.project?.swooshVisibility,
+                sideText: props.project?.sideText,
+            };
+
+            const data = {
+                userId,
+                paymentMethod: selectedPayment.name,
+                deliveryMethod: selectedDelivery.name,
+                project: customContextData,
+                price: 115,
+                email,
+                name,
+                surname,
+                street,
+                city,
+                postalCode,
+                telephone,
+                extra,
+                country,
+                isTemporaryCustom: props.project?.designName ? false : true
+            };
+
+            try {
+                const response = await axios.post("/saveOrderCustomShoe", data);
+                const orderNumber = response.data.orderNumber;
+
+                let userStoragePath;
+                if (props.project?.designName) {
+                    console.log("projekt to jest");
+                    userStoragePath = `/designProject/${userId}/${props.project.designName}`;
+                } else {
+                    console.log("custom to jest");
+                    userStoragePath = `/customImages/${userId}`;
+                }
+
+                const userStorageRef = ref(storage, userStoragePath);
+                const userImages = await listAll(userStorageRef);
+
+                const newStorageRef = ref(storage, `/orderCustomProjects/${userId}/${orderNumber}`);
+
+                for (const imageRef of userImages.items) {
+                    const fileName = imageRef.name;
+
+                    const imageUrl = await getDownloadURL(imageRef);
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+
+                    const newImageRef = ref(newStorageRef, fileName);
+                    await uploadBytes(newImageRef, blob); // Zapisanie pliku w nowym folderze
+                }
+
+                if (!props.project?.designName) {
+                    for (const imageRef of userImages.items) {
+                        if (imageRef.name.startsWith(`left`) || imageRef.name.startsWith(`right`)) {
+                            await deleteObject(imageRef);
+                        }
+                    }
+                }
+
+                setShowAfterOrder(true)
+                setTimeout(() => {
+                    window.location.reload()
+                }, 2000);
+            } catch (error) {
+                setErrorsServer("wystąpił błąd");
+            }
+        }
+    };
     return (
         <>
-            {errorsServer && (
-                <div className="flex justify-center">
-                    <InfoDivBottom color="bg-red-500" text={errorsServer} />
+            {showAfterOrder && (
+                <div className="fixed bg-black/40 w-full h-screen z-[70] flex justify-center items-center backdrop-blur-sm overflow-y-auto min-h-screen animate-fade-in-long ">
+                    <div className="relative flex flex-col items-center bg-white dark:bg-black w-[23rem] h-[23rem]  lg:w-[30rem] lg:h-[30rem]  rounded-full">
+                        <img src={orderPlaced} className="w-[6rem] h-[6rem] lg:w-[8rem] lg:h-[8rem] mt-10 lg:mt-20" />
+                        <p className="text-2xl text-black w-[80%] text-center dark:text-white mt-4">
+                            {t("submitOrder.text1")}
+                        </p>
+                        <p className="text-2xl text-black/60 w-[80%] text-center dark:text-white/60 mt-4">
+                            {t("submitOrder.text2")}
+                        </p>
+                    </div>
                 </div>
-            )}
-
-            {errorsValidationServer.length > 0 && (
-                <InfoDivBottom
-                    color="bg-red-500"
-                    text={errorsValidationServer.map((error) => error.msg).join(", ")}
-                />
             )}
 
             {showAddressDiv && (
                 <div className="fixed bg-black/40 w-full h-screen z-[70] flex justify-center items-center backdrop-blur-sm overflow-y-auto min-h-screen">
                     <div className="relative flex flex-col items-start justify-center pb-10 bg-white dark:bg-black my-20 rounded-lg max-h-[80vh] w-[90vw] sm:w-[50rem] xl:w-[70rem]">
+
                         {/* Rest of your content */}
                         <AiOutlineClose
                             size={25}
@@ -384,6 +500,22 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
                 >
                     <p className="text-lg"> {t("designSection.text1")}</p>
                 </button>
+
+                {errorsServer && (
+                    <div className="flex justify-center ">
+                        <InfoDivBottom color="bg-red-500" text={errorsServer} />
+                    </div>
+                )}
+
+                {errorsValidationServer.length > 0 && (
+                    <div className="flex justify-center ">
+                        <InfoDivBottom
+                            color="bg-red-500"
+                            text={errorsValidationServer.map((error) => error.msg).join(", ")}
+                        />
+                    </div>
+                )}
+
                 <div
                     className={`flex justify-center w-screen  items-center h-32  md:px-20 mx-auto pt-1 border-b-[1px] border-black/20`}
                 >
@@ -750,14 +882,19 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
                                 {t("checkout.text19")} *
                             </p>
                         </div>
+                        {errorsChecked.terms && (
+                            <p className="text-red-500 text-sm mt-2 ">
+                                {errorsChecked.terms}
+                            </p>
+                        )}
 
                         <button
-                            // disabled={showLoading}
-                            // onClick={handleSubmit}
+                            disabled={loading}
+                            onClick={handleSubmit}
                             className="w-full h-[3.5rem] rounded-md bg-[#97DEFF] disabled:bg-[#c9c9c9] mt-6 hover:bg-[#48c5ff]"
                         >
                             <div className="flex items-center justify-center">
-                                {/* {showLoading && <CircleSvg color="black" secColor="black" />} */}
+                                {loading && <CircleSvg color="black" secColor="black" />}
                                 <p className="text-xl text-black/80">
                                     {t("checkout.text20")}
                                 </p>

@@ -84,7 +84,7 @@ import getProjectsHandler from "./controllers/getProjects";
 import deleteExpiredCustomDesignHandler from "./controllers/deleteExpiredCustomDesign";
 import saveCustomShoeTemporaryHandler from "./controllers/saveCustomShoeTemporary";
 import getCustomShoeTemporaryHandler from "./controllers/getCustomShoeTemporary";
-
+import saveOrderCustomShoeHandler from "./controllers/saveOrderCustomShoe";
 app.use(express.static(path.join(__dirname, "client", "build")));
 
 //-------------i18next----------------------------------
@@ -170,6 +170,7 @@ mongoose
 
 //---------------------routes----------------------------
 
+
 app.delete("/deleteExpiredCustomDesign", deleteExpiredCustomDesignHandler);
 app.delete("/deleteProject/:userId/:projectId",deleteProjectHandler);
 app.delete("/deleteUser/:userId", deleteUserHandler);
@@ -203,6 +204,7 @@ app.get("/user", (req, res) => {
   res.send(req.user);
 });
 
+app.post("/saveOrderCustomShoe", saveOrderCustomShoeHandler);
 app.post("/saveCustomShoeTemporary", saveCustomShoeTemporaryHandler);
 app.post("/saveDesignProject", saveDesignProjectHandler);
 app.post("/saveSpecificProject", saveSpecificProjectHandler);
