@@ -76,9 +76,8 @@ function Favorite() {
       });
   };
 
-
   return (
-    <div className="bg-white dark:bg-black/80 min-h-screen">
+    <div className="bg-white dark:bg-black/80 min-h-screen pb-10">
       <Navbar background="bg-white" shadow="shadow-lg" />
       <div className="flex justify-center">
         <p className="text-4xl text-black/80 dark:text-white mt-16">

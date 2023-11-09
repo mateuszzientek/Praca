@@ -17,7 +17,13 @@ import CircleSvg from "../elements/CircleSvg";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { useTranslation } from "react-i18next";
 import storage from "../../firebase";
-import { ref, uploadBytes, getDownloadURL, listAll, deleteObject } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  deleteObject,
+} from "firebase/storage";
 import "react-image-crop/dist/ReactCrop.css";
 import { Link } from "react-router-dom";
 import { ErrorInterface } from "src/types";
@@ -84,7 +90,7 @@ function Profile() {
   }, []);
 
   useEffect(() => {
-    if (image) {
+    if (image || showEditData || showEditEmail || showEditPassword) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
@@ -93,7 +99,7 @@ function Profile() {
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [image]);
+  }, [image, showEditData, showEditEmail, showEditPassword]);
 
   useEffect(() => {
     if (user?.dateOfBirth && isUserDataLoaded) {
@@ -269,12 +275,12 @@ function Profile() {
     return (
       Object.keys(
         newErrors.name ||
-        newErrors.surname ||
-        newErrors.day ||
-        newErrors.month ||
-        newErrors.year ||
-        newErrorsPassword.old ||
-        newErrorsPassword.new
+          newErrors.surname ||
+          newErrors.day ||
+          newErrors.month ||
+          newErrors.year ||
+          newErrorsPassword.old ||
+          newErrorsPassword.new
       ).length === 0
     );
   };
@@ -520,8 +526,8 @@ function Profile() {
     const avatarFilesList = await listAll(avatarFolderRef);
 
     const deletePromises = avatarFilesList.items
-      .filter(item => item.name.startsWith(`${userId}_`))
-      .map(item => deleteObject(item));
+      .filter((item) => item.name.startsWith(`${userId}_`))
+      .map((item) => deleteObject(item));
 
     await Promise.all(deletePromises);
   }
@@ -547,13 +553,15 @@ function Profile() {
       const response = await axios.post("/uploadImage", data);
 
       if (user && croppedImageFile) {
-
         await deleteAvatarFiles(user._id);
 
-        const storageRef = ref(storage, `avatars/${user._id}_${response.data.filename}`);
+        const storageRef = ref(
+          storage,
+          `avatars/${user._id}_${response.data.filename}`
+        );
         await uploadBytes(storageRef, croppedImageFile);
 
-        console.log("Zdjęcie zapisane w Firebase Storage")
+        console.log("Zdjęcie zapisane w Firebase Storage");
       }
 
       const message = t("profile.text13");
@@ -609,7 +617,15 @@ function Profile() {
             />
           </div>
 
-          <input className="w-full lg:w-[60%] mt-6" type="range" value={zoom} step={0.01} onChange={handleZoomChange} min={1} max={3} />
+          <input
+            className="w-full lg:w-[60%] mt-6"
+            type="range"
+            value={zoom}
+            step={0.01}
+            onChange={handleZoomChange}
+            min={1}
+            max={3}
+          />
 
           <div className="flex mt-6 space-x-4 ">
             <button
@@ -625,8 +641,9 @@ function Profile() {
             <button
               disabled={isLoadingEditData}
               onClick={handleImageUpload}
-              className={`flex items-center justify-center py-2 px-4 border-2 border-black/80 ${isLoadingEditData ? "bg-[#c9c9c9]" : "bg-transparent"
-                } dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300`}
+              className={`flex items-center justify-center py-2 px-4 border-2 border-black/80 ${
+                isLoadingEditData ? "bg-[#c9c9c9]" : "bg-transparent"
+              } dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300`}
             >
               {isLoadingEditData && (
                 <CircleSvg
@@ -642,51 +659,55 @@ function Profile() {
 
       {/* --------------- Email EDIT ------------------*/}
       {showEditEmail && (
-        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-[2] flex justify-center items-center ">
-          <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black  w-[25rem]  lg:w-[35rem]  xl:w-[45rem]  rounded-lg">
-            <div onClick={handleClickEditEmail}>
-              <AiOutlineClose
-                size={30}
-                color={theme === "dark" ? "white" : "black"}
-                className="absolute right-8 top-6 cursor-pointer hover:scale-125"
-              />
-            </div>
-
-            <p className="text-3xl text-black/80 dark:text-white/80 font-bold mt-6">
-              {t("profile.text1")}
-            </p>
-
-            <form className="w-[90%]" onSubmit={handleEditEmail}>
-              <input
-                className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorEmail ? "border-red-500" : "border-black/50"
-                  } `}
-                value={email}
-                type="email"
-                onChange={handleEmailChange}
-                placeholder={t("login.email") as string}
-              />
-              {errorEmail && (
-                <p className="text-red-500 text-sm mt-2">{errorEmail}</p>
-              )}
-
-              <button
-                type="submit"
-                disabled={isLoadingEditData}
-                className="mt-8 w-full  h-[3rem] bg-black/80 dark:bg-white/80 text-white dark:text-black "
-              >
-                <div className="flex items-center justify-center">
-                  {isLoadingEditData && (
-                    <CircleSvg
-                      color={theme === "dark" ? "black" : "white"}
-                      secColor={theme === "dark" ? "black" : "white"}
-                    />
-                  )}
-                  <p className="text-white dark:text-black font-lato text-xl">
-                    {t("profile.save")}
-                  </p>
+        <div className="bg-black/40 backdrop-blur-sm fixed w-full min-h-screen h-screen z-[2] flex justify-center items-center overflow-y-auto ">
+          <div className="relative flex flex-col items-start px-10 pb-10 bg-white dark:bg-black  w-[25rem]  lg:w-[35rem]  xl:w-[45rem] max-h-[80vh]   rounded-lg overflow-y-auto">
+            <div className="max-h-[80vh] w-full">
+              <div className="flex justify-between items-center mt-6">
+                <p className="text-3xl text-black/80 dark:text-white/80 font-bold ">
+                  {t("profile.text1")}
+                </p>
+                <div onClick={handleClickEditEmail}>
+                  <AiOutlineClose
+                    size={30}
+                    color={theme === "dark" ? "white" : "black"}
+                    className="cursor-pointer hover:scale-125"
+                  />
                 </div>
-              </button>
-            </form>
+              </div>
+
+              <form className="w-full" onSubmit={handleEditEmail}>
+                <input
+                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${
+                    errorEmail ? "border-red-500" : "border-black/50"
+                  } `}
+                  value={email}
+                  type="email"
+                  onChange={handleEmailChange}
+                  placeholder={t("login.email") as string}
+                />
+                {errorEmail && (
+                  <p className="text-red-500 text-sm mt-2">{errorEmail}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoadingEditData}
+                  className="mt-8 w-full  h-[3rem] bg-black/80 dark:bg-white/80 text-white dark:text-black mb-4"
+                >
+                  <div className="flex items-center justify-center">
+                    {isLoadingEditData && (
+                      <CircleSvg
+                        color={theme === "dark" ? "black" : "white"}
+                        secColor={theme === "dark" ? "black" : "white"}
+                      />
+                    )}
+                    <p className="text-white dark:text-black font-lato text-xl">
+                      {t("profile.save")}
+                    </p>
+                  </div>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
@@ -694,104 +715,109 @@ function Profile() {
       {/* --------------- Password EDIT ------------------*/}
 
       {showEditPassword && (
-        <div className="bg-black/40  backdrop-blur-sm fixed w-full h-screen z-[2] flex justify-center items-center ">
-          <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black  w-[25rem]  lg:w-[35rem]  xl:w-[45rem]  rounded-lg">
-            <div onClick={handleClickEditPassword}>
-              <AiOutlineClose
-                size={30}
-                color={theme === "dark" ? "white" : "black"}
-                className="absolute right-8 top-6 cursor-pointer hover:scale-125"
-              />
-            </div>
-
-            <p className="text-3xl text-black/80 dark:text-white/80 font-bold mt-6">
-              {t("profile.text2")}
-            </p>
-
-            <form className="w-[90%]" onSubmit={handleEditPassword}>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorsPassword.old ? "border-red-500" : "border-black/50"
-                    } `}
-                  value={oldPassword}
-                  onChange={handleOldPasswordChange}
-                  onBlur={handleBlur}
-                  placeholder={t("profile.text3") as string}
-                />
-                <div
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 bottom-4"
-                >
-                  {showPassword ? (
-                    <AiOutlineEye
-                      size={20}
-                      className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
-                    />
-                  ) : (
-                    <AiOutlineEyeInvisible
-                      size={20}
-                      className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
-                    />
-                  )}
+        <div className="bg-black/40  backdrop-blur-sm fixed w-full h-screen z-[2] flex justify-center items-center overflow-y-auto min-h-screen">
+          <div className="relative flex flex-col items-start px-10 pb-4 bg-white dark:bg-black  w-[25rem]  lg:w-[35rem]  xl:w-[45rem] max-h-[80vh]  rounded-lg overflow-y-auto">
+            <div className="max-h-[80vh] w-full">
+              <div className="flex justify-between items-center mt-6">
+                <p className="text-3xl text-black/80 dark:text-white/80 font-bold ">
+                  {t("profile.text2")}
+                </p>
+                <div onClick={handleClickEditPassword}>
+                  <AiOutlineClose
+                    size={30}
+                    color={theme === "dark" ? "white" : "black"}
+                    className="cursor-pointer hover:scale-125"
+                  />
                 </div>
               </div>
-              {errorsPassword.old && (
-                <p className="text-red-500 text-sm mt-2">
-                  {errorsPassword.old}
-                </p>
-              )}
-              <div className="relative">
-                <input
-                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorsPassword.new ? "border-red-500" : "border-black/50"
-                    } `}
-                  type={showPasswordSec ? "text" : "password"}
-                  value={newPassword}
-                  onChange={handleNewPasswordChange}
-                  onBlur={handleBlur}
-                  placeholder={t("profile.text4") as string}
-                />
-                <div
-                  onClick={() => setShowPasswordSec(!showPasswordSec)}
-                  className="absolute right-4 bottom-4"
-                >
-                  {showPasswordSec ? (
-                    <AiOutlineEye
-                      size={20}
-                      className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
-                    />
-                  ) : (
-                    <AiOutlineEyeInvisible
-                      size={20}
-                      className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
-                    />
-                  )}
-                </div>
-              </div>
-              {errorsPassword.new && (
-                <p className="text-red-500 text-sm mt-2">
-                  {errorsPassword.new}
-                </p>
-              )}
 
-              <button
-                disabled={isLoadingEditData}
-                type="submit"
-                className="mt-8 w-full  h-[3rem] bg-black/80 dark:bg-white/80 text-white dark:text-black "
-              >
-                <div className="flex items-center justify-center">
-                  {isLoadingEditData && (
-                    <CircleSvg
-                      color={theme === "dark" ? "black" : "white"}
-                      secColor={theme === "dark" ? "black" : "white"}
-                    />
-                  )}
-                  <p className="text-white dark:text-black font-lato text-xl">
-                    {t("profile.save")}
+              <form className="w-full " onSubmit={handleEditPassword}>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className={`mt-10 w-full px-2 h-[3rem] border-2 ${
+                      errorsPassword.old ? "border-red-500" : "border-black/50"
+                    } `}
+                    value={oldPassword}
+                    onChange={handleOldPasswordChange}
+                    onBlur={handleBlur}
+                    placeholder={t("profile.text3") as string}
+                  />
+                  <div
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 bottom-4"
+                  >
+                    {showPassword ? (
+                      <AiOutlineEye
+                        size={20}
+                        className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        size={20}
+                        className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
+                      />
+                    )}
+                  </div>
+                </div>
+                {errorsPassword.old && (
+                  <p className="text-red-500 text-sm mt-2">
+                    {errorsPassword.old}
                   </p>
+                )}
+                <div className="relative">
+                  <input
+                    className={`mt-10 w-full px-2 h-[3rem] border-2 ${
+                      errorsPassword.new ? "border-red-500" : "border-black/50"
+                    } `}
+                    type={showPasswordSec ? "text" : "password"}
+                    value={newPassword}
+                    onChange={handleNewPasswordChange}
+                    onBlur={handleBlur}
+                    placeholder={t("profile.text4") as string}
+                  />
+                  <div
+                    onClick={() => setShowPasswordSec(!showPasswordSec)}
+                    className="absolute right-4 bottom-4"
+                  >
+                    {showPasswordSec ? (
+                      <AiOutlineEye
+                        size={20}
+                        className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        size={20}
+                        className="cursor-pointer hover:scale-105 transition ease-in-out duration-300"
+                      />
+                    )}
+                  </div>
                 </div>
-              </button>
-            </form>
+                {errorsPassword.new && (
+                  <p className="text-red-500 text-sm mt-2">
+                    {errorsPassword.new}
+                  </p>
+                )}
+
+                <button
+                  disabled={isLoadingEditData}
+                  type="submit"
+                  className="mt-8 w-full mb-4  h-[3rem] bg-black/80 dark:bg-white/80 text-white dark:text-black "
+                >
+                  <div className="flex items-center justify-center">
+                    {isLoadingEditData && (
+                      <CircleSvg
+                        color={theme === "dark" ? "black" : "white"}
+                        secColor={theme === "dark" ? "black" : "white"}
+                      />
+                    )}
+                    <p className="text-white dark:text-black font-lato text-xl">
+                      {t("profile.save")}
+                    </p>
+                  </div>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
@@ -799,140 +825,150 @@ function Profile() {
       {/* --------------- Personal data EDIT ------------------*/}
 
       {showEditData && (
-        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-[2] flex justify-center items-center ">
-          <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black  w-[25rem]  lg:w-[35rem]  xl:w-[45rem]  rounded-lg">
-            <div onClick={handleClickEditData}>
-              <AiOutlineClose
-                size={30}
-                color={theme === "dark" ? "white" : "black"}
-                className="absolute right-3 lg:right-8 top-6 cursor-pointer hover:scale-125"
-              />
-            </div>
-
-            <p className="text-3xl text-black/80 dark:text-white/80 font-bold mt-6">
-              {t("profile.text5")}
-            </p>
-
-            <form className="w-[90%]" onSubmit={handleSubmitEditData}>
-              <input
-                className={`mt-10 w-full px-2 h-[3rem] border-2 ${errors.name ? "border-red-500" : "border-black/50"
-                  } `}
-                value={name}
-                onChange={handleNameChange}
-                onBlur={handleBlur}
-                placeholder={t("login.name") as string}
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-2">{errors.name}</p>
-              )}
-
-              <input
-                className={`mt-6 w-full  px-2 h-[3rem] border-2 ${errors.surname ? "border-red-500" : "border-black/50"
-                  } `}
-                value={surname}
-                onChange={handleSurnameChange}
-                onBlur={handleBlur}
-                placeholder={t("login.surname") as string}
-              />
-              {errors.surname && (
-                <p className="text-red-500 text-sm mt-2">{errors.surname}</p>
-              )}
-
-              <p className="text-2xl text-black/80 dark:text-white/80 mt-6 font-bold">
-                {t("profile.text6")}
-              </p>
-
-              <div className="flex w-full  mt-6 space-x-4">
-                <div className="w-[33%] ">
-                  <input
-                    className={`w-full px-2 h-[3rem]  border-2 ${errors.day ? "border-red-500" : "border-black/50"
-                      }`}
-                    value={day}
-                    onChange={handleDayChange}
-                    onBlur={handleBlur}
-                    maxLength={2}
-                    placeholder={t("profile.day") as string}
+        <div className="bg-black/40 backdrop-blur-sm fixed w-full  h-screen flex flex-col justify-center items-center overflow-y-auto min-h-screen">
+          <div className="relative flex flex-col items-start px-10 pb-4 bg-white dark:bg-black  w-[30rem]  md:w-[35rem]  xl:w-[45rem] max-h-[80vh]   rounded-lg  overflow-y-auto">
+            <div className="max-h-[80vh]  w-full">
+              <div className="flex justify-between items-center mt-6">
+                <p className="text-3xl text-black/80 dark:text-white/80 font-bold">
+                  {t("profile.text5")}
+                </p>
+                <div onClick={handleClickEditData}>
+                  <AiOutlineClose
+                    size={30}
+                    color={theme === "dark" ? "white" : "black"}
+                    className="absolute right-3 lg:right-8 top-6 cursor-pointer hover:scale-125"
                   />
-                  {errors.day && (
-                    <p className="text-red-500 text-sm mt-2">{errors.day}</p>
-                  )}
-                </div>
-
-                <div className="w-[33%] ">
-                  <input
-                    className={`w-full px-2 h-[3rem]  border-2 ${errors.month ? "border-red-500" : "border-black/50"
-                      }`}
-                    value={month}
-                    onChange={handleMonthChange}
-                    onBlur={handleBlur}
-                    maxLength={2}
-                    placeholder={t("profile.month") as string}
-                  />
-                  {errors.month && (
-                    <p className="text-red-500 text-sm mt-2">{errors.month}</p>
-                  )}
-                </div>
-
-                <div className="w-[33%] ">
-                  <input
-                    className={`w-full px-2 h-[3rem]  border-2 ${errors.year ? "border-red-500" : "border-black/50"
-                      }`}
-                    value={year}
-                    onChange={handleYearChange}
-                    onBlur={handleBlur}
-                    maxLength={4}
-                    placeholder={t("profile.year") as string}
-                  />
-                  {errors.year && (
-                    <p className="text-red-500 text-sm mt-2">{errors.year}</p>
-                  )}
                 </div>
               </div>
 
-              <p className="text-2xl text-black/80 dark:text-white/80 mt-6 font-bold">
-                {t("profile.gender")}
-              </p>
+              <form className="w-full " onSubmit={handleSubmitEditData}>
+                <input
+                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${
+                    errors.name ? "border-red-500" : "border-black/50"
+                  } `}
+                  value={name}
+                  onChange={handleNameChange}
+                  onBlur={handleBlur}
+                  placeholder={t("login.name") as string}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-2">{errors.name}</p>
+                )}
 
-              <div className="mt-4 flex space-x-6 ">
-                {genders.map((gender) => (
-                  <label
-                    key={gender}
-                    className="cursor-pointer flex items-center"
-                  >
+                <input
+                  className={`mt-6 w-full  px-2 h-[3rem] border-2 ${
+                    errors.surname ? "border-red-500" : "border-black/50"
+                  } `}
+                  value={surname}
+                  onChange={handleSurnameChange}
+                  onBlur={handleBlur}
+                  placeholder={t("login.surname") as string}
+                />
+                {errors.surname && (
+                  <p className="text-red-500 text-sm mt-2">{errors.surname}</p>
+                )}
+
+                <p className="text-2xl text-black/80 dark:text-white/80 mt-6 font-bold">
+                  {t("profile.text6")}
+                </p>
+
+                <div className="flex w-full  mt-6 space-x-4">
+                  <div className="w-[33%] ">
                     <input
-                      type="radio"
-                      className="peer sr-only"
-                      name="gender"
-                      value={gender}
-                      checked={selectedGender === gender}
-                      onChange={handleGenderChange}
+                      className={`w-full px-2 h-[3rem]  border-2 ${
+                        errors.day ? "border-red-500" : "border-black/50"
+                      }`}
+                      value={day}
+                      onChange={handleDayChange}
+                      onBlur={handleBlur}
+                      maxLength={2}
+                      placeholder={t("profile.day") as string}
                     />
-                    <div className="w-5 h-5 border-2 border-black/20 dark:border-white rounded-full transition-all peer-checked:bg-black/80 dark:peer-checked:bg-white"></div>
-                    <p className=" ml-2 text-black/60 dark:text-white">
-                      {t(`profile.${gender}`)}
-                    </p>
-                  </label>
-                ))}
-              </div>
+                    {errors.day && (
+                      <p className="text-red-500 text-sm mt-2">{errors.day}</p>
+                    )}
+                  </div>
 
-              <button
-                disabled={isLoadingEditData}
-                type="submit"
-                className="mt-8 w-full  h-[3rem] bg-black/80 dark:bg-white/80 text-white dark:text-black "
-              >
-                <div className="flex items-center justify-center">
-                  {isLoadingEditData && (
-                    <CircleSvg
-                      color={theme === "dark" ? "black" : "white"}
-                      secColor={theme === "dark" ? "black" : "white"}
+                  <div className="w-[33%] ">
+                    <input
+                      className={`w-full px-2 h-[3rem]  border-2 ${
+                        errors.month ? "border-red-500" : "border-black/50"
+                      }`}
+                      value={month}
+                      onChange={handleMonthChange}
+                      onBlur={handleBlur}
+                      maxLength={2}
+                      placeholder={t("profile.month") as string}
                     />
-                  )}
-                  <p className="text-white dark:text-black font-lato text-xl">
-                    {t("profile.save")}
-                  </p>
+                    {errors.month && (
+                      <p className="text-red-500 text-sm mt-2">
+                        {errors.month}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="w-[33%] ">
+                    <input
+                      className={`w-full px-2 h-[3rem]  border-2 ${
+                        errors.year ? "border-red-500" : "border-black/50"
+                      }`}
+                      value={year}
+                      onChange={handleYearChange}
+                      onBlur={handleBlur}
+                      maxLength={4}
+                      placeholder={t("profile.year") as string}
+                    />
+                    {errors.year && (
+                      <p className="text-red-500 text-sm mt-2">{errors.year}</p>
+                    )}
+                  </div>
                 </div>
-              </button>
-            </form>
+
+                <p className="text-2xl text-black/80 dark:text-white/80 mt-6 font-bold">
+                  {t("profile.gender")}
+                </p>
+
+                <div className="mt-4 flex space-x-6 ">
+                  {genders.map((gender) => (
+                    <label
+                      key={gender}
+                      className="cursor-pointer flex items-center"
+                    >
+                      <input
+                        type="radio"
+                        className="peer sr-only"
+                        name="gender"
+                        value={gender}
+                        checked={selectedGender === gender}
+                        onChange={handleGenderChange}
+                      />
+                      <div className="w-5 h-5 border-2 border-black/20 dark:border-white rounded-full transition-all peer-checked:bg-black/80 dark:peer-checked:bg-white"></div>
+                      <p className=" ml-2 text-black/60 dark:text-white">
+                        {t(`profile.${gender}`)}
+                      </p>
+                    </label>
+                  ))}
+                </div>
+
+                <button
+                  disabled={isLoadingEditData}
+                  type="submit"
+                  className="mt-8 w-full mb-4 h-[3rem] bg-black/80 dark:bg-white/80 text-white dark:text-black "
+                >
+                  <div className="flex items-center justify-center">
+                    {isLoadingEditData && (
+                      <CircleSvg
+                        color={theme === "dark" ? "black" : "white"}
+                        secColor={theme === "dark" ? "black" : "white"}
+                      />
+                    )}
+                    <p className="text-white dark:text-black font-lato text-xl">
+                      {t("profile.save")}
+                    </p>
+                  </div>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
@@ -961,7 +997,7 @@ function Profile() {
               </p>
             </div>
 
-            <div className="flex items-center space-x-2 lg:mt-40">
+            <div className="flex items-center sm:space-x-2 lg:mt-40 ">
               <p className="text-xl lg:text-2xl  text-black/80 dark:text-white/80  px-4 h-[3rem] border-b-4  border-black dark:border-white cursor-default">
                 {t("profile.myprofile")}
               </p>

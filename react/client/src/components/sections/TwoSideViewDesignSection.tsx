@@ -48,16 +48,28 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
   const [showSelectSize, setShowSelectSize] = useState(false);
   const sizes = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
   const currentCode = localStorage.getItem("i18nextLng");
-  const [selectedSize, setSelectedSize] = useState("")
+  const [selectedSize, setSelectedSize] = useState("");
 
   const buttonStyle =
     "px-4  py-3 text-black  dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white ";
 
   const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedSize(event.target.value)
-    setShowSelectSize(false)
-    setShowCustomShoesOrder(true)
-  }
+    setSelectedSize(event.target.value);
+    setShowSelectSize(false);
+    setShowCustomShoesOrder(true);
+  };
+
+  useEffect(() => {
+    if (showDiv || showSelectSize) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showDiv, showSelectSize]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,16 +118,15 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
       .delete(`/deleteProject/${user?._id}/${props.project?._id}`)
       .then((response) => {
         console.log("Projekt został usunięty z bazy danych");
-        window.location.reload()
+        window.location.reload();
       })
       .catch((error) => {
         const text = t("customization.text12");
         props.setError(text);
       });
-  }
+  };
 
   const handleEdit = () => {
-
     const fetchData = async () => {
       try {
         const userId = user ? user._id : "";
@@ -168,89 +179,95 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
         } else {
           setImagesUrls({
             leftSideImageCroppedUrl: "",
-            rightSideImageCroppedUrl: ""
-          })
+            rightSideImageCroppedUrl: "",
+          });
           console.log("Folder nie istnieje");
         }
-
       } catch (error) {
         const text = t("customization.text12");
         props.setError(text);
-        console.error(
-          "Błąd podczas pobierania danych",
-          error
-        );
+        console.error("Błąd podczas pobierania danych", error);
       }
     };
     fetchData();
-    navigate(`/customization/${props.project?.designName}`)
-  }
+    navigate(`/customization/${props.project?.designName}`);
+  };
 
   return (
     <>
       {showCustomShoesOrder && (
-        <CustomShoesOrder setShowMainDiv={setShowCustomShoesOrder} project={props.project} size={selectedSize} />
+        <CustomShoesOrder
+          setShowMainDiv={setShowCustomShoesOrder}
+          project={props.project}
+          size={selectedSize}
+        />
       )}
 
       {showSelectSize && (
-        <div className="fixed bg-black/40 w-full h-screen z-[70] flex justify-center items-center backdrop-blur-sm overflow-y-auto min-h-screen">
-          <div className="relative flex flex-col items-center justify-center  bg-white dark:bg-black rounded-lg p-10 ">
-            <AiOutlineClose
-              size={25}
-              onClick={() => setShowSelectSize(!showSelectSize)}
-              color={theme === "dark" ? "white" : "black"}
-              className="absolute right-6 top-5 cursor-pointer hover:scale-125"
-            />
-            <p className="text-2xl text-black pb-4">Wybierz rozmiar</p>
-            <div className="grid grid-cols-3 xl:grid-cols-4 mt-2 mb-4 gap-y-2 gap-x-2 ">
-
-
-              {sizes.map((size) => (
-                <label
-                  key={size}
-                  className="cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    className="peer sr-only"
-                    name="sizeChoice2"
-                    value={size}
-                    onChange={handleChangeSize}
-                  />
-                  <div
-                    className={` flex justify-center space-x-1 items-center rounded  w-[5rem] h-[3rem] text-black/80 dark:text-white  shadow-md 
+        <div className="fixed bg-black/40 w-full h-screen z-[70] flex justify-center items-center backdrop-blur-sm overflow-y-auto min-h-screen ">
+          <div className="relative flex flex-col items-center justify-center  bg-white dark:bg-black rounded-lg p-10 overflow-y-auto max-h-[80vh] ">
+            <div className="w-full max-h-[80vh] ">
+              <div className="flex justify-between items-center pb-4">
+                <p className="text-2xl text-black ">Wybierz rozmiar</p>
+                <AiOutlineClose
+                  size={25}
+                  onClick={() => setShowSelectSize(!showSelectSize)}
+                  color={theme === "dark" ? "white" : "black"}
+                  className="cursor-pointer hover:scale-125"
+                />
+              </div>
+              <div className="grid grid-cols-3 xl:grid-cols-4 mt-2 mb-4 gap-y-2 gap-x-2">
+                {sizes.map((size) => (
+                  <label key={size} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      className="peer sr-only"
+                      name="sizeChoice2"
+                      value={size}
+                      onChange={handleChangeSize}
+                    />
+                    <div
+                      className={` flex justify-center space-x-1 items-center rounded  w-[5rem] h-[3rem] text-black/80 dark:text-white  shadow-md 
                     bg-[#ebebeb] dark:bg-black/30 transition-all active:scale-95 peer-checked:bg-[#97DEFF] peer-checked:text-black/80"
                       } `}
-                  >
-                    <p>{currentCode !== "pl" ? "US" : "EU"}</p>
-                    <p>{t(`sizes.${size}`)}</p>
-                  </div>
-                </label>
-              ))}
+                    >
+                      <p>{currentCode !== "pl" ? "US" : "EU"}</p>
+                      <p>{t(`sizes.${size}`)}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       )}
 
       {showDiv && (
-        <div className='bg-black/50 backdrop-blur-sm fixed w-full h-screen z-30 flex justify-center items-center '>
-          <div className="bg-white rounded-lg w-[45rem] text-center py-8">
+        <div className="bg-black/50 backdrop-blur-sm fixed w-full h-screen z-30 flex justify-center items-center min-h-screen overflow-y-auto">
+          <div className="bg-white rounded-lg w-[45rem] text-center py-8 max-h-[80vh] overflow-y-auto">
             <p className="text-3xl text-black">{t("myProjects.text8")}</p>
-            <p className="text-2xl text-black/80 mt-4">{t("myProjects.text9")}</p>
+            <p className="text-2xl text-black/80 mt-4">
+              {t("myProjects.text9")}
+            </p>
 
             <div className="flex justify-center items-center space-x-10 mt-10">
-              <button onClick={() => setShowDiv(!showDiv)} className="border-2 border-black/80 rounded-full px-10 py-3 hover:bg-black/80 hover:text-white">
+              <button
+                onClick={() => setShowDiv(!showDiv)}
+                className="border-2 border-black/80 rounded-full px-10 py-3 hover:bg-black/80 hover:text-white"
+              >
                 <p className="text-lg">{t("designSection.text27")}</p>
               </button>
 
-              <button onClick={handleDeleteProject} className="border-2 border-black/80 rounded-full  px-10 py-3 hover:bg-black/80 hover:text-white">
+              <button
+                onClick={handleDeleteProject}
+                className="border-2 border-black/80 rounded-full  px-10 py-3 hover:bg-black/80 hover:text-white"
+              >
                 <p className="text-lg">{t("designSection.text26")}</p>
               </button>
             </div>
           </div>
         </div>
       )}
-
 
       <div className="bg-black/50 backdrop-blur-sm fixed w-full h-screen z-20 flex justify-center items-center ">
         <div className="flex flex-col lg:justify-center relative items-center bg-[#ebebeb] dark:bg-[#3f3f3f] rounded-lg max-h-[80vh] h-[80vh] w-[80vw] lg:w-[70vw]  overflow-y-auto  ">
@@ -273,9 +290,9 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
           </div>
           {props.project && isReady && (
             <>
-              <div className="flex flex-col lg:flex-row justify-center items-center   2xl:space-x-[10rem]">
+              <div className="flex flex-col lg:flex-row justify-center items-center pc:space-x-[10rem]">
                 <div className="flex justify-center items-center lg:w-[20rem] lg:h-[15rem] xl:w-[25rem] xl:h-[20rem]  mt-6">
-                  <div className="relative transform lg:scale-[120%] xl:scale-[150%] 2xl:scale-[200%]">
+                  <div className="relative transform lg:scale-[120%] xl:scale-[150%] pc:scale-[200%]">
                     <CloudinaryContext cloudName="dlrhphkcb">
                       <img className="h-[10rem]  rounded-xl" src={photos[0]} />
 
@@ -293,15 +310,16 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                           <TransformedImage
                             publicId="elements/quarter_1_ycvbpt.png"
                             rgb={
-                              props.project.selectedColors.selectedColorQuarter_1
-                                .rgb
+                              props.project.selectedColors
+                                .selectedColorQuarter_1.rgb
                             }
                             opacity="opacity-70"
                           />
                           <TransformedImage
                             publicId="elements/hill_1_h370h8.png"
                             rgb={
-                              props.project.selectedColors.selectedColorHill_1.rgb
+                              props.project.selectedColors.selectedColorHill_1
+                                .rgb
                             }
                             opacity="opacity-70"
                           />
@@ -310,14 +328,17 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
 
                       <TransformedImage
                         publicId="elements/tip_1_jxccem.png"
-                        rgb={props.project.selectedColors.selectedColorTip_1.rgb}
+                        rgb={
+                          props.project.selectedColors.selectedColorTip_1.rgb
+                        }
                         opacity="opacity-70"
                       />
                       {props.project.swooshVisibility.isLeftSwooshVisible && (
                         <TransformedImage
                           publicId="elements/swosh_1_pxffyd.png"
                           rgb={
-                            props.project.selectedColors.selectedColorSwosh_1.rgb
+                            props.project.selectedColors.selectedColorSwosh_1
+                              .rgb
                           }
                           opacity={imageUrlLeft ? "opacity-100" : "opacity-70"}
                         />
@@ -332,13 +353,16 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                       />
                       <TransformedImage
                         publicId="elements/toe_1_uz2weu.png"
-                        rgb={props.project.selectedColors.selectedColorToe_1.rgb}
+                        rgb={
+                          props.project.selectedColors.selectedColorToe_1.rgb
+                        }
                         opacity="opacity-70"
                       />
                       <TransformedImage
                         publicId="elements/Eyestay_1_z5b6jc.png"
                         rgb={
-                          props.project.selectedColors.selectedColorEyestay_1.rgb
+                          props.project.selectedColors.selectedColorEyestay_1
+                            .rgb
                         }
                         opacity="opacity-70"
                       />
@@ -363,7 +387,7 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                   </div>
                 </div>
                 <div className="flex justify-center items-center lg:w-[20rem] lg:h-[15rem] xl:w-[25rem] xl:h-[20rem]  mt-6">
-                  <div className="relative transform lg:scale-[120%] xl:scale-[150%]  2xl:scale-[200%]">
+                  <div className="relative transform lg:scale-[120%] xl:scale-[150%]  pc:scale-[200%]">
                     <CloudinaryContext cloudName="dlrhphkcb">
                       <img className="h-[10rem]  rounded-xl" src={photos[1]} />
                       <img
@@ -377,12 +401,16 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
 
                       <TransformedImage
                         publicId="elements/toe_2_enco6w.png"
-                        rgb={props.project.selectedColors.selectedColorToe_1.rgb}
+                        rgb={
+                          props.project.selectedColors.selectedColorToe_1.rgb
+                        }
                         opacity="opacity-70"
                       />
                       <TransformedImage
                         publicId="elements/tip_2_bmjg7i.png"
-                        rgb={props.project.selectedColors.selectedColorTip_1.rgb}
+                        rgb={
+                          props.project.selectedColors.selectedColorTip_1.rgb
+                        }
                         opacity="opacity-70"
                       />
                       {!imageUrlRight && (
@@ -390,15 +418,16 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                           <TransformedImage
                             publicId="elements/quarter_2_kjcplp.png"
                             rgb={
-                              props.project.selectedColors.selectedColorQuarter_2
-                                .rgb
+                              props.project.selectedColors
+                                .selectedColorQuarter_2.rgb
                             }
                             opacity="opacity-70"
                           />
                           <TransformedImage
                             publicId="elements/heel_2_xtnwp2.png"
                             rgb={
-                              props.project.selectedColors.selectedColorHeel_2.rgb
+                              props.project.selectedColors.selectedColorHeel_2
+                                .rgb
                             }
                             opacity="opacity-70"
                           />
@@ -408,7 +437,8 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                         <TransformedImage
                           publicId="elements/swosh_2_twgxvt.png"
                           rgb={
-                            props.project.selectedColors.selectedColorSwosh_2.rgb
+                            props.project.selectedColors.selectedColorSwosh_2
+                              .rgb
                           }
                           opacity={imageUrlRight ? "opacity-100" : "opacity-70"}
                         />
@@ -424,7 +454,8 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                       <TransformedImage
                         publicId="elements/eyestay_2_ciar70.png"
                         rgb={
-                          props.project.selectedColors.selectedColorEyestay_2.rgb
+                          props.project.selectedColors.selectedColorEyestay_2
+                            .rgb
                         }
                         opacity="opacity-70"
                       />
@@ -459,13 +490,22 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
               </div>
 
               <div className="flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-x-10 lg:space-y-0 mt-8 xl:mt-12 pb-10">
-                <button onClick={handleEdit} className={`${buttonStyle} w-[10rem]`}>
+                <button
+                  onClick={handleEdit}
+                  className={`${buttonStyle} w-[10rem]`}
+                >
                   <p className="text-lg ">{t("myProjects.text5")}</p>
                 </button>
-                <button onClick={() => setShowDiv(!showDiv)} className={`${buttonStyle} w-[10rem]`}>
+                <button
+                  onClick={() => setShowDiv(!showDiv)}
+                  className={`${buttonStyle} w-[10rem]`}
+                >
                   <p className="text-lg ">{t("myProjects.text6")}</p>
                 </button>
-                <button onClick={() => setShowSelectSize(!showSelectSize)} className={`${buttonStyle} w-[14rem]`}>
+                <button
+                  onClick={() => setShowSelectSize(!showSelectSize)}
+                  className={`${buttonStyle} w-[14rem]`}
+                >
                   <p className="text-lg ">{t("customization.text7")}</p>
                 </button>
               </div>

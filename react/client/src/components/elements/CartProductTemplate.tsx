@@ -82,7 +82,7 @@ function CartProductTemplate(props: CartProductTemplateProps) {
 
     axios
       .post("/updateQuantityCart", requestData)
-      .then((response) => { })
+      .then((response) => {})
       .catch((error) => {
         if (
           error.response &&
@@ -168,10 +168,11 @@ function CartProductTemplate(props: CartProductTemplateProps) {
 
               <div className={`flex md:hidden space-x-2`}>
                 <p
-                  className={`text-lg ' ${props.discountPrice !== 0
-                    ? "text-red-500"
-                    : "text-black dark:text-white"
-                    } `}
+                  className={`text-lg ' ${
+                    props.discountPrice !== 0
+                      ? "text-red-500"
+                      : "text-black dark:text-white"
+                  } `}
                 >
                   {formatPrice(shoePrice, t)}
                 </p>
@@ -204,7 +205,7 @@ function CartProductTemplate(props: CartProductTemplateProps) {
               </div>
             </div>
 
-            <div className="absolute right-4  md:right-[8.5rem] lg:right-[11.7rem] ">
+            <div className="absolute bottom-10 md:bottom-auto right-4  md:right-[8.5rem] lg:right-[11.7rem] ">
               <button
                 onClick={() => setShowQuantity(!showQuantity)}
                 className="flex items-center justify-center px-3 py-2  border-2 border-black/50 dark:border-white/50 space-x-4 "
@@ -256,14 +257,16 @@ function CartProductTemplate(props: CartProductTemplateProps) {
             </p>
 
             <div
-              className={`flex-col hidden md:flex absolute ${currentCode === "pl" ? "right-[2.4rem]" : "right-[2rem]"
-                }  space-y-1`}
+              className={`flex-col hidden md:flex absolute ${
+                currentCode === "pl" ? "right-[2.4rem]" : "right-[2rem]"
+              }  space-y-1`}
             >
               <p
-                className={`text-lg ' ${props.discountPrice !== 0
-                  ? "text-red-500"
-                  : "text-black dark:text-white"
-                  } `}
+                className={`text-lg ' ${
+                  props.discountPrice !== 0
+                    ? "text-red-500"
+                    : "text-black dark:text-white"
+                } `}
               >
                 {formatPrice(shoePrice, t)}
               </p>

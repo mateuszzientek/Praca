@@ -390,7 +390,7 @@
     "text1": "Nr. Zamówienia:",
     "text2": "Status zamówienia:",
     "text3": "Wartość zamówienia:",
-    "text4": "Szczegóły zamówienia",
+    "text4": "Szczegóły",
     "text5": "Sprawdź swoje zamówienia!",
     "text6": "Aktualnie nie masz żadnych zamówień",
     "text7": "Zamówienie",
@@ -401,7 +401,9 @@
     "text12": "Adres dostawy",
     "text13": "Zamówione produkty",
     "text14": "Kod rabatowy:",
-    "text15": "Wysyłka:"
+    "text15": "Wysyłka:",
+    "text16": "Klasyczne buty",
+    "text17": "Spersonalizowane"
   },
   "status": {
     "all": "Wszystkie",

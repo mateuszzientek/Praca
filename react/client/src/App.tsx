@@ -41,6 +41,10 @@ const App: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Przewiń do góry po zmianie ścieżki
+  }, [location.pathname]);
+
+  useEffect(() => {
     // Sprawdzamy, czy bieżąca ścieżka nie jest '/login' ani '/redirectAfterGoogleLogin'
     if (
       location.pathname !== "/login" &&
@@ -70,7 +74,10 @@ const App: React.FC = () => {
                     <Route element={<Address />} path="/address" />
                     <Route element={<Order />} path="/order" />
                     <Route element={<MyProjects />} path="/myProjects" />
-                    <Route element={<Customization />} path="/customization/:projectName?" />
+                    <Route
+                      element={<Customization />}
+                      path="/customization/:projectName?"
+                    />
                   </Route>
                   <Route element={<CheckoutRoute />}>
                     <Route element={<Checkout />} path="/checkout" />

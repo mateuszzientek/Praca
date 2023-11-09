@@ -128,7 +128,6 @@ function Contact() {
       });
   };
 
-
   return (
     <>
       {showInfo && (
@@ -156,10 +155,10 @@ function Contact() {
           />
 
           <div className=" text-center w-full absolute top-[57%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <p className="text-6xl md:text-7xl lg:text-8xl font-lato text-black/80 dark:text-white">
+            <p className="text-6xl md:text-7xl 2xl:text-8xl font-lato text-black/80 dark:text-white">
               {t("contact.main")}
             </p>
-            <div className="text-xl w-auto md:text-2xl lg:text-3xl font-lato text-black/60 dark:text-white mt-6 ">
+            <div className="text-xl w-auto md:text-2xl 2xl:text-3xl font-lato text-black/60 dark:text-white mt-6 ">
               <p className="mb-2"> {t("contact.text1")}</p>
               <p> {t("contact.text2")}</p>
             </div>

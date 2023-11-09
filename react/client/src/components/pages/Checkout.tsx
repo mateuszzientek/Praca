@@ -188,12 +188,12 @@ function Checkout() {
     return (
       Object.keys(
         newErrors.email ||
-        newErrors.name ||
-        newErrors.surname ||
-        newErrors.street ||
-        newErrors.city ||
-        newErrors.postalCode ||
-        newErrors.telephone
+          newErrors.name ||
+          newErrors.surname ||
+          newErrors.street ||
+          newErrors.city ||
+          newErrors.postalCode ||
+          newErrors.telephone
       ).length === 0
     );
   };
@@ -567,36 +567,40 @@ function Checkout() {
 
       {showAddressDiv && (
         <div className="fixed bg-black/40 w-full h-screen z-10 flex justify-center items-center backdrop-blur-sm overflow-y-auto min-h-screen">
-          <div className="relative flex flex-col items-start justify-center pb-10 bg-white dark:bg-black my-20 rounded-lg max-h-[80vh] w-[90vw] sm:w-[50rem] xl:w-[70rem]">
-            {/* Rest of your content */}
-            <AiOutlineClose
-              size={25}
-              onClick={() => setShowAddressDiv(!showAddressDiv)}
-              color={theme === "dark" ? "white" : "black"}
-              className="absolute right-6 top-5 cursor-pointer hover:scale-125"
-            />
-            <p className="text-2xl text-black/80 dark:text-white/80 mx-auto mt-4">
-              {t("checkout.text1")}
-            </p>
-            <div className="h-[1px] w-full bg-black/20 dark:bg-white/20 mt-4"></div>
-            <div className="flex flex-wrap gap-20 gap-y-2 pl-12 xl:px-28 mx-auto mt-10 max-h-[80vh] overflow-y-auto">
-              {addresses.map((address) => (
-                <div key={address._id}>
-                  <AddressTemplateCheckout
-                    addressId={address._id}
-                    name={address.name}
-                    surname={address.surname}
-                    street={address.street}
-                    city={address.city}
-                    postalCode={address.postalCode}
-                    telephone={address.telephone}
-                    extra={address.extra}
-                    country={address.country}
-                    isDefault={address.isDefault}
-                    handleSetDefaultAddress={handleSetDefaultAddress}
-                  />
-                </div>
-              ))}
+          <div className="relative flex flex-col items-start justify-center pb-10 bg-white dark:bg-black my-20 rounded-lg max-h-[80vh] w-[90vw] sm:w-[50rem] xl:w-[70rem]  overflow-y-auto">
+            <div className="max-h-[80vh] w-full">
+              {/* Rest of your content */}
+              <div className="flex justify-between items-center mt-6">
+                <p className="text-2xl text-black/80 dark:text-white/80 mx-auto mt-4">
+                  {t("checkout.text1")}
+                </p>
+                <AiOutlineClose
+                  size={25}
+                  onClick={() => setShowAddressDiv(!showAddressDiv)}
+                  color={theme === "dark" ? "white" : "black"}
+                  className="absolute right-6 top-5 cursor-pointer hover:scale-125"
+                />
+              </div>
+              <div className="h-[1px] w-full bg-black/20 dark:bg-white/20 mt-4"></div>
+              <div className="flex flex-wrap gap-20 gap-y-2 pl-12 xl:px-28 mx-auto mt-10 ">
+                {addresses.map((address) => (
+                  <div key={address._id}>
+                    <AddressTemplateCheckout
+                      addressId={address._id}
+                      name={address.name}
+                      surname={address.surname}
+                      street={address.street}
+                      city={address.city}
+                      postalCode={address.postalCode}
+                      telephone={address.telephone}
+                      extra={address.extra}
+                      country={address.country}
+                      isDefault={address.isDefault}
+                      handleSetDefaultAddress={handleSetDefaultAddress}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -857,8 +861,9 @@ function Checkout() {
 
                   <div className="flex space-x-1 items-center">
                     <p
-                      className={`px-4 text-black/80 dark:text-white/80 whitespace-nowrap  text-lg ${type.price === 0 ? "text-green-500" : "text-black/80"
-                        }`}
+                      className={`px-4 text-black/80 dark:text-white/80 whitespace-nowrap  text-lg ${
+                        type.price === 0 ? "text-green-500" : "text-black/80"
+                      }`}
                     >
                       {formatPrice(type.price, t)}
                     </p>
@@ -962,10 +967,11 @@ function Checkout() {
                     {t("checkout.text17")}
                   </p>
                   <p
-                    className={`${selectedDelivery.price === 0
-                      ? "text-green-500"
-                      : "text-black/80 dark:text-white/80 "
-                      } font-bold`}
+                    className={`${
+                      selectedDelivery.price === 0
+                        ? "text-green-500"
+                        : "text-black/80 dark:text-white/80 "
+                    } font-bold`}
                   >
                     {formatPrice(selectedDelivery.price, t)}
                   </p>

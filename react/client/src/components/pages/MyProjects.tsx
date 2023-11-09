@@ -15,7 +15,8 @@ import { ProjectItem, DesignProjectInterface } from "src/types";
 import { CustomContext } from "../elements/CustomProvider";
 
 function MyProjects() {
-  const { setImagesUrls, setLeftSideImageCropped, setRightSideImageCropped } = useContext(CustomContext);
+  const { setImagesUrls, setLeftSideImageCropped, setRightSideImageCropped } =
+    useContext(CustomContext);
   const { theme, setTheme } = useContext(ThemeContext);
   const { t } = useTranslation();
   const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
@@ -40,12 +41,12 @@ function MyProjects() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setLeftSideImageCropped(null)
-    setRightSideImageCropped(null)
+    setLeftSideImageCropped(null);
+    setRightSideImageCropped(null);
     setImagesUrls({
       leftSideImageCroppedUrl: "",
-      rightSideImageCroppedUrl: ""
-    })
+      rightSideImageCroppedUrl: "",
+    });
 
     const userId = user?._id ? user?._id : "";
 
@@ -100,7 +101,7 @@ function MyProjects() {
           extra="border-b border-black/20 dark:border-white/20"
         />
 
-        <div className="flex justify-center space-x-[10rem] xl:space-x-[16rem] 2xl:space-x-[20rem] items-center bg-white dark:bg-[#292929] h-[13rem]">
+        <div className="flex justify-center space-x-[8rem] xl:space-x-[16rem] 2xl:space-x-[20rem] items-center bg-white dark:bg-[#292929] h-[13rem]">
           <div className="flex flex-col lg:flex text-center items-center">
             <div className="text-center">
               {isUserDataLoaded && (
@@ -118,7 +119,7 @@ function MyProjects() {
             </div>
 
             <div className="flex lg:hidden items-center pt-8 lg:pr-[5rem]">
-              <p className="text-4xl text-black/80 dark:text-white/80">
+              <p className="text-2xl lg:text-4xl text-black/80 dark:text-white/80">
                 {t("myProjects.text1")}
               </p>
             </div>
@@ -139,7 +140,7 @@ function MyProjects() {
             <LoadingAnimationSmall />
           </div>
         ) : (
-          <div className="relative flex flex-col  mx-auto  bg-white dark:bg-[#292929] w-full sm:w-[600px] lg:w-[1000px]  mt-20 ">
+          <div className="relative flex flex-col  mx-auto  bg-white dark:bg-[#292929] w-full md:w-[80vw] lg:w-[1000px]  mt-20 ">
             {projects === null ? (
               <p className="text-2xl text-black/80 dark:text-white/80 text-center py-10">
                 {t("myProjects.text2")}

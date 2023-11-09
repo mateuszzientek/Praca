@@ -12,10 +12,10 @@ import storage from "../../firebase";
 import { CartContext } from "../elements/CartProvider";
 import { UserContext } from "../elements/UserProvider";
 import { useNavigate } from "react-router-dom";
-import tick from "../../assets/images/tick.png"
+import tick from "../../assets/images/tick.png";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import CircleSvg from "../elements/CircleSvg";
-import { formatPrice } from 'src/currencyUtils';
+import { formatPrice } from "src/currencyUtils";
 import { ShoeInterface } from "src/types";
 
 interface ShoeSize {
@@ -45,25 +45,21 @@ function ShoeView() {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const [error, setError] = useState("");
-  const [showDiv, setShowDiv] = useState(false)
+  const [showDiv, setShowDiv] = useState(false);
   const [showQuantityMessage, setShowQuantityMessage] = useState(true);
   const [errorsServer, setErrorsServer] = useState("");
 
   const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setShowQuantityMessage(true)
-    setError("")
-    setSelectedSize(event.target.value)
-  }
+    setShowQuantityMessage(true);
+    setError("");
+    setSelectedSize(event.target.value);
+  };
 
   useEffect(() => {
-
-
     const fetchData = async () => {
       try {
-
         const response = await axios.get(`/getShoeById?id=${id}`);
         setShoe(response.data);
-
 
         if (response.data) {
           const folderRef = ref(
@@ -91,7 +87,7 @@ function ShoeView() {
             );
             const favoriteShoeIds = favoriteShoesResponse.data.favoriteShoes;
 
-            console.log(favoriteShoesResponse.data)
+            console.log(favoriteShoesResponse.data);
 
             const isFavorite = favoriteShoeIds.includes(response.data._id);
             setShoe((prevShoe) => ({ ...prevShoe, isHearted: isFavorite }));
@@ -148,46 +144,46 @@ function ShoeView() {
   };
 
   const addToCart = () => {
-    setError("")
+    setError("");
 
     if (!selectedSize) {
-      const message = t("shoeView.text2")
-      setError(message)
-      return
+      const message = t("shoeView.text2");
+      setError(message);
+      return;
     }
 
     const requestData = {
       shoeId: shoe._id,
       selectedSize: selectedSize,
       quantity: 1,
-      userId: ""
+      userId: "",
     };
 
     if (user?._id) {
       requestData.userId = user._id;
     }
 
-    setIsDataFetched(true)
+    setIsDataFetched(true);
 
-    axios.post("/addToCart", requestData)
+    axios
+      .post("/addToCart", requestData)
       .then((response) => {
-
         if (response.data.limit) {
-          setShowQuantityMessage(false)
-          const message = t("shoeView.text6")
-          setError(message)
-          return
+          setShowQuantityMessage(false);
+          const message = t("shoeView.text6");
+          setError(message);
+          return;
         } else {
+          const userIdParam = user?._id || "";
 
-          const userIdParam = user?._id || '';
-
-          axios.get(`/getQuantityCart?userId=${userIdParam}`)
+          axios
+            .get(`/getQuantityCart?userId=${userIdParam}`)
             .then((response) => {
-              setQuantityCart(response.data.itemCount)
+              setQuantityCart(response.data.itemCount);
 
-              setSelectedSize("")
-              setShowDiv(true)
-              setShowQuantityMessage(false)
+              setSelectedSize("");
+              setShowDiv(true);
+              setShowQuantityMessage(false);
             })
             .catch((error) => {
               if (
@@ -199,10 +195,10 @@ function ShoeView() {
               } else {
                 console.log(error);
               }
-            })
+            });
         }
-
-      }).catch((error) => {
+      })
+      .catch((error) => {
         if (
           error.response &&
           error.response.data &&
@@ -212,32 +208,42 @@ function ShoeView() {
         } else {
           console.log(error);
         }
-      }).finally(() => {
-        setIsDataFetched(false)
       })
-
-  }
-
+      .finally(() => {
+        setIsDataFetched(false);
+      });
+  };
 
   return (
     <>
       <div className="flex justify-center">
-        {errorsServer && <InfoDivBottom color="bg-red-500" text={errorsServer} />}
+        {errorsServer && (
+          <InfoDivBottom color="bg-red-500" text={errorsServer} />
+        )}
       </div>
 
       {showDiv && (
         <div className="bg-black/50 fixed w-full h-screen z-10 flex justify-center items-center animate-fade-in-long ">
           <div className="relative flex flex-col items-center bg-white dark:bg-black w-[23rem] h-[23rem]  lg:w-[30rem] lg:h-[30rem]  rounded-full">
-            <img src={tick} className="w-[6rem] h-[6rem] lg:w-[8rem] lg:h-[8rem] mt-10 lg:mt-20" />
+            <img
+              src={tick}
+              className="w-[6rem] h-[6rem] lg:w-[8rem] lg:h-[8rem] mt-10 lg:mt-20"
+            />
             <p className="text-2xl text-black/80 dark:text-white/80 mt-4">
               {t("shoeView.text3")}
             </p>
 
             <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0 mt-8 lg:mt-10">
-              <button onClick={() => setShowDiv(!showDiv)} className="w-[10rem] h-[3rem] border-[3px] border-[#32c1ff] rounded-md hover:bg-black/5">
+              <button
+                onClick={() => setShowDiv(!showDiv)}
+                className="w-[10rem] h-[3rem] border-[3px] border-[#32c1ff] rounded-md hover:bg-black/5"
+              >
                 <p className="text-[#32c1ff] text-sm ">{t("shoeView.text4")}</p>
               </button>
-              <button onClick={() => navigate("/cart")} className="w-[10rem] h-[3rem] border-[3px] border-[#23bf61]  rounded-md hover:bg-black/5">
+              <button
+                onClick={() => navigate("/cart")}
+                className="w-[10rem] h-[3rem] border-[3px] border-[#23bf61]  rounded-md hover:bg-black/5"
+              >
                 <p className="text-[#23bf61] text-sm ">{t("shoeView.text5")}</p>
               </button>
             </div>
@@ -249,17 +255,16 @@ function ShoeView() {
         <Navbar background="bg-white" shadow="none" />
         <div className="flex justify-center">
           {isLoading ? (
-            <div className="mt-[20rem]">
+            <div className="mt-20">
               <LoadingAnimationSmall />
             </div>
           ) : !arePhotosLoaded ? (
-            <div className="mt-[20rem]">
+            <div className="mt-20">
               <LoadingAnimationSmall />
             </div>
           ) : (
             <div className="flex lg:flex-row flex-col justify-center lg:space-x-20 xl:space-x-40 mb-20">
-
-              <div className="flex flex-col items-center mt-12 xl:mt-0 ">
+              <div className="flex flex-col items-center  ">
                 <div>
                   <img
                     src={photos[selectedPhotoIndex]}
@@ -271,10 +276,11 @@ function ShoeView() {
                   {photos.map((photo, index) => (
                     <div
                       key={index}
-                      className={`cursor-pointer w-[5rem] h-[5rem] md:w-[7rem] md:h-[7rem] lg:w-[5rem] lg:h-[5rem] xl:w-[7rem] xl:h-[7rem] bg-white dark:bg-black/50 shadow-lg ${selectedPhotoIndex === index
-                        ? "border-2 border-[#97DEFF]"
-                        : ""
-                        }`}
+                      className={`cursor-pointer w-[5rem] h-[5rem] md:w-[7rem] md:h-[7rem] lg:w-[5rem] lg:h-[5rem] xl:w-[7rem] xl:h-[7rem] bg-white dark:bg-black/50 shadow-lg ${
+                        selectedPhotoIndex === index
+                          ? "border-2 border-[#97DEFF]"
+                          : ""
+                      }`}
                       onClick={() => setSelectedPhotoIndex(index)}
                     >
                       <img className="w-full h-full" src={photo} />
@@ -283,7 +289,7 @@ function ShoeView() {
                 </div>
               </div>
 
-              <div className="flex justify-center mt-24">
+              <div className="flex justify-center lg:mt-16 pc:mt-24">
                 <div className="flex flex-col items-center lg:items-start justify-start">
                   <p className="text-xl xl:text-2xl text-black/60 dark:text-white/60 mb-3">
                     {t(`categoryShoes.${shoe.category}`)}
@@ -311,8 +317,9 @@ function ShoeView() {
                     {shoe.sizes.map((size) => (
                       <label
                         key={size.size}
-                        className={` ${size.quantity === 0 ? "cursor-auto" : "cursor-pointer"
-                          }`}
+                        className={` ${
+                          size.quantity === 0 ? "cursor-auto" : "cursor-pointer"
+                        }`}
                       >
                         <input
                           type="radio"
@@ -324,10 +331,11 @@ function ShoeView() {
                           checked={size.size === selectedSize}
                         />
                         <div
-                          className={` flex justify-center space-x-1 items-center rounded w-[4rem] h-[2rem] xl:w-[5rem] xl:h-[3rem] text-black/80 dark:text-white  shadow-md ${size.quantity === 0
-                            ? "bg-black/10 "
-                            : "bg-white dark:bg-black/30 transition-all active:scale-95 peer-checked:bg-[#97DEFF] peer-checked:text-black/80"
-                            } `}
+                          className={` flex justify-center space-x-1 items-center rounded w-[4rem] h-[2rem] xl:w-[5rem] xl:h-[3rem] text-black/80 dark:text-white  shadow-md ${
+                            size.quantity === 0
+                              ? "bg-black/10 "
+                              : "bg-white dark:bg-black/30 transition-all active:scale-95 peer-checked:bg-[#97DEFF] peer-checked:text-black/80"
+                          } `}
                         >
                           <p>{currentCode !== "pl" ? "US" : "EU"}</p>
                           <p>{t(`sizes.${size.size}`)}</p>
@@ -336,22 +344,35 @@ function ShoeView() {
                     ))}
                   </div>
 
-                  {showQuantityMessage && selectedSize &&
-                    shoe.sizes.find((size) => size.size === selectedSize && size.quantity < 5 && size.quantity > 0) && (
+                  {showQuantityMessage &&
+                    selectedSize &&
+                    shoe.sizes.find(
+                      (size) =>
+                        size.size === selectedSize &&
+                        size.quantity < 5 &&
+                        size.quantity > 0
+                    ) && (
                       <p className="text-red-600 text-lg mt-2">
-                        {t("shoeView.text1")} {shoe.sizes.find((size) => size.size === selectedSize && size.quantity)?.quantity}
+                        {t("shoeView.text1")}{" "}
+                        {
+                          shoe.sizes.find(
+                            (size) =>
+                              size.size === selectedSize && size.quantity
+                          )?.quantity
+                        }
                       </p>
                     )}
 
-                  {error && <p className="text-red-500 text-lg mt-2 ">
-                    {error}
-                  </p>}
+                  {error && (
+                    <p className="text-red-500 text-lg mt-2 ">{error}</p>
+                  )}
 
                   <div className="flex space-x-4 mt-6">
                     <button
                       onClick={addToCart}
                       disabled={isDataFetched}
-                      className="flex items-center py-3 px-6 rounded-lg shadow-lg bg-[#97DEFF] disabled:bg-[#c9c9c9] transform hover:scale-105 ease-in-out duration-300">
+                      className="flex items-center py-3 px-6 rounded-lg shadow-lg bg-[#97DEFF] disabled:bg-[#c9c9c9] transform hover:scale-105 ease-in-out duration-300"
+                    >
                       {isDataFetched && (
                         <CircleSvg
                           color={theme === "dark" ? "white" : "black"}

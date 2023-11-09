@@ -85,7 +85,7 @@ import deleteExpiredCustomDesignHandler from "./controllers/deleteExpiredCustomD
 import saveCustomShoeTemporaryHandler from "./controllers/saveCustomShoeTemporary";
 import getCustomShoeTemporaryHandler from "./controllers/getCustomShoeTemporary";
 import saveOrderCustomShoeHandler from "./controllers/saveOrderCustomShoe";
-app.use(express.static(path.join(__dirname, "client", "build")));
+import getOrdersCustomShoeHandler from "./controllers/getOrderCustomShoe";
 
 //-------------i18next----------------------------------
 
@@ -115,6 +115,7 @@ i18next
 
 //-------------app use------------------------
 
+app.use(express.static(path.join(__dirname, "client", "build")));
 app.use(i18nextMiddleware.handle(i18next));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -177,6 +178,7 @@ app.delete("/deleteUser/:userId", deleteUserHandler);
 app.delete("/deleteAddress/:addressId", deleteAddressHandler);
 app.delete("/removeFavoriteShoe/:userId/:shoeId", removeFavoriteShoeHandler);
 
+app.get("/getOrderCustomShoe", getOrdersCustomShoeHandler );
 app.get("/getCustomShoeTemporary", getCustomShoeTemporaryHandler);
 app.get("/getProjects", getProjectsHandler );
 app.get("/getSpecificProject", getSpecificProjectHandler );

@@ -12,19 +12,18 @@ function SubmitOrder() {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="flex flex-col w-screen min-h-screen items-center pb-10 bg-white dark:bg-black/80">
-      <div></div>
+    <div className="flex flex-col w-screen min-h-screen items-center pb-10 pt-20 bg-white dark:bg-black/80">
       <LazyLoadImage
         src={orderPlaced}
         alt="Order Placed"
-        className="w-[5rem] mt-10 md:mt-28"
+        className="w-[5rem] "
         effect="blur"
         placeholderSrc={orderPlaced}
       />
-      <p className="text-black/80 dark:text-white/80 text-4xl mt-8 text-center w-[90%]">
+      <p className="text-black/80 dark:text-white/80 text-2xl lg:text-4xl mt-8 text-center w-[90%]">
         {t("submitOrder.text1")}
       </p>
-      <p className="text-black/50 dark:text-white/50  text-2xl mt-8 w-[80%] lg:w-[52rem] text-center ">
+      <p className="text-black/50 dark:text-white/50 text-lg lg:text-2xl mt-8 w-[80%] lg:w-[52rem] text-center ">
         {t("submitOrder.text2")}
         {user && <span className="ml-1">{t("submitOrder.text3")}</span>}
         {!user && <span className="ml-1">{t("submitOrder.text4")}</span>}
@@ -36,7 +35,10 @@ function SubmitOrder() {
             onClick={() => navigate("/order")}
             className=" h-[3.5rem] rounded-full px-4 bg-[#97DEFF] mt-6 hover:bg-[#48c5ff]"
           >
-            <p className="text-xl text-black/80"> {t("submitOrder.text5")}</p>
+            <p className="text-md lg:text-xl text-black/80">
+              {" "}
+              {t("submitOrder.text5")}
+            </p>
           </button>
         )}
         <button
@@ -47,7 +49,7 @@ function SubmitOrder() {
               : "bg-transparent hover:bg-[#97DEFF]"
           } hover:text-black/80`}
         >
-          <p className="text-xl text-black/80 dark:text-white/80 ">
+          <p className="text-md lg:text-xl text-black/80 dark:text-white/80 ">
             {t("submitOrder.text6")}
           </p>
         </button>

@@ -9,7 +9,13 @@ import {
 } from "react-icons/ai";
 
 import { UserContext } from "../elements/UserProvider";
-import { ref, uploadBytes, deleteObject, listAll, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  deleteObject,
+  listAll,
+  getDownloadURL,
+} from "firebase/storage";
 import storage from "../../firebase";
 import RoundedColor from "../elements/RoundedColor";
 import { CloudinaryContext } from "cloudinary-react";
@@ -30,8 +36,8 @@ import {
 import { onSelectFile, getCroppedImageFile } from "src/graphicsUtils";
 import axios from "axios";
 import { ThemeContext } from "../elements/ThemeContext";
-import side_left from "../../assets/images/side_left.png"
-import side_right from "../../assets/images/side_right.png"
+import side_left from "../../assets/images/side_left.png";
+import side_right from "../../assets/images/side_right.png";
 import "react-image-crop/dist/ReactCrop.css";
 import GraphicsCropDiv from "../elements/GraphicsCropDiv";
 import ToogleButtonSwosh from "../elements/ToogleButtonSwosh";
@@ -45,7 +51,7 @@ import {
   textArrayWithBothCroppedImageWithoutSwooshLeft,
   textArrayWithBothCroppedImageWithoutSwooshRight,
   textArrayWithBothCroppedImageWithoutSwoosh,
-} from '../../textArraysCustom';
+} from "../../textArraysCustom";
 import ColoPickerTextDiv from "../elements/ColoPickerTextDiv";
 import PatchesDiv from "../elements/PatchesDiv";
 import { useTranslation } from "react-i18next";
@@ -55,11 +61,10 @@ import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import renderPatch from "src/renderPatch";
 
-
 interface DesignSectionProps {
-  photos: string[]
-  patches: Array<{ url: string; name: string }>
-  param: string | undefined
+  photos: string[];
+  patches: Array<{ url: string; name: string }>;
+  param: string | undefined;
 }
 
 function DesignSection(props: DesignSectionProps) {
@@ -80,13 +85,27 @@ function DesignSection(props: DesignSectionProps) {
   const [showColorPicker, setShowColorPicker] = useState("");
   const [showPatchesDiv, setShowPatchesDiv] = useState("");
   const [isDivBackVisible, setIsDivBackVisible] = useState(false);
-  const [selectedType, setSelectedType] = useState<number | null>(0)
+  const [selectedType, setSelectedType] = useState<number | null>(0);
   const [leftSideImage, setLeftSideImage] = useState<string | null>(null);
   const [rightSideImage, setRightSideImage] = useState<string | null>(null);
-  const { selectedColors, setSelectedColors, setLeftSideImageCropped,
-    setRightSideImageCropped, leftSideImageCropped,
-    rightSideImageCropped, swooshVisibility, setSwooshVisibility, setSelectedColorsText, selectedColorsText, sideText, setSideText,
-    selectedPatches, setSelectedPatches, setImagesUrls, imagesUrls } = useContext(CustomContext);
+  const {
+    selectedColors,
+    setSelectedColors,
+    setLeftSideImageCropped,
+    setRightSideImageCropped,
+    leftSideImageCropped,
+    rightSideImageCropped,
+    swooshVisibility,
+    setSwooshVisibility,
+    setSelectedColorsText,
+    selectedColorsText,
+    sideText,
+    setSideText,
+    selectedPatches,
+    setSelectedPatches,
+    setImagesUrls,
+    imagesUrls,
+  } = useContext(CustomContext);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
   const textArray = (() => {
@@ -133,7 +152,8 @@ function DesignSection(props: DesignSectionProps) {
     }
   })();
 
-  const buttonStyle = "text-black bg-white dark:bg-[#3b3b3b] dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white "
+  const buttonStyle =
+    "text-black bg-white dark:bg-[#3b3b3b] dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white ";
 
   const handleChangeTextLeft = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -145,14 +165,16 @@ function DesignSection(props: DesignSectionProps) {
     setSideView("left");
   };
 
-  const handleChangeTextRight = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeTextRight = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newValue = event.target.value;
 
     setSideText({
       ...sideText,
       rightText: newValue,
     });
-    setSideView("right") // Aktualizacja stanu po zmianie wartości pola tekstowego
+    setSideView("right"); // Aktualizacja stanu po zmianie wartości pola tekstowego
   };
 
   const handleNextText = () => {
@@ -168,7 +190,17 @@ function DesignSection(props: DesignSectionProps) {
   };
 
   const renderImageSource = () => {
-    if (["tip_1", "quarter_1", "swoosh_1", "heel_1", "heel_logo", "toe", "eyestay_1"].includes(textArray[currentTextIndex])) {
+    if (
+      [
+        "tip_1",
+        "quarter_1",
+        "swoosh_1",
+        "heel_1",
+        "heel_logo",
+        "toe",
+        "eyestay_1",
+      ].includes(textArray[currentTextIndex])
+    ) {
       return props.photos[0];
     } else {
       return props.photos[1];
@@ -183,7 +215,12 @@ function DesignSection(props: DesignSectionProps) {
 
   useEffect(() => {
     // Wywołaj changeColorToRed i ustaw isColorChanging na true
-    changeColorToRed(selectedColors, setSelectedColors, currentTextIndex, textArray);
+    changeColorToRed(
+      selectedColors,
+      setSelectedColors,
+      currentTextIndex,
+      textArray
+    );
     setIsColorChanging(true);
 
     setTimeout(() => {
@@ -192,15 +229,22 @@ function DesignSection(props: DesignSectionProps) {
     }, 500);
   }, [currentTextIndex]);
 
-  const buttonVisible = shouldShowButton(currentTextIndex, selectedColors, isColorChanging, textArray);
+  const buttonVisible = shouldShowButton(
+    currentTextIndex,
+    selectedColors,
+    isColorChanging,
+    textArray
+  );
 
   async function deleteCustomImages(id: any) {
-
-    const projectName = props.param
+    const projectName = props.param;
     let customImagesFolderRef;
 
     if (props.param) {
-      customImagesFolderRef = ref(storage, `designProject/${user?._id}/${projectName}`);
+      customImagesFolderRef = ref(
+        storage,
+        `designProject/${user?._id}/${projectName}`
+      );
     } else {
       customImagesFolderRef = ref(storage, `customImages/${id}`);
     }
@@ -208,7 +252,7 @@ function DesignSection(props: DesignSectionProps) {
     const avatarFilesList = await listAll(customImagesFolderRef);
 
     const deletePromises = avatarFilesList.items
-      .filter(item => {
+      .filter((item) => {
         if (deleteLeftImage && deleteRightImage) {
           // Jeśli oba URL-i istnieją, usuwaj tylko pliki, które zaczynają się od "left" lub "right"
           return item.name.startsWith(`left`) || item.name.startsWith(`right`);
@@ -222,17 +266,16 @@ function DesignSection(props: DesignSectionProps) {
         // Jeśli żadne z URL-i nie istnieje, nie usuwaj żadnych plików
         return false;
       })
-      .map(item => deleteObject(item));
+      .map((item) => deleteObject(item));
 
     await Promise.all(deletePromises);
   }
 
   const saveDesign = async () => {
     const userId = user ? user._id : "";
-    const projectName = props.param
+    const projectName = props.param;
 
     if (props.param) {
-
       const customContextData = {
         selectedColors,
         selectedColorsText,
@@ -244,33 +287,42 @@ function DesignSection(props: DesignSectionProps) {
       setLoading(true);
 
       try {
-        const response = await axios.post(`/saveSpecificProject`, { customContextData, userId, projectName });
+        const response = await axios.post(`/saveSpecificProject`, {
+          customContextData,
+          userId,
+          projectName,
+        });
 
         // Usuń pliki
         await deleteCustomImages(response.data.id);
 
         if (leftSideImageCropped) {
-          const storageRef = ref(storage, `designProject/${user?._id}/${projectName}/left_${leftSideImageCropped.name}`);
+          const storageRef = ref(
+            storage,
+            `designProject/${user?._id}/${projectName}/left_${leftSideImageCropped.name}`
+          );
           await uploadBytes(storageRef, leftSideImageCropped);
         }
         if (rightSideImageCropped) {
-          const storageRef = ref(storage, `designProject/${user?._id}/${projectName}/right_${rightSideImageCropped.name}`);
+          const storageRef = ref(
+            storage,
+            `designProject/${user?._id}/${projectName}/right_${rightSideImageCropped.name}`
+          );
           await uploadBytes(storageRef, rightSideImageCropped);
         }
       } catch (error) {
-        const text = t("shop.error")
+        const text = t("shop.error");
         setErrorsServer(text);
       }
 
       setImagesUrls({
         leftSideImageCroppedUrl: "",
-        rightSideImageCroppedUrl: ""
-      })
-      setLeftSideImageCropped(null)
-      setRightSideImageCropped(null)
+        rightSideImageCroppedUrl: "",
+      });
+      setLeftSideImageCropped(null);
+      setRightSideImageCropped(null);
       setLoading(false);
-      navigate("/myProjects")
-
+      navigate("/myProjects");
     } else {
       const customContextData = {
         selectedColors,
@@ -283,21 +335,30 @@ function DesignSection(props: DesignSectionProps) {
       setLoading(true);
 
       try {
-        const response = await axios.post(`/saveCustomShoeTemporary`, { customContextData, userId });
+        const response = await axios.post(`/saveCustomShoeTemporary`, {
+          customContextData,
+          userId,
+        });
 
         // Usuń pliki
         await deleteCustomImages(response.data.id);
 
         if (leftSideImageCropped) {
-          const storageRef = ref(storage, `customImages/${response.data.id}/left_${leftSideImageCropped.name}`);
+          const storageRef = ref(
+            storage,
+            `customImages/${response.data.id}/left_${leftSideImageCropped.name}`
+          );
           await uploadBytes(storageRef, leftSideImageCropped);
         }
         if (rightSideImageCropped) {
-          const storageRef = ref(storage, `customImages/${response.data.id}/right_${rightSideImageCropped.name}`);
+          const storageRef = ref(
+            storage,
+            `customImages/${response.data.id}/right_${rightSideImageCropped.name}`
+          );
           await uploadBytes(storageRef, rightSideImageCropped);
         }
       } catch (error) {
-        const text = t("shop.error")
+        const text = t("shop.error");
         setErrorsServer(text);
       }
 
@@ -308,13 +369,13 @@ function DesignSection(props: DesignSectionProps) {
 
   const closeDesign = () => {
     if (props.param) {
-      setLeftSideImageCropped(null)
-      setRightSideImageCropped(null)
-      navigate("/myProjects")
+      setLeftSideImageCropped(null);
+      setRightSideImageCropped(null);
+      navigate("/myProjects");
     } else {
       window.location.reload();
     }
-  }
+  };
 
   const handleZoomChange = (event: any) => {
     setZoom(event.target.value);
@@ -327,35 +388,43 @@ function DesignSection(props: DesignSectionProps) {
     setCroppedArea(croppedAreaPixels);
   };
 
-  const processImage = async (image: any, setCroppedImage: (file: any) => void, setImage: (image: any) => void, area: any, side: string) => {
+  const processImage = async (
+    image: any,
+    setCroppedImage: (file: any) => void,
+    setImage: (image: any) => void,
+    area: any,
+    side: string
+  ) => {
     try {
       if (!image || !area) {
-        return null
+        return null;
       }
 
       const croppedImageFile: File = await getCroppedImageFile(image, area);
 
       setCroppedImage(croppedImageFile);
 
-      setSideView(side)
+      setSideView(side);
       setImage("");
-
     } catch (error) {
       console.error("Error processing image:", error);
     }
   };
 
-  const deleteImageCropped = (setImageCropped: any, setIsSwooshVisible: any, side: string) => {
-    setIsSwooshVisible(true)
+  const deleteImageCropped = (
+    setImageCropped: any,
+    setIsSwooshVisible: any,
+    side: string
+  ) => {
+    setIsSwooshVisible(true);
 
     if (side === "left") {
-
       setImagesUrls({
         ...imagesUrls,
         leftSideImageCroppedUrl: "",
       });
 
-      setDeleteLeftImage(true)
+      setDeleteLeftImage(true);
 
       setSwooshVisibility({
         ...swooshVisibility,
@@ -364,7 +433,7 @@ function DesignSection(props: DesignSectionProps) {
     }
 
     if (side === "right") {
-      setDeleteRightImage(true)
+      setDeleteRightImage(true);
 
       setImagesUrls({
         ...imagesUrls,
@@ -377,7 +446,7 @@ function DesignSection(props: DesignSectionProps) {
       });
     }
     setImageCropped(null);
-  }
+  };
 
   useEffect(() => {
     if (!sideText.rightText || !sideText.leftText) {
@@ -396,7 +465,6 @@ function DesignSection(props: DesignSectionProps) {
   }, [sideText.rightText, sideText.leftText]);
 
   useEffect(() => {
-
     if (sideView === "left") {
       setCurrentTextIndex(0);
     } else if (sideView === "right") {
@@ -405,28 +473,39 @@ function DesignSection(props: DesignSectionProps) {
     } else {
       setCurrentTextIndex(0);
     }
-
   }, [textArray, sideView]);
 
   return (
     <>
-
       <div className="flex justify-center items-center">
-        {errorsServer && <InfoDivBottom color="bg-red-500" text={errorsServer} />}
+        {errorsServer && (
+          <InfoDivBottom color="bg-red-500" text={errorsServer} />
+        )}
       </div>
 
-
       {showPatchesDiv === "left" && (
-        <PatchesDiv setShowDiv={setShowPatchesDiv}
-          setPatche={(patchName) => setSelectedPatches({ ...selectedPatches, selectedLeftPatch: patchName })}
+        <PatchesDiv
+          setShowDiv={setShowPatchesDiv}
+          setPatche={(patchName) =>
+            setSelectedPatches({
+              ...selectedPatches,
+              selectedLeftPatch: patchName,
+            })
+          }
           setSideView={setSideView}
           side="left"
         />
       )}
 
       {showPatchesDiv === "right" && (
-        <PatchesDiv setShowDiv={setShowPatchesDiv}
-          setPatche={(patchName) => setSelectedPatches({ ...selectedPatches, selectedRightPatch: patchName })}
+        <PatchesDiv
+          setShowDiv={setShowPatchesDiv}
+          setPatche={(patchName) =>
+            setSelectedPatches({
+              ...selectedPatches,
+              selectedRightPatch: patchName,
+            })
+          }
           setSideView={setSideView}
           side="right"
         />
@@ -440,12 +519,12 @@ function DesignSection(props: DesignSectionProps) {
           selectedColors={selectedColorsText}
           selectedColorType="left"
           setSideView={setSideView}
-
         />
       )}
 
       {showColorPicker === "right" && (
-        <ColoPickerTextDiv setShowDiv={setShowColorPicker}
+        <ColoPickerTextDiv
+          setShowDiv={setShowColorPicker}
           color={selectedColorsText.selectedColorRightText.rgb}
           setSelectedColors={setSelectedColorsText}
           selectedColors={selectedColorsText}
@@ -464,7 +543,15 @@ function DesignSection(props: DesignSectionProps) {
           setImage={setLeftSideImage}
           handleZoomChange={handleZoomChange}
           onCropComplete={onCropComplete}
-          submit={() => processImage(leftSideImage, setLeftSideImageCropped, setLeftSideImage, croppedArea, "left")}
+          submit={() =>
+            processImage(
+              leftSideImage,
+              setLeftSideImageCropped,
+              setLeftSideImage,
+              croppedArea,
+              "left"
+            )
+          }
         />
       )}
 
@@ -478,55 +565,98 @@ function DesignSection(props: DesignSectionProps) {
           setImage={setRightSideImage}
           handleZoomChange={handleZoomChange}
           onCropComplete={onCropComplete}
-          submit={() => processImage(rightSideImage, setRightSideImageCropped, setRightSideImage, croppedArea, "right")}
+          submit={() =>
+            processImage(
+              rightSideImage,
+              setRightSideImageCropped,
+              setRightSideImage,
+              croppedArea,
+              "right"
+            )
+          }
         />
       )}
 
       {isDivBackVisible && (
-        <div className='bg-black/50 backdrop-blur-sm fixed w-full h-screen z-20 flex justify-center items-center '>
+        <div className="bg-black/50 backdrop-blur-sm fixed w-full h-screen z-20 flex justify-center items-center ">
           <div className="bg-white rounded-lg w-[45rem] text-center py-8">
             <p className="text-3xl text-black">{t("designSection.text24")}</p>
-            <p className="text-2xl text-black/80 mt-4">{t("designSection.text25")}</p>
+            <p className="text-2xl text-black/80 mt-4">
+              {t("designSection.text25")}
+            </p>
 
             <div className="flex justify-center items-center space-x-10 mt-10">
-              <button onClick={() => setIsDivBackVisible(!isDivBackVisible)} className="border-2 border-black/80 rounded-full px-10 py-3 hover:bg-black/80 hover:text-white">
+              <button
+                onClick={() => setIsDivBackVisible(!isDivBackVisible)}
+                className="border-2 border-black/80 rounded-full px-10 py-3 hover:bg-black/80 hover:text-white"
+              >
                 <p className="text-lg">{t("designSection.text27")}</p>
               </button>
 
-              <button onClick={closeDesign} className="border-2 border-black/80 rounded-full  px-10 py-3 hover:bg-black/80 hover:text-white">
+              <button
+                onClick={closeDesign}
+                className="border-2 border-black/80 rounded-full  px-10 py-3 hover:bg-black/80 hover:text-white"
+              >
                 <p className="text-lg">{t("designSection.text26")}</p>
               </button>
-
             </div>
           </div>
-
-
         </div>
       )}
 
       <div className=" min-h-screen bg-white dark:bg-[#3b3b3b]">
-        <div className="flex justify-between pt-6 px-10 lg:px-20  xl:px-0 xl:absolute top-10 2xl:top-4 left-10 z-10  space-x-4">
-          <button
-            onClick={() => setIsDivBackVisible(!isDivBackVisible)}
-            className={`px-8 py-3 ${buttonStyle} `}
-          >
-            <p className="text-lg">{t("designSection.text1")}</p>
-          </button>
+        <div className="flex justify-center pt-6 px-10 lg:px-20  xl:px-0 xl:absolute top-10 2xl:top-4 left-10 z-10 space-x-10 2xl:space-x-[10rem]">
+          <div className="flex justify-center space-x-20 xl:space-x-4">
+            <button
+              onClick={() => setIsDivBackVisible(!isDivBackVisible)}
+              className={`px-8 py-3 ${buttonStyle} `}
+            >
+              <p className="text-lg">{t("designSection.text1")}</p>
+            </button>
 
-          <button
-            onClick={saveDesign}
-            disabled={loading}
-            className={`px-8 py-3 bg-black/80 dark:bg-white/80 disabled:bg-[#c9c9c9] text-white dark:text-black rounded-full ${!loading ? 'hover:bg-black hover:dark:bg-white' : ''}`}
-          >
-            <div className="flex items-center justify-center">
-              {loading && <CircleSvg color={theme === "dark" ? "black" : "white"} secColor={theme === "dark" ? "black" : "white"} />}
-              <p className="text-lg">{t("designSection.text2")}</p>
+            <button
+              onClick={saveDesign}
+              disabled={loading}
+              className={`px-8 py-3 bg-black/80 dark:bg-white/80 disabled:bg-[#c9c9c9] text-white dark:text-black rounded-full ${
+                !loading ? "hover:bg-black hover:dark:bg-white" : ""
+              }`}
+            >
+              <div className="flex items-center justify-center">
+                {loading && (
+                  <CircleSvg
+                    color={theme === "dark" ? "black" : "white"}
+                    secColor={theme === "dark" ? "black" : "white"}
+                  />
+                )}
+                <p className="text-lg">{t("designSection.text2")}</p>
+              </div>
+            </button>
+          </div>
+          <div className="hidden xl:flex xl:w-[20rem] 2xl:w-[24rem]  mx-auto justify-between items-center text-black dark:text-white">
+            <AiOutlineArrowLeft
+              size={30}
+              className="cursor-pointer"
+              onClick={handlePreviousText}
+            />
+
+            <div className="flex space-x-2 text-xl font-medium">
+              <p className=" text-black dark:text-white">
+                {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
+              </p>
+              <p className=" text-black/50 dark:text-white/60">{`${
+                currentTextIndex + 1
+              }/${textArray.length}`}</p>
             </div>
-          </button>
+
+            <AiOutlineArrowRight
+              size={30}
+              className="cursor-pointer"
+              onClick={handleNextText}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col xl:flex-row items-center justify-center  bg-white dark:bg-[#3b3b3b] xl:h-[50rem] border-b-2 border-black/20 dark:border-white/30">
-
           <div className="flex  justify-center items-center xl:w-[50%] 2xl:w-[60%]  xl:border-r-2 border-black/20 dark:border-white/30 xl:h-[50rem] ">
             <div className="flex justify-center items-center mt-6 md:w-[30rem] md:h-[25rem] xl:pr-10 ">
               <div className="relative md:scale-[130%] xl:scale-[160%] 2xl:scale-[200%]">
@@ -537,31 +667,45 @@ function DesignSection(props: DesignSectionProps) {
 
                 <>
                   <CloudinaryContext cloudName="dlrhphkcb">
-                    {["tip_1", "quarter_1", "swoosh_1", "heel_1", "heel_logo", "toe", "eyestay_1"].includes(textArray[currentTextIndex]) ? (
+                    {[
+                      "tip_1",
+                      "quarter_1",
+                      "swoosh_1",
+                      "heel_1",
+                      "heel_logo",
+                      "toe",
+                      "eyestay_1",
+                    ].includes(textArray[currentTextIndex]) ? (
                       <>
                         <img
-                          src={leftSideImageCropped ? URL.createObjectURL(leftSideImageCropped) : imagesUrls.leftSideImageCroppedUrl ? imagesUrls.leftSideImageCroppedUrl : ""}
-
+                          src={
+                            leftSideImageCropped
+                              ? URL.createObjectURL(leftSideImageCropped)
+                              : imagesUrls.leftSideImageCroppedUrl
+                              ? imagesUrls.leftSideImageCroppedUrl
+                              : ""
+                          }
                           className="h-[8rem]  absolute top-[4.7rem] left-[10.3rem] opacity-80"
                         />
                         <img
                           src={side_left}
                           className="h-[17rem] rounded-xl absolute top-0 left-0 "
                         />
-                        {(!imagesUrls.leftSideImageCroppedUrl && !leftSideImageCropped) && (
-                          <>
-                            <TransformedImage
-                              publicId="elements/quarter_1_ycvbpt.png"
-                              rgb={selectedColors.selectedColorQuarter_1.rgb}
-                              opacity="opacity-70"
-                            />
-                            <TransformedImage
-                              publicId="elements/hill_1_h370h8.png"
-                              rgb={selectedColors.selectedColorHill_1.rgb}
-                              opacity="opacity-70"
-                            />
-                          </>
-                        )}
+                        {!imagesUrls.leftSideImageCroppedUrl &&
+                          !leftSideImageCropped && (
+                            <>
+                              <TransformedImage
+                                publicId="elements/quarter_1_ycvbpt.png"
+                                rgb={selectedColors.selectedColorQuarter_1.rgb}
+                                opacity="opacity-70"
+                              />
+                              <TransformedImage
+                                publicId="elements/hill_1_h370h8.png"
+                                rgb={selectedColors.selectedColorHill_1.rgb}
+                                opacity="opacity-70"
+                              />
+                            </>
+                          )}
                         <TransformedImage
                           publicId="elements/tip_1_jxccem.png"
                           rgb={selectedColors.selectedColorTip_1.rgb}
@@ -571,7 +715,12 @@ function DesignSection(props: DesignSectionProps) {
                           <TransformedImage
                             publicId="elements/swosh_1_pxffyd.png"
                             rgb={selectedColors.selectedColorSwosh_1.rgb}
-                            opacity={(imagesUrls.leftSideImageCroppedUrl || leftSideImageCropped) ? "opacity-100" : "opacity-70"}
+                            opacity={
+                              imagesUrls.leftSideImageCroppedUrl ||
+                              leftSideImageCropped
+                                ? "opacity-100"
+                                : "opacity-70"
+                            }
                           />
                         )}
 
@@ -593,19 +742,32 @@ function DesignSection(props: DesignSectionProps) {
 
                         {sideText.leftText && (
                           <div className="absolute w-[10rem] bottom-[5.8rem] left-[4.3rem]  text-center opacity-80">
-                            <p className="text-xs"
+                            <p
+                              className="text-xs"
                               style={{
                                 color: `rgb(${selectedColorsText.selectedColorLeftText.rgb.r}, ${selectedColorsText.selectedColorLeftText.rgb.g}, ${selectedColorsText.selectedColorLeftText.rgb.b})`,
                               }}
-                            >{sideText.leftText}</p>
+                            >
+                              {sideText.leftText}
+                            </p>
                           </div>
                         )}
-                        {renderPatch(selectedPatches.selectedLeftPatch, "absolute bottom-[6.8rem] right-[3rem] max-w-[3rem] max-h-[2rem] opacity-90", props.patches)}
+                        {renderPatch(
+                          selectedPatches.selectedLeftPatch,
+                          "absolute bottom-[6.8rem] right-[3rem] max-w-[3rem] max-h-[2rem] opacity-90",
+                          props.patches
+                        )}
                       </>
                     ) : (
                       <>
                         <img
-                          src={rightSideImageCropped ? URL.createObjectURL(rightSideImageCropped) : imagesUrls.rightSideImageCroppedUrl ? imagesUrls.rightSideImageCroppedUrl : ""}
+                          src={
+                            rightSideImageCropped
+                              ? URL.createObjectURL(rightSideImageCropped)
+                              : imagesUrls.rightSideImageCroppedUrl
+                              ? imagesUrls.rightSideImageCroppedUrl
+                              : ""
+                          }
                           className="h-[8rem] absolute top-[4.7rem] left-[1.7rem] opacity-80"
                         />
                         <img
@@ -622,26 +784,32 @@ function DesignSection(props: DesignSectionProps) {
                           rgb={selectedColors.selectedColorTip_1.rgb}
                           opacity="opacity-70"
                         />
-                        {(!imagesUrls.rightSideImageCroppedUrl && !rightSideImageCropped) && (
-                          <>
-                            <TransformedImage
-                              publicId="elements/quarter_2_kjcplp.png"
-                              rgb={selectedColors.selectedColorQuarter_2.rgb}
-                              opacity="opacity-70"
-                            />
-                            <TransformedImage
-                              publicId="elements/heel_2_xtnwp2.png"
-                              rgb={selectedColors.selectedColorHeel_2.rgb}
-                              opacity="opacity-70"
-                            />
-                          </>
-                        )}
+                        {!imagesUrls.rightSideImageCroppedUrl &&
+                          !rightSideImageCropped && (
+                            <>
+                              <TransformedImage
+                                publicId="elements/quarter_2_kjcplp.png"
+                                rgb={selectedColors.selectedColorQuarter_2.rgb}
+                                opacity="opacity-70"
+                              />
+                              <TransformedImage
+                                publicId="elements/heel_2_xtnwp2.png"
+                                rgb={selectedColors.selectedColorHeel_2.rgb}
+                                opacity="opacity-70"
+                              />
+                            </>
+                          )}
 
                         {swooshVisibility.isRightSwooshVisible && (
                           <TransformedImage
                             publicId="elements/swosh_2_twgxvt.png"
                             rgb={selectedColors.selectedColorSwosh_2.rgb}
-                            opacity={(imagesUrls.rightSideImageCroppedUrl || rightSideImageCropped) ? "opacity-100" : "opacity-70"}
+                            opacity={
+                              imagesUrls.rightSideImageCroppedUrl ||
+                              rightSideImageCropped
+                                ? "opacity-100"
+                                : "opacity-70"
+                            }
                           />
                         )}
 
@@ -662,18 +830,22 @@ function DesignSection(props: DesignSectionProps) {
                               style={{
                                 color: `rgb(${selectedColorsText.selectedColorRightText.rgb.r}, ${selectedColorsText.selectedColorRightText.rgb.g}, ${selectedColorsText.selectedColorRightText.rgb.b})`,
                               }}
-                            >{sideText.rightText}</p>
+                            >
+                              {sideText.rightText}
+                            </p>
                           </div>
                         )}
-                        {renderPatch(selectedPatches.selectedRightPatch, "absolute bottom-[7rem] left-[3rem] max-w-[3rem] max-h-[2rem]  opacity-90", props.patches)}
+                        {renderPatch(
+                          selectedPatches.selectedRightPatch,
+                          "absolute bottom-[7rem] left-[3rem] max-w-[3rem] max-h-[2rem]  opacity-90",
+                          props.patches
+                        )}
                       </>
                     )}
                   </CloudinaryContext>
                 </>
               </div>
-
             </div>
-
           </div>
 
           <div className="flex xl:hidden w-[24rem]  mx-auto justify-between items-center  mt-10 text-black dark:text-white">
@@ -687,8 +859,9 @@ function DesignSection(props: DesignSectionProps) {
               <p className=" text-black dark:text-white">
                 {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
               </p>
-              <p className=" text-black/50 dark:text-white/60">{`${currentTextIndex + 1
-                }/${textArray.length}`}</p>
+              <p className=" text-black/50 dark:text-white/60">{`${
+                currentTextIndex + 1
+              }/${textArray.length}`}</p>
             </div>
 
             <AiOutlineArrowRight
@@ -698,8 +871,8 @@ function DesignSection(props: DesignSectionProps) {
             />
           </div>
 
-          <div className=" mt-10 pb-16 xl:pb-0 h-[45rem] xl:pl-10">
-            <div className="flex space-x-4">
+          <div className=" mt-10 pb-16 xl:pb-0 h-[45rem] px-10 ">
+            <div className="flex justify-center space-x-4">
               <TypeButtonDesign
                 index={0}
                 selectedType={selectedType}
@@ -762,7 +935,11 @@ function DesignSection(props: DesignSectionProps) {
 
                 <div className="flex space-x-10 items-center">
                   <ChromePicker
-                    color={getCurrentColor(currentTextIndex, selectedColors, textArray)}
+                    color={getCurrentColor(
+                      currentTextIndex,
+                      selectedColors,
+                      textArray
+                    )}
                     onChange={
                       (newColor: any) =>
                         handleColorChange(
@@ -778,20 +955,32 @@ function DesignSection(props: DesignSectionProps) {
 
                   <button
                     style={{ display: buttonVisible ? "block" : "none" }}
-                    onClick={() => handleDeleteColor(currentTextIndex, selectedColors, setSelectedColors, textArray)}
-                    className={`px-4 h-[3.5rem] ${buttonStyle} `}>
+                    onClick={() =>
+                      handleDeleteColor(
+                        currentTextIndex,
+                        selectedColors,
+                        setSelectedColors,
+                        textArray
+                      )
+                    }
+                    className={`px-4 h-[3.5rem] ${buttonStyle} `}
+                  >
                     <p className="text-xl">{t("designSection.text5")}</p>
                   </button>
                 </div>
-
               </div>
             )}
 
             {selectedType === 1 && (
               <div className="flex flex-col mt-6 ">
-
                 <div className="flex flex-col mt-6">
-                  <p className="text-xl text-black dark:text-white ">{t("designSection.text7")} <span className="text-red-500">{t("designSection.text8")}</span> {t("designSection.text9")}</p>
+                  <p className="text-xl text-black dark:text-white ">
+                    {t("designSection.text7")}{" "}
+                    <span className="text-red-500">
+                      {t("designSection.text8")}
+                    </span>{" "}
+                    {t("designSection.text9")}
+                  </p>
                   <input
                     type="text"
                     value={sideText.leftText}
@@ -803,21 +992,30 @@ function DesignSection(props: DesignSectionProps) {
                     {t("designSection.text10")}
                   </p>
 
-
-                  {sideText.leftText && (<div className="flex items-center mt-10 space-x-8">
-                    <p className="text-xl text-black dark:text-white ">{t("designSection.text12")}</p>
-                    <div onClick={() => setShowColorPicker("left")}
-                      className="cursor-pointer rounded-lg h-[2rem] w-[4rem] bg-black"
-                      style={{
-                        backgroundColor: `rgb(${selectedColorsText.selectedColorLeftText.rgb.r}, ${selectedColorsText.selectedColorLeftText.rgb.g}, ${selectedColorsText.selectedColorLeftText.rgb.b})`,
-                      }}
-                    ></div>
-                  </div>)}
-
+                  {sideText.leftText && (
+                    <div className="flex items-center mt-10 space-x-8">
+                      <p className="text-xl text-black dark:text-white ">
+                        {t("designSection.text12")}
+                      </p>
+                      <div
+                        onClick={() => setShowColorPicker("left")}
+                        className="cursor-pointer rounded-lg h-[2rem] w-[4rem] bg-black"
+                        style={{
+                          backgroundColor: `rgb(${selectedColorsText.selectedColorLeftText.rgb.r}, ${selectedColorsText.selectedColorLeftText.rgb.g}, ${selectedColorsText.selectedColorLeftText.rgb.b})`,
+                        }}
+                      ></div>
+                    </div>
+                  )}
                 </div>
                 <div className="h-[2px] w-full bg-black/30 dark:bg-white/50 mt-10"></div>
                 <div className="flex flex-col mt-6">
-                  <p className="text-xl text-black dark:text-white ">{t("designSection.text7")} <span className="text-red-500">{t("designSection.text11")}</span> {t("designSection.text9")}</p>
+                  <p className="text-xl text-black dark:text-white ">
+                    {t("designSection.text7")}{" "}
+                    <span className="text-red-500">
+                      {t("designSection.text11")}
+                    </span>{" "}
+                    {t("designSection.text9")}
+                  </p>
                   <input
                     type="text"
                     value={sideText.rightText}
@@ -829,81 +1027,129 @@ function DesignSection(props: DesignSectionProps) {
                     {t("designSection.text10")}
                   </p>
 
-                  {sideText.rightText && (<div className="flex items-center mt-10 space-x-8">
-                    <p className="text-xl text-black dark:text-white ">{t("designSection.text12")}</p>
-                    <div onClick={() => setShowColorPicker("right")}
-                      className="cursor-pointer rounded-lg h-[2rem] w-[4rem]"
-                      style={{
-                        backgroundColor: `rgb(${selectedColorsText.selectedColorRightText.rgb.r}, ${selectedColorsText.selectedColorRightText.rgb.g}, ${selectedColorsText.selectedColorRightText.rgb.b})`,
-                      }}
-                    ></div>
-                  </div>)}
-
+                  {sideText.rightText && (
+                    <div className="flex items-center mt-10 space-x-8">
+                      <p className="text-xl text-black dark:text-white ">
+                        {t("designSection.text12")}
+                      </p>
+                      <div
+                        onClick={() => setShowColorPicker("right")}
+                        className="cursor-pointer rounded-lg h-[2rem] w-[4rem]"
+                        style={{
+                          backgroundColor: `rgb(${selectedColorsText.selectedColorRightText.rgb.r}, ${selectedColorsText.selectedColorRightText.rgb.g}, ${selectedColorsText.selectedColorRightText.rgb.b})`,
+                        }}
+                      ></div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {selectedType === 2 && (
               <div className="flex flex-col mt-10 ">
-                <p className="text-xl text-black dark:text-white ">{t("designSection.text14")} <span className="text-red-500">{t("designSection.text8")}</span> {t("designSection.text9")}</p>
+                <p className="text-xl text-black dark:text-white ">
+                  {t("designSection.text14")}{" "}
+                  <span className="text-red-500">
+                    {t("designSection.text8")}
+                  </span>{" "}
+                  {t("designSection.text9")}
+                </p>
 
                 <div className="flex items-center mt-6">
-
-                  {(!leftSideImageCropped && !imagesUrls.leftSideImageCroppedUrl) ? (
-                    <label className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
+                  {!leftSideImageCropped &&
+                  !imagesUrls.leftSideImageCroppedUrl ? (
+                    <label
+                      className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}
+                    >
                       {t("designSection.text15")}
                       <input
                         type="file"
                         name="left_side_graphicDesign"
                         accept="image/jpeg, image/jpg"
                         className="hidden"
-                        onChange={(event) => onSelectFile(event, setLeftSideImage)}
+                        onChange={(event) =>
+                          onSelectFile(event, setLeftSideImage)
+                        }
                       />
                     </label>
                   ) : (
                     <>
                       <img
-                        src={imagesUrls.leftSideImageCroppedUrl ? imagesUrls.leftSideImageCroppedUrl : (leftSideImageCropped ? URL.createObjectURL(leftSideImageCropped) : "")}
-
+                        src={
+                          imagesUrls.leftSideImageCroppedUrl
+                            ? imagesUrls.leftSideImageCroppedUrl
+                            : leftSideImageCropped
+                            ? URL.createObjectURL(leftSideImageCropped)
+                            : ""
+                        }
                         className="h-[5rem] rounded-lg"
                       />
-                      <div onClick={() => {
-                        deleteImageCropped(setLeftSideImageCropped, setSwooshVisibility, "left")
-                        setSideView("left")
-                      }
-                      } className="flex items-center ml-4 cursor-pointer text-balck/80 dark:text-white/80">
+                      <div
+                        onClick={() => {
+                          deleteImageCropped(
+                            setLeftSideImageCropped,
+                            setSwooshVisibility,
+                            "left"
+                          );
+                          setSideView("left");
+                        }}
+                        className="flex items-center ml-4 cursor-pointer text-balck/80 dark:text-white/80"
+                      >
                         <AiOutlineClose size={25} />
                         <p className="text-xl ">{t("designSection.text16")}</p>
                       </div>
                     </>
                   )}
-
                 </div>
 
-                <p className="text-xl text-black dark:text-white mt-10">{t("designSection.text14")} <span className="text-red-500">{t("designSection.text11")}</span> {t("designSection.text9")}</p>
+                <p className="text-xl text-black dark:text-white mt-10">
+                  {t("designSection.text14")}{" "}
+                  <span className="text-red-500">
+                    {t("designSection.text11")}
+                  </span>{" "}
+                  {t("designSection.text9")}
+                </p>
 
                 <div className="flex items-center mt-6">
-                  {(!rightSideImageCropped && !imagesUrls.rightSideImageCroppedUrl) ? (
-                    <label className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
+                  {!rightSideImageCropped &&
+                  !imagesUrls.rightSideImageCroppedUrl ? (
+                    <label
+                      className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}
+                    >
                       {t("designSection.text15")}
                       <input
                         type="file"
                         name="right_side_graphicDesign"
                         accept="image/jpeg, image/jpg"
                         className="hidden"
-                        onChange={(event) => onSelectFile(event, setRightSideImage)}
+                        onChange={(event) =>
+                          onSelectFile(event, setRightSideImage)
+                        }
                       />
                     </label>
                   ) : (
                     <>
                       <img
-                        src={imagesUrls.rightSideImageCroppedUrl ? imagesUrls.rightSideImageCroppedUrl : (rightSideImageCropped ? URL.createObjectURL(rightSideImageCropped) : "")}
+                        src={
+                          imagesUrls.rightSideImageCroppedUrl
+                            ? imagesUrls.rightSideImageCroppedUrl
+                            : rightSideImageCropped
+                            ? URL.createObjectURL(rightSideImageCropped)
+                            : ""
+                        }
                         className="h-[5rem] rounded-lg"
                       />
-                      <div onClick={() => {
-                        deleteImageCropped(setRightSideImageCropped, setSwooshVisibility, "right")
-                        setSideView("right")
-                      }} className="flex items-center ml-4 cursor-pointer text-balck/80 dark:text-white/80">
+                      <div
+                        onClick={() => {
+                          deleteImageCropped(
+                            setRightSideImageCropped,
+                            setSwooshVisibility,
+                            "right"
+                          );
+                          setSideView("right");
+                        }}
+                        className="flex items-center ml-4 cursor-pointer text-balck/80 dark:text-white/80"
+                      >
                         <AiOutlineClose size={25} />
                         <p className="text-xl">{t("designSection.text16")}</p>
                       </div>
@@ -911,9 +1157,12 @@ function DesignSection(props: DesignSectionProps) {
                   )}
                 </div>
 
-                {(leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) && (
+                {(leftSideImageCropped ||
+                  imagesUrls.leftSideImageCroppedUrl) && (
                   <div className="flex items-center mt-10">
-                    <p className="text-xl text-black/80 dark:text-white/80 ">{t("designSection.text17")}</p>
+                    <p className="text-xl text-black/80 dark:text-white/80 ">
+                      {t("designSection.text17")}
+                    </p>
                     <ToogleButtonSwosh
                       isSwooshVisible={swooshVisibility.isLeftSwooshVisible}
                       setIsSwooshVisible={setSwooshVisibility}
@@ -924,9 +1173,12 @@ function DesignSection(props: DesignSectionProps) {
                   </div>
                 )}
 
-                {(rightSideImageCropped || imagesUrls.rightSideImageCroppedUrl) && (
+                {(rightSideImageCropped ||
+                  imagesUrls.rightSideImageCroppedUrl) && (
                   <div className="flex items-center mt-10">
-                    <p className="text-xl text-black/80 dark:text-white/80">{t("designSection.text18")}</p>
+                    <p className="text-xl text-black/80 dark:text-white/80">
+                      {t("designSection.text18")}
+                    </p>
                     <ToogleButtonSwosh
                       isSwooshVisible={swooshVisibility.isRightSwooshVisible}
                       setIsSwooshVisible={setSwooshVisibility}
@@ -934,84 +1186,95 @@ function DesignSection(props: DesignSectionProps) {
                       setSideView={setSideView}
                       swooshVisibility={swooshVisibility}
                     />
-
                   </div>
                 )}
-
               </div>
             )}
 
             {selectedType === 3 && (
               <div className="flex flex-col mt-10">
                 <p className="text-xl text-black dark:text-white">
-                  {t("designSection.text19")} <span className="text-red-500">{t("designSection.text8")}</span> {t("designSection.text9")}
+                  {t("designSection.text19")}{" "}
+                  <span className="text-red-500">
+                    {t("designSection.text8")}
+                  </span>{" "}
+                  {t("designSection.text9")}
                 </p>
 
                 {!selectedPatches.selectedLeftPatch ? (
                   <div className="flex items-center mt-6">
-                    <button onClick={() => setShowPatchesDiv("left")} className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
+                    <button
+                      onClick={() => setShowPatchesDiv("left")}
+                      className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}
+                    >
                       <p>{t("designSection.text20")}</p>
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center mt-8">
-                    {renderPatch(selectedPatches.selectedLeftPatch, "max-w-[6rem] max-h-[5rem]", props.patches)}
-                    <div onClick={() => {
-                      setSelectedPatches({ ...selectedPatches, selectedLeftPatch: "" })
-                      setSideView("left")
-                    }} className="flex items-center ml-4 cursor-pointer text-black/80 dark:text-white/80">
+                    {renderPatch(
+                      selectedPatches.selectedLeftPatch,
+                      "max-w-[6rem] max-h-[5rem]",
+                      props.patches
+                    )}
+                    <div
+                      onClick={() => {
+                        setSelectedPatches({
+                          ...selectedPatches,
+                          selectedLeftPatch: "",
+                        });
+                        setSideView("left");
+                      }}
+                      className="flex items-center ml-4 cursor-pointer text-black/80 dark:text-white/80"
+                    >
                       <AiOutlineClose size={25} />
                       <p className="text-xl">{t("designSection.text21")}</p>
                     </div>
-                  </div>)}
-
+                  </div>
+                )}
 
                 <p className="text-xl text-black dark:text-white mt-10">
-                  {t("designSection.text19")} <span className="text-red-500">{t("designSection.text11")}</span> {t("designSection.text9")}
+                  {t("designSection.text19")}{" "}
+                  <span className="text-red-500">
+                    {t("designSection.text11")}
+                  </span>{" "}
+                  {t("designSection.text9")}
                 </p>
 
                 {!selectedPatches.selectedRightPatch ? (
                   <div className="flex items-center mt-6">
-                    <button onClick={() => setShowPatchesDiv("right")} className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}>
+                    <button
+                      onClick={() => setShowPatchesDiv("right")}
+                      className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}
+                    >
                       <p>{t("designSection.text20")}</p>
                     </button>
-                  </div>) : (
+                  </div>
+                ) : (
                   <div className="flex items-center mt-8">
-                    {renderPatch(selectedPatches.selectedRightPatch, "max-w-[6rem] max-h-[5rem]", props.patches)}
-                    <div onClick={() => {
-                      setSelectedPatches({ ...selectedPatches, selectedRightPatch: "" })
-                      setSideView("right")
-                    }} className="flex items-center ml-4 cursor-pointer text-black/80 dark:text-white/80">
+                    {renderPatch(
+                      selectedPatches.selectedRightPatch,
+                      "max-w-[6rem] max-h-[5rem]",
+                      props.patches
+                    )}
+                    <div
+                      onClick={() => {
+                        setSelectedPatches({
+                          ...selectedPatches,
+                          selectedRightPatch: "",
+                        });
+                        setSideView("right");
+                      }}
+                      className="flex items-center ml-4 cursor-pointer text-black/80 dark:text-white/80"
+                    >
                       <AiOutlineClose size={25} />
                       <p className="text-xl">{t("designSection.text21")}</p>
                     </div>
-                  </div>)}
-
+                  </div>
+                )}
               </div>
             )}
           </div>
-        </div>
-
-        <div className="hidden xl:flex w-[24rem] pb-20  mx-auto justify-between items-center  mt-10 text-black dark:text-white">
-          <AiOutlineArrowLeft
-            size={30}
-            className="cursor-pointer"
-            onClick={handlePreviousText}
-          />
-
-          <div className="flex space-x-2 text-xl font-medium">
-            <p className=" text-black dark:text-white">
-              {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
-            </p>
-            <p className=" text-black/50 dark:text-white/60">{`${currentTextIndex + 1
-              }/${textArray.length}`}</p>
-          </div>
-
-          <AiOutlineArrowRight
-            size={30}
-            className="cursor-pointer"
-            onClick={handleNextText}
-          />
         </div>
       </div>
     </>

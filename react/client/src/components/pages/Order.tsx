@@ -15,8 +15,13 @@ import InfoDivBottom from "../elements/InfoDivBottom";
 import { AiOutlineClose } from "react-icons/ai";
 import CheckoutProductTemplate from "../elements/CheckoutProductTemplate";
 import { formatPrice } from "src/currencyUtils";
-import { OrderInterface, ShoeInterface } from "src/types";
-
+import {
+  OrderInterface,
+  ShoeInterface,
+  OrderCustomShoeInterface,
+} from "src/types";
+import OrderCustomShoeTemplate from "../elements/OrderCustomShoeTemplate";
+import PersonalizedShoesView from "../sections/PersonalizedShoesView";
 
 interface Shoe extends ShoeInterface {
   brand: string;
@@ -34,13 +39,32 @@ function Order() {
   const [matchingShoes, setMatchingShoes] = useState<Shoe[]>([]);
   const [showDiv, setShowDiv] = useState(false);
   const [isDataFetched, setIsDataFetched] = useState(false);
+  const [showStandardOrder, setShowStandardOrder] = useState(true);
+  const [showDivCustomShoe, setShowDivCustomShoe] = useState(false);
   const [errorsServer, setErrorsServer] = useState("");
 
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [orders, setOrders] = useState<OrderInterface[] | null>(null);
+  const [orderCustomShoes, setOrderCustomShoes] = useState<
+    OrderCustomShoeInterface[] | null
+  >(null);
   const [singleOrder, setSingleOrder] = useState<OrderInterface | null>(null);
+  const [singleOrderCustomShoes, setSingleOrderCustomShoes] =
+    useState<OrderCustomShoeInterface | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
+
+  useEffect(() => {
+    if (showDivCustomShoe || showDiv) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showDivCustomShoe, showDiv]);
 
   useEffect(() => {
     fetchUserData();
@@ -55,6 +79,16 @@ function Order() {
     }
   };
 
+  const clickDetailsCustomShoe = (orderId: string) => {
+    setShowDivCustomShoe(!showDivCustomShoe);
+
+    if (orderCustomShoes) {
+      const singleOrder = orderCustomShoes.filter(
+        (order) => order._id === orderId
+      );
+      setSingleOrderCustomShoes(singleOrder.length > 0 ? singleOrder[0] : null);
+    }
+  };
 
   useEffect(() => {
     if (singleOrder) {
@@ -84,15 +118,12 @@ function Order() {
     }
   }, [shoes, singleOrder]);
 
-
   useEffect(() => {
-
-    const userId = user?._id ? user?._id : ""
+    const userId = user?._id ? user?._id : "";
 
     axios
       .get(`/getOrders/?userId=${userId}`)
       .then(async (response) => {
-        console.log(response.data)
         const fetchedShoes: any[] = response.data.shoes || [];
 
         const shoeImages = await Promise.all(
@@ -111,6 +142,23 @@ function Order() {
 
         setShoes(shoeImages);
         setOrders(response.data.orders);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorsServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      });
+
+    axios
+      .get(`/getOrderCustomShoe/?userId=${userId}`)
+      .then(async (response) => {
+        setOrderCustomShoes(response.data.orders);
       })
       .catch((error) => {
         if (
@@ -150,22 +198,147 @@ function Order() {
     setMatchingShoes(matchingShoesWithQuantityAndSize);
   }, [singleOrder]);
 
-  useEffect(() => {
-    if (showDiv) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [showDiv]);
-
-
-
   return (
     <>
+      {showDivCustomShoe && (
+        <div className="fixed w-screen h-screen flex justify-center items-center m-auto z-10   bg-black/40 backdrop-blur-sm  ">
+          <div className="relative flex flex-col lg:flex-row bg-white dark:bg-black  pt-10 px-2  sm:px-10 xl:px-20 max-h-[80vh] w-full md:w-[90vw]  xl:w-[70rem] overflow-y-auto">
+            <div onClick={() => setShowDivCustomShoe(!showDivCustomShoe)}>
+              <AiOutlineClose
+                size={30}
+                color={theme === "dark" ? "white" : "black"}
+                className="absolute right-8 top-10 cursor-pointer hover:scale-125"
+              />
+            </div>
+            <p className="absolute top-10 left-10 xl:left-20 text-2xl text-black dark:text-white font-semibold">
+              {t("order.text7")} {singleOrderCustomShoes?.orderNumber}
+            </p>
+            <div className="h-full w-full lg:w-[50%] mt-20 ">
+              <p className="text-xl text-black/80  dark:text-white/80">
+                {t("order.text8")}
+              </p>
+              <div className="text-lg text-black/50  dark:text-white/50">
+                <p className="mt-6">
+                  {t("order.text1")}{" "}
+                  <span className="text-black/80  dark:text-white/80">
+                    {singleOrderCustomShoes?.orderNumber}
+                  </span>
+                </p>
+                <p className="mt-2">
+                  {t("order.text9")}{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes
+                      ? new Date(
+                          singleOrderCustomShoes.orderDate
+                        ).toLocaleString()
+                      : ""}
+                  </span>
+                </p>
+                <p className="mt-2">
+                  {t("order.text10")}{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes?.deliveryMethod}
+                  </span>
+                </p>
+                <p className="mt-2">
+                  {t("order.text11")}{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {t(`payment.${singleOrderCustomShoes?.paymentMethod}`)}
+                  </span>
+                </p>
+              </div>
+
+              <p className="text-xl text-black/80  dark:text-white/80 mt-10 ">
+                {t("order.text12")}
+              </p>
+
+              <div className="text-lg text-black/50 dark:text-white/50  pb-10">
+                <p className="mt-6">
+                  Email:{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes?.address.email}
+                  </span>
+                </p>
+                <p className="mt-2">
+                  {t("checkout.text23")}{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes?.address.name}{" "}
+                    {singleOrderCustomShoes?.address.surname}
+                  </span>
+                </p>
+
+                <p className="mt-2">
+                  {t("checkout.text24")}{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes?.address.telephone}
+                  </span>
+                </p>
+                <p className="mt-2">
+                  {t("checkout.text25")}{" "}
+                  <span className="text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes?.address.street},
+                  </span>
+                </p>
+                <p className="mt-2 text-black/80 dark:text-white/80">
+                  {singleOrderCustomShoes?.address.postalCode}{" "}
+                  {singleOrderCustomShoes?.address.city},
+                </p>
+                <p className="mt-2 text-black/80 dark:text-white/80">
+                  {t(`country.${singleOrderCustomShoes?.address.country}`)}
+                </p>
+              </div>
+            </div>
+
+            <div className="h-full w-full lg:w-[50%]  lg:mt-20  ">
+              <div className="flex justify-center transform scale-[80%] sm:scale-[90%] md:scale-[100%] lg:scale-[110%]">
+                {singleOrderCustomShoes && (
+                  <PersonalizedShoesView
+                    selectedColors={
+                      singleOrderCustomShoes.project.selectedColors
+                    }
+                    selectedColorsText={
+                      singleOrderCustomShoes.project.selectedColorsText
+                    }
+                    selectedPatches={
+                      singleOrderCustomShoes.project.selectedPatches
+                    }
+                    swooshVisibility={
+                      singleOrderCustomShoes.project.swooshVisibility
+                    }
+                    sideText={singleOrderCustomShoes.project.sideText}
+                    orderNumber={singleOrderCustomShoes.orderNumber}
+                  />
+                )}
+              </div>
+
+              <div className="h-[1px] w-full bg-black/50 dark:bg-white/50 mt-6"></div>
+              <div className="flex flex-col space-y-2 text-lg text-black/80 dark:text-white/80 text-end mt-6 pb-10">
+                <p>
+                  {t("order.text15")}{" "}
+                  {singleOrderCustomShoes?.deliveryMethod && (
+                    <span className="font-bold">
+                      {singleOrderCustomShoes?.deliveryMethod ===
+                      "Poczta Polska"
+                        ? formatPrice(4, t)
+                        : formatPrice(0, t)}
+                    </span>
+                  )}
+                </p>
+
+                <p>
+                  {t("order.text3")}{" "}
+                  {singleOrderCustomShoes && (
+                    <span className="font-bold">
+                      {formatPrice(singleOrderCustomShoes.price, t)}
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showDiv && (
         <div className="fixed w-screen h-screen flex justify-center items-center m-auto z-10   bg-black/40 backdrop-blur-sm  ">
           <div className="relative flex flex-col lg:flex-row bg-white dark:bg-black  pt-10 px-10 xl:px-20 max-h-[80vh] w-[90vw]  xl:w-[70rem] overflow-y-auto">
@@ -224,7 +397,7 @@ function Order() {
                   </span>
                 </p>
                 <p className="mt-2">
-                  {t("checkout.text23")} {" "}
+                  {t("checkout.text23")}{" "}
                   <span className="text-black/80 dark:text-white/80">
                     {singleOrder?.address.name} {singleOrder?.address.surname}
                   </span>
@@ -282,7 +455,9 @@ function Order() {
                 </p>
 
                 {singleOrder?.discount && (
-                  <p>   {t("order.text14")} {""}
+                  <p>
+                    {" "}
+                    {t("order.text14")} {""}
                     <span className="font-bold">
                       -{formatPrice(discount, t)}
                     </span>
@@ -298,7 +473,6 @@ function Order() {
                   )}
                 </p>
               </div>
-
             </div>
           </div>
         </div>
@@ -334,7 +508,7 @@ function Order() {
               </p>
             </div>
 
-            <div className="flex items-center space-x-2 lg:mt-40">
+            <div className="flex items-center sm:space-x-2 lg:mt-40">
               <Link
                 to={"/profile"}
                 className="text-xl lg:text-2xl  text-black/50 dark:text-white/50  px-4 h-[3rem] hover:border-b-4  hover:border-black hover:dark:border-white cursor-pointer"
@@ -363,31 +537,69 @@ function Order() {
             <LoadingAnimationSmall />
           </div>
         ) : (
-          <div className="flex flex-col  mx-auto  bg-white dark:bg-[#292929] w-full lg:w-[1000px]  mt-20 ">
-            {orders?.length === 0 ? (
-              <p className="text-2xl text-black/80 dark:text-white/80 text-center py-10">
-                {t("order.text6")}
-              </p>
+          <>
+            <div className="flex justify-center items-center mt-10 space-x-10">
+              <button
+                onClick={() => setShowStandardOrder(true)}
+                className="px-4 py-3 text-black  dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white"
+              >
+                <p> {t("order.text16")}</p>
+              </button>
+              <button
+                onClick={() => setShowStandardOrder(false)}
+                className="px-4 py-3 text-black  dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white"
+              >
+                <p> {t("order.text17")}</p>
+              </button>
+            </div>
+
+            {showStandardOrder ? (
+              <div className="flex flex-col  mx-auto  bg-white dark:bg-[#292929] w-full lg:w-[1000px]  mt-10">
+                {orders?.length === 0 ? (
+                  <p className="text-lg xl:text-2xl text-black/80 dark:text-white/80 text-center py-10">
+                    {t("order.text6")}
+                  </p>
+                ) : (
+                  <>
+                    {orders?.map((order) => (
+                      <div key={order._id}>
+                        <OrderTemplate
+                          orderId={order._id}
+                          orderNumber={order.orderNumber}
+                          orderProducts={order.products}
+                          shoes={shoes}
+                          price={order.price}
+                          status={order.status}
+                          clickDetails={clickDetails}
+                        />
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
             ) : (
-              <>
-                {orders?.map((order) => (
-
-                  <div key={order._id}>
-                    <OrderTemplate
-                      orderId={order._id}
-                      orderNumber={order.orderNumber}
-                      orderProducts={order.products}
-                      shoes={shoes}
-                      price={order.price}
-                      status={order.status}
-                      clickDetails={clickDetails}
-                    />
-                  </div>
-
-                ))}
-              </>
+              <div className="flex flex-col  mx-auto  bg-white dark:bg-[#292929] w-full lg:w-[1000px]   mt-10 ">
+                {orderCustomShoes?.length === 0 ? (
+                  <p className="text-lg xl:text-2xl text-black/80 dark:text-white/80 text-center py-10">
+                    {t("order.text6")}
+                  </p>
+                ) : (
+                  orderCustomShoes?.map((product) => (
+                    <div key={product._id}>
+                      <OrderCustomShoeTemplate
+                        _id={product._id}
+                        orderNumber={product.orderNumber}
+                        status={product.status}
+                        price={product.price}
+                        project={product.project}
+                        clickDetails={clickDetailsCustomShoe}
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </>

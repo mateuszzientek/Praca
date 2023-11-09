@@ -188,7 +188,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
       </div>
 
       {showSearchDiv && (
-        <div className="bg-white dark:bg-[#404040] fixed w-screen h-screen z-10 overflow-y-auto ">
+        <div className="bg-white dark:bg-[#404040] fixed w-screen h-screen z-50 overflow-y-auto ">
           <div className="flex w-full space-x-4 mx-auto  mt-10 justify-center items-center">
             <div className="flex bg-black/5 dark:bg-white/50 rounded-full items-center px-2 w-[70%] h-[3rem]">
               <input
@@ -230,17 +230,17 @@ const Navbar: React.FC<NavbarProps> = (props) => {
       )}
 
       <div
-        className={`${props.background || "bg-[#F8F6F4]"} ${props.darkBackground || "dark:bg-[#292929]"
-          } ${props.shadow || "shadow-2xl"} ${props.extra}`}
+        className={`${props.background || "bg-[#F8F6F4]"} ${
+          props.darkBackground || "dark:bg-[#292929]"
+        } ${props.shadow || "shadow-2xl"} ${props.extra}`}
       >
         <div
-          className={`flex justify-center md:justify-between items-center ${props.height || "h-32"
-            }  md:max-w-[100rem] md:px-20 mx-auto pt-1 `}
+          className={`flex justify-center md:justify-between items-center ${
+            props.height || "h-32"
+          }  md:max-w-[100rem] md:px-20 mx-auto pt-1 `}
         >
           {/* switcher -show mobile menu */}
-          <div
-            className=" md:hidden pl-8"
-          >
+          <div className=" md:hidden pl-8">
             <AiOutlineMenu
               onClick={() => setNav(!nav)}
               size={25}
@@ -375,7 +375,9 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
                 <div className="border-b border-black/50 w-full"></div>
 
-                {user?.role === "admin" && <ProfileLink text="Admin Panel" link="/adminPanel" />}
+                {user?.role === "admin" && (
+                  <ProfileLink text="Admin Panel" link="/adminPanel" />
+                )}
                 <ProfileLink text={t("profile.myprofile")} link="/profile" />
                 <ProfileLink text={t("profile.address")} link="/address" />
                 <ProfileLink text={t("profile.orders")} link="/order" />
@@ -548,23 +550,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 </p>
                 {dropdown
                   ? languages.map(({ code, name, country_code }) => {
-                    if (code !== (i18next as any).language) {
-                      return (
-                        <button
-                          key={country_code}
-                          onClick={() => {
-                            (i18next as any).changeLanguage(code);
-                            setDropdown(!dropdown);
-                          }}
-                        >
-                          <span
-                            className={`fi fi-${country_code} mr-2 text-xl hover:scale-125 ease-in-out duration-300`}
-                          />
-                        </button>
-                      );
-                    }
-                    return null;
-                  })
+                      if (code !== (i18next as any).language) {
+                        return (
+                          <button
+                            key={country_code}
+                            onClick={() => {
+                              (i18next as any).changeLanguage(code);
+                              setDropdown(!dropdown);
+                            }}
+                          >
+                            <span
+                              className={`fi fi-${country_code} mr-2 text-xl hover:scale-125 ease-in-out duration-300`}
+                            />
+                          </button>
+                        );
+                      }
+                      return null;
+                    })
                   : ""}
               </div>
 
@@ -630,11 +632,12 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     )}
 
                     <div className="flex flex-col text-2xl mt-4 w-full">
-                      {user?.role === "admin" &&
+                      {user?.role === "admin" && (
                         <ProfileLinkMobile
                           text="Admin Panel"
                           link="/adminPanel"
-                        />}
+                        />
+                      )}
                       <ProfileLinkMobile
                         text={t("profile.myprofile")}
                         link="/profile"

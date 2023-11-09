@@ -276,7 +276,7 @@ function Cart() {
             </>
           ) : (
             <div className="flex flex-col items-center mt-12 space-x-2">
-              <div className="flex flex-col xl:flex-row justify-center items-center xl:items-start xl:w-screen xl:space-x-[1rem] 2xl:space-x-[12rem]">
+              <div className="flex flex-col xl:flex-row justify-center items-center xl:items-start xl:w-screen xl:space-x-[1rem] pc:space-x-[12rem]">
                 <div className="flex flex-col">
                   <div className="flex justify-center xl:justify-start relative w-screen xl:w-[50rem] 2xl:w-[55rem] mt-2 mb-4">
                     <div className="flex ">

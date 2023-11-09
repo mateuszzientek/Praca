@@ -46,7 +46,7 @@ function Customization() {
     photos,
     sideText,
     setLeftSideImageCropped,
-    setRightSideImageCropped
+    setRightSideImageCropped,
   } = useContext(CustomContext);
   const { user } = useContext(UserContext);
   const [showDesignPanel, setShowDesignPanel] = useState(false);
@@ -95,14 +95,10 @@ function Customization() {
   };
 
   useEffect(() => {
-
     if (projectName) {
-
       window.history.replaceState(null, "", "/customization");
-      setShowDesignPanel(true)
-
+      setShowDesignPanel(true);
     } else {
-
       const initialSelectedColors = {
         selectedColorSwosh_1: { rgb: { r: 255, g: 255, b: 255 } },
         selectedColorTip_1: { rgb: { r: 255, g: 255, b: 255 } },
@@ -143,8 +139,8 @@ function Customization() {
       setSelectedPatches(initialSelectedPatches);
       setSwooshVisibility(initialSwooshVisibility);
       setSideText(initialSideText);
-      setLeftSideImageCropped(null)
-      setRightSideImageCropped(null)
+      setLeftSideImageCropped(null);
+      setRightSideImageCropped(null);
 
       const fetchData = async () => {
         try {
@@ -156,57 +152,54 @@ function Customization() {
 
           if (userDocument) {
             setShowSaveProject(true);
-            setCanOrder(true)
-          }
-          setProject(userDocument)
+            setCanOrder(true);
+            setProject(userDocument);
 
-          setSelectedColors(userDocument.selectedColors);
-          setSelectedColorsText(userDocument.selectedColorsText);
-          setSelectedPatches(userDocument.selectedPatches);
-          setSwooshVisibility(userDocument.swooshVisibility);
-          setSideText(userDocument.sideText);
+            setSelectedColors(userDocument.selectedColors);
+            setSelectedColorsText(userDocument.selectedColorsText);
+            setSelectedPatches(userDocument.selectedPatches);
+            setSwooshVisibility(userDocument.swooshVisibility);
+            setSideText(userDocument.sideText);
 
-          const userStorageRef = ref(storage, `/customImages/${userId}`);
+            const userStorageRef = ref(storage, `/customImages/${userId}`);
 
-          const data = await listAll(userStorageRef);
+            const data = await listAll(userStorageRef);
 
-          if (data.items.length > 0) {
-            const userImages = data.items;
-            const leftImages = userImages.filter((item) =>
-              item.name.startsWith("left")
-            );
-            const rightImages = userImages.filter((item) =>
-              item.name.startsWith("right")
-            );
+            if (data.items.length > 0) {
+              const userImages = data.items;
+              const leftImages = userImages.filter((item) =>
+                item.name.startsWith("left")
+              );
+              const rightImages = userImages.filter((item) =>
+                item.name.startsWith("right")
+              );
 
-            const updatedImagesUrls = { ...imagesUrls };
+              const updatedImagesUrls = { ...imagesUrls };
 
-            if (leftImages.length > 0) {
-              const leftImageRef = leftImages[0];
-              const leftImageURL = await getDownloadURL(leftImageRef);
-              updatedImagesUrls.leftSideImageCroppedUrl = leftImageURL;
+              if (leftImages.length > 0) {
+                const leftImageRef = leftImages[0];
+                const leftImageURL = await getDownloadURL(leftImageRef);
+                updatedImagesUrls.leftSideImageCroppedUrl = leftImageURL;
+              } else {
+                updatedImagesUrls.leftSideImageCroppedUrl = "";
+              }
+
+              if (rightImages.length > 0) {
+                const rightImageRef = rightImages[0];
+                const rightImageURL = await getDownloadURL(rightImageRef);
+                updatedImagesUrls.rightSideImageCroppedUrl = rightImageURL;
+              } else {
+                updatedImagesUrls.rightSideImageCroppedUrl = "";
+              }
+              setImagesUrls(updatedImagesUrls);
             } else {
-              updatedImagesUrls.leftSideImageCroppedUrl = "";
+              console.log("Folder nie istnieje");
             }
-
-            if (rightImages.length > 0) {
-              const rightImageRef = rightImages[0];
-              const rightImageURL = await getDownloadURL(rightImageRef);
-              updatedImagesUrls.rightSideImageCroppedUrl = rightImageURL;
-            } else {
-              updatedImagesUrls.rightSideImageCroppedUrl = "";
-            }
-            setImagesUrls(updatedImagesUrls);
-          } else {
-            console.log("Folder nie istnieje");
           }
         } catch (error) {
           const text = t("customization.text12");
           setErrorsServer(text);
-          console.error(
-            "Błąd podczas pobierania danych lub listowania plików:",
-            error
-          );
+          console.error("Błąd podczas pobierania danych", error);
         }
       };
 
@@ -280,7 +273,7 @@ function Customization() {
       const text = t("customization.text13");
       setMessage(text);
       setTimeout(() => {
-        navigate("/myProjects")
+        navigate("/myProjects");
       }, 700);
     } catch (error) {
       const text = t("customization.text12");
@@ -289,20 +282,20 @@ function Customization() {
   };
 
   const handleOrder = () => {
-    setOrderMessageProject("")
-    setOrderMessageSize("")
+    setOrderMessageProject("");
+    setOrderMessageSize("");
 
     if (!canOrder) {
-      setOrderMessageProject("Stwórz projekt aby dokonać zakupu")
-      return
+      setOrderMessageProject("Stwórz projekt aby dokonać zakupu");
+      return;
     }
     if (!selectedSize) {
-      setOrderMessageSize("Wybierz rozmiar obuwia")
-      return
+      setOrderMessageSize("Wybierz rozmiar obuwia");
+      return;
     }
 
-    setShowCustomShoesOrder(true)
-  }
+    setShowCustomShoesOrder(true);
+  };
 
   return (
     <>
@@ -315,7 +308,11 @@ function Customization() {
       </div>
 
       {showCustomShoesOrder && (
-        <CustomShoesOrder setShowMainDiv={setShowCustomShoesOrder} project={project} size={selectedSize} />
+        <CustomShoesOrder
+          setShowMainDiv={setShowCustomShoesOrder}
+          project={project}
+          size={selectedSize}
+        />
       )}
 
       {showDivSaveProject && (
@@ -364,8 +361,9 @@ function Customization() {
               <button
                 onClick={saveProject}
                 disabled={loading}
-                className={`px-8 py-3 border-2 border-black/80 rounded-full  ${!loading ? "hover:bg-black/80 hover:text-white" : ""
-                  }`}
+                className={`px-8 py-3 border-2 border-black/80 rounded-full  ${
+                  !loading ? "hover:bg-black/80 hover:text-white" : ""
+                }`}
               >
                 <div className="flex items-center justify-center">
                   {loading && <CircleSvg color={"black"} secColor={"black"} />}
@@ -382,10 +380,16 @@ function Customization() {
           {!isReady ? (
             <div className="flex justify-center items-center fixed bg-white dark:bg-[#3b3b3b] w-full h-full z-[10]">
               <LoadingAnimationSmall />
-            </div>) : (
+            </div>
+          ) : (
             <div className="fixed w-full h-full z-[10] overflow-y-auto">
-              <DesignSection photos={photos} patches={patches} param={projectName} />
-            </div>)}
+              <DesignSection
+                photos={photos}
+                patches={patches}
+                param={projectName}
+              />
+            </div>
+          )}
         </>
       )}
 
@@ -398,14 +402,21 @@ function Customization() {
           </div>
         ) : (
           <div
-            className={`flex justify-center  ${showSaveProject ? "xl:mt-6" : "2xl:mt-20 xl:mt-10"
-              }`}
+            className={`flex justify-center  ${
+              showSaveProject ? "xl:mt-6" : "pc:mt-20 xl:mt4"
+            }`}
           >
             <div className="flex flex-col justify-center items-center xl:flex-row  ">
               <div className="flex flex-col justify-center items-start xl:w-[45%] 2xl:w-[50%] min-[1900px]:w-[50%] xl:ml-10">
-                <div className="flex justify-center items-center md:w-[30rem]  md:h-[25rem] mt-16 md:mt-10">
-                  <div className="relative transform md:scale-[130%] xl:scale-[150%] 2xl:scale-[170%]">
-                    <PersonalizedShoesView />
+                <div className="flex justify-center items-center md:w-[30rem]  md:h-[25rem] mt-16 xl:mt-0">
+                  <div className="relative transform md:scale-[130%] xl:scale-[150%] pc:scale-[170%]">
+                    <PersonalizedShoesView
+                      selectedColors={selectedColors}
+                      selectedColorsText={selectedColorsText}
+                      selectedPatches={selectedPatches}
+                      swooshVisibility={swooshVisibility}
+                      sideText={sideText}
+                    />
                   </div>
                 </div>
               </div>
@@ -488,11 +499,22 @@ function Customization() {
                   </button>
                 )}
 
-                <button onClick={handleOrder} className="px-6 w-full py-3 text-white/80 dark:text-black/80 bg-black/80 dark:bg-white/80 mt-10  hover:scale-105 ease-in-out duration-500">
+                <button
+                  onClick={handleOrder}
+                  className="px-6 w-full py-3 text-white/80 dark:text-black/80 bg-black/80 dark:bg-white/80 mt-10  hover:scale-105 ease-in-out duration-500"
+                >
                   <p className="text-xl ">{t("customization.text7")}</p>
                 </button>
-                {orderMessageProject && (<p className="text-red-500 text-base mt-2 ">{orderMessageProject}</p>)}
-                {orderMessageSize && (<p className="text-red-500 text-base mt-2 ">{orderMessageSize}</p>)}
+                {orderMessageProject && (
+                  <p className="text-red-500 text-base mt-2 ">
+                    {orderMessageProject}
+                  </p>
+                )}
+                {orderMessageSize && (
+                  <p className="text-red-500 text-base mt-2 ">
+                    {orderMessageSize}
+                  </p>
+                )}
                 <p className="text-lg text-black/80 dark:text-white/90 mt-4">
                   {t("customization.text8")}{" "}
                 </p>

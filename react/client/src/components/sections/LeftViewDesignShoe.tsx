@@ -18,6 +18,7 @@ interface LeftViewDesignShoeProps {
     selectedColors: SelectedColors
     selectedColorsText: SelectedColorsText
     designName: string
+    orderNumber?: string
     setError: (error: string) => void
 }
 
@@ -35,6 +36,8 @@ function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
 
                 if (props.designName) {
                     userStorageRef = ref(storage, `/designProject/${user?._id}/${props.designName}`);
+                } else if (props.orderNumber) {
+                    userStorageRef = ref(storage, `/orderCustomProjects/${user?._id}/${props.orderNumber}`);
                 } else {
                     userStorageRef = ref(storage, `/customImages/${user?._id}`);
                 }

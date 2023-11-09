@@ -15,7 +15,6 @@ import AddressTemplate from "../elements/AddressTemplate";
 import AddressFormTemplate from "../elements/AddressFormTemplate";
 import { AddressInterface, ErrorInterface } from "src/types";
 
-
 function Address() {
   const { t } = useTranslation();
   const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
@@ -24,7 +23,9 @@ function Address() {
   const [openEditDiv, setOpenEditDiv] = useState(false);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
-  const [singleAddress, setSingleAddress] = useState<AddressInterface | null>(null);
+  const [singleAddress, setSingleAddress] = useState<AddressInterface | null>(
+    null
+  );
   const [addresses, setAddresses] = useState<AddressInterface[]>([]);
   const [openDiv, setOpenDiv] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState("");
@@ -277,8 +278,6 @@ function Address() {
       });
   };
 
-
-
   return (
     <>
       {openEditDiv && singleAddress && (
@@ -297,6 +296,7 @@ function Address() {
           isDefault={singleAddress.isDefault}
           isLoading={isLoading}
           onSubmit={handleEditAddress}
+          isOpen={openEditDiv || singleAddress}
         />
       )}
 
@@ -316,40 +316,43 @@ function Address() {
           isDefault={false}
           isLoading={isLoading}
           onSubmit={handleClickSubmit}
+          isOpen={showAdd}
         />
       )}
 
       {openDiv && (
-        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center ">
-          <div className="relative flex flex-col items-start pl-10 pb-10 bg-white dark:bg-black  w-[25rem] xl:w-[38rem]  rounded-lg">
-            <p className="text-3xl  text-black/80 dark:text-white/80 font-bold mt-6">
-              {t("address.text11")}
-            </p>
+        <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center min-h-screen overflow-y-auto">
+          <div className="relative flex flex-col items-start pl-10 pb-5 bg-white dark:bg-black  w-[25rem] xl:w-[38rem] max-h-[80vh]  rounded-lg overflow-y-auto">
+            <div className="max-h-[80vh] w-full">
+              <p className="text-3xl  text-black/80 dark:text-white/80 font-bold mt-6">
+                {t("address.text11")}
+              </p>
 
-            <button
-              disabled={isLoading}
-              onClick={handleDeleteAddress}
-              className={`mt-10 w-[90%] h-[3rem] dark:bg-white/50 bg-black/80 hover:scale-105 ease-in-out duration-300`}
-            >
-              <div className="flex items-center justify-center">
-                {isLoading && <CircleSvg color="white" secColor="white" />}
-                <p className="text-xl  text-white/80  ">
-                  {" "}
-                  {t("profile.delete")}
-                </p>
-              </div>
-            </button>
+              <button
+                disabled={isLoading}
+                onClick={handleDeleteAddress}
+                className={`mt-10 w-[90%] h-[3rem] dark:bg-white/50 bg-black/80 hover:scale-105 ease-in-out duration-300`}
+              >
+                <div className="flex items-center justify-center">
+                  {isLoading && <CircleSvg color="white" secColor="white" />}
+                  <p className="text-xl  text-white/80  ">
+                    {" "}
+                    {t("profile.delete")}
+                  </p>
+                </div>
+              </button>
 
-            <button
-              onClick={handleCloseDiv}
-              className={`mt-6 w-[90%] h-[3rem] border-2 border-black/80 dark:border-white/80 hover:scale-105 ease-in-out duration-300`}
-            >
-              <div className="flex items-center justify-center">
-                <p className="text-xl text-black/80 dark:text-white/80 ">
-                  {t("profile.cancel")}
-                </p>
-              </div>
-            </button>
+              <button
+                onClick={handleCloseDiv}
+                className={`mt-6 mb-5 w-[90%] h-[3rem] border-2 border-black/80 dark:border-white/80 hover:scale-105 ease-in-out duration-300`}
+              >
+                <div className="flex items-center justify-center">
+                  <p className="text-xl text-black/80 dark:text-white/80 ">
+                    {t("profile.cancel")}
+                  </p>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -393,7 +396,7 @@ function Address() {
               </p>
             </div>
 
-            <div className="flex items-center space-x-2 lg:mt-40">
+            <div className="flex items-center sm:space-x-2 lg:mt-40">
               <Link
                 to={"/profile"}
                 className="text-xl lg:text-2xl  text-black/50 dark:text-white/50  hover:border-b-4  hover:border-black hover:dark:border-white px-4 h-[3rem]  cursor-pointer"

@@ -16,9 +16,8 @@ import { FilterContext } from "../elements/FilterProvider";
 import { useTranslation } from "react-i18next";
 import validator from "validator";
 import { UserContext } from "../elements/UserProvider";
-import { ThemeContext } from '../elements/ThemeContext';
+import { ThemeContext } from "../elements/ThemeContext";
 import { ShoeInterface } from "src/types";
-
 
 interface Shoe extends ShoeInterface {
   isHearted: boolean;
@@ -51,9 +50,8 @@ function Shop() {
     currentMax,
     setCurrentMax,
     currentMin,
-    setCurrentMin
+    setCurrentMin,
   } = useContext(FilterContext);
-
 
   const sizesNumber = Array.from({ length: 11 }, (_, index) => 36 + index);
   const [showFilter, setShowFilter] = useState(false);
@@ -103,19 +101,19 @@ function Shop() {
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedPrice = event.target.value;
     setSelectedPrice(selectedPrice);
-    setSelectedMin("")
-    setSelectedMax("")
-    setCurrentMax("")
-    setCurrentMin("")
+    setSelectedMin("");
+    setSelectedMax("");
+    setCurrentMax("");
+    setCurrentMin("");
   };
 
   const handleMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMax(event.target.value);
-    setSelectedPrice("")
+    setSelectedPrice("");
   };
   const handleMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMin(event.target.value);
-    setSelectedPrice("")
+    setSelectedPrice("");
   };
 
   const handleSizesChange = (
@@ -130,7 +128,6 @@ function Shop() {
       );
     }
   };
-
 
   const handleMinBlur = () => {
     if (
@@ -173,7 +170,6 @@ function Shop() {
   };
 
   useEffect(() => {
-
     const filters = {
       selectedBrand,
       selectedCategory,
@@ -187,12 +183,20 @@ function Shop() {
       page,
     };
     localStorage.setItem("shopFilters", JSON.stringify(filters));
-  }, [selectedBrand, selectedCategory, selectedMax, selectedMin, selectedPrice, currentMin, currentMax, selectedSizes, selectedSort, page]);
-
+  }, [
+    selectedBrand,
+    selectedCategory,
+    selectedMax,
+    selectedMin,
+    selectedPrice,
+    currentMin,
+    currentMax,
+    selectedSizes,
+    selectedSort,
+    page,
+  ]);
 
   useEffect(() => {
-
-
     setFavoriteShoesFetched(false);
     setMessage("");
     setError("");
@@ -224,7 +228,7 @@ function Shop() {
           setMessage(response.data.message);
         }
 
-        setPage(response.data.page)
+        setPage(response.data.page);
         setPages(totalPages);
         setFavoriteShoesFetched(true);
 
@@ -232,7 +236,6 @@ function Shop() {
           axios
             .get(`/getFavoriteShoesById/?userId=${user?._id}`)
             .then((response) => {
-
               if (response.data.favoriteShoes.length !== 0) {
                 const favoriteShoesIds = response.data.favoriteShoes;
                 const updatedShoes = shoeImages.map((shoe) => {
@@ -243,12 +246,10 @@ function Shop() {
                 });
                 setShoes(updatedShoes);
                 setLoading(false);
-
               } else {
                 setShoes(shoeImages);
                 setLoading(false);
               }
-
             })
             .catch((error) => {
               console.error("Błąd podczas pobierania ulubionych butów", error);
@@ -265,8 +266,6 @@ function Shop() {
     };
 
     fetchShoes();
-
-
   }, [
     page,
     selectedBrand,
@@ -334,10 +333,10 @@ function Shop() {
     setSelectedMax("");
     setCurrentMax("");
     setSelectedSizes([]);
-  }
+  };
 
   const formatSearchTerm = (term: string) => {
-    if (!term) return ''; // Return an empty string if searchTerm is empty
+    if (!term) return ""; // Return an empty string if searchTerm is empty
 
     return term.charAt(0).toUpperCase() + term.slice(1);
   };
@@ -346,7 +345,6 @@ function Shop() {
     localStorage.removeItem("searchTerm");
     setSearchTerm("");
   };
-
 
   return (
     <>
@@ -368,16 +366,22 @@ function Shop() {
       <div className="flex justify-center   xl:px-12 2xl:px-20 bg-white dark:bg-[#292929] min-h-screen ">
         <div className="hidden lg:flex flex-col items-center w-[270px] min-w-[270px] h-auto  border-r-[2px] dark:border-white border-black/10">
           <div className="text-left ">
-
             {searchTerm && (
               <div className="flex items-center mt-10 space-x-4">
                 <p className="text-2xl text-black dark:text-white">
                   {formatSearchTerm(searchTerm)}
                 </p>
-                <div onClick={handleClickRemoveSearchTerm} className="cursor-pointer">
-                  <AiOutlineClose size={30} color={theme === "dark" ? "white" : "black"} />
+                <div
+                  onClick={handleClickRemoveSearchTerm}
+                  className="cursor-pointer"
+                >
+                  <AiOutlineClose
+                    size={30}
+                    color={theme === "dark" ? "white" : "black"}
+                  />
                 </div>
-              </div>)}
+              </div>
+            )}
 
             <p className="mt-10 text-xl mb-4 text-black dark:text-white">
               {t("shop.category")}
@@ -589,7 +593,7 @@ function Shop() {
             </>
           )}
         </div>
-      </div >
+      </div>
     </>
   );
 }

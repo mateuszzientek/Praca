@@ -115,3 +115,16 @@ export interface DesignProjectInterface {
   userId: string;
   projects: ProjectItem[];
 }
+
+export interface OrderCustomShoeInterface{
+  _id: string
+  orderNumber: string;
+  userId: string;
+  project: ProjectItem;
+  address: Address;
+  status: string;
+  price: number;
+  paymentMethod: string;
+  deliveryMethod: string;
+  orderDate: Date;
+}
