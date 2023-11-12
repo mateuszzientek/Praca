@@ -13,7 +13,7 @@ interface LoginCompletedProps {
 
 function LoginCompleted(props: LoginCompletedProps) {
   return (
-    <div className="bg-black/10 dark:bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
+    <div className="bg-black/40 dark:bg-black/80 fixed w-full h-screen z-10 flex justify-center items-center ">
       <div className="flex flex-col justify-center pt-10 pb-14 items-center bg-white dark:bg-black dark:border-white dark:border-2 w-[25rem]  lg:w-[35rem]  xl:w-[45rem]  rounded-2xl">
         <LazyLoadImage
           alt="Green Tick"

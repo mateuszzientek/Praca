@@ -15,6 +15,9 @@ const getCustomShoeTemporaryHandler = [
       if (userDocument) {
         // Jeśli dokument istnieje po userId, zwróć go
         return res.status(200).json({ userDocument: userDocument });
+      }else{
+        console.log("dokument nie istnieje")
+        return res.status(200).json({ message: "Dokument nie istnieje" });
       }
     } catch (error) {
       console.error("Błąd podczas pobierania danych z bazy", error);

@@ -28,7 +28,9 @@ const newsletterHandler = [
         const workbook = new exceljs.Workbook();
         const worksheet = workbook.addWorksheet("Newslatter");
 
-        worksheet.addRow([email]);
+        if (worksheet) {
+          worksheet.addRow([email]);
+        } 
 
         const filePath = "C:/Users/mateu/Desktop/Praca/newslatter.xlsx";
 
@@ -55,7 +57,9 @@ const newsletterHandler = [
               .readFile(filePath)
               .then(() => {
                 const worksheet = workbook.getWorksheet("Newslatter");
-                worksheet.addRow([email]);
+                if (worksheet) {
+                  worksheet.addRow([email]);
+                } 
 
                 return workbook.xlsx.writeFile(filePath);
               })

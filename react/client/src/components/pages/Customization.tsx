@@ -11,7 +11,7 @@ import {
 } from "firebase/storage";
 import storage from "../../firebase";
 import color from "../../assets/images/color.png";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineFilePdf } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 import DesignSection from "../sections/DesignSection";
 import PersonalizedShoesView from "../sections/PersonalizedShoesView";
@@ -25,8 +25,11 @@ import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomShoesOrder from "../sections/CustomShoesOrder";
 import { ProjectItem, DesignProjectInterface } from "src/types";
+import { ThemeContext } from "../elements/ThemeContext";
+
 
 function Customization() {
+  const { theme, setTheme } = useContext(ThemeContext);
   const { projectName } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -68,6 +71,7 @@ function Customization() {
   const [orderMessageProject, setOrderMessageProject] = useState("");
   const [orderMessageSize, setOrderMessageSize] = useState("");
   const [showCustomShoesOrder, setShowCustomShoesOrder] = useState(false);
+
 
   const handleChangeDesignName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -150,6 +154,7 @@ function Customization() {
           );
           const userDocument = response.data.userDocument;
 
+          console.log(userDocument)
           if (userDocument) {
             setShowSaveProject(true);
             setCanOrder(true);
@@ -199,7 +204,7 @@ function Customization() {
         } catch (error) {
           const text = t("customization.text12");
           setErrorsServer(text);
-          console.error("Błąd podczas pobierania danych", error);
+          console.error("Błąd podczas pobierania danych w customization");
         }
       };
 
@@ -361,9 +366,8 @@ function Customization() {
               <button
                 onClick={saveProject}
                 disabled={loading}
-                className={`px-8 py-3 border-2 border-black/80 rounded-full  ${
-                  !loading ? "hover:bg-black/80 hover:text-white" : ""
-                }`}
+                className={`px-8 py-3 border-2 border-black/80 rounded-full  ${!loading ? "hover:bg-black/80 hover:text-white" : ""
+                  }`}
               >
                 <div className="flex items-center justify-center">
                   {loading && <CircleSvg color={"black"} secColor={"black"} />}
@@ -402,9 +406,8 @@ function Customization() {
           </div>
         ) : (
           <div
-            className={`flex justify-center  ${
-              showSaveProject ? "xl:mt-6" : "pc:mt-20 xl:mt4"
-            }`}
+            className={`flex justify-center  ${showSaveProject ? "xl:mt-6" : "pc:mt-20 xl:mt4"
+              }`}
           >
             <div className="flex flex-col justify-center items-center xl:flex-row  ">
               <div className="flex flex-col justify-center items-start xl:w-[45%] 2xl:w-[50%] min-[1900px]:w-[50%] xl:ml-10">
@@ -518,6 +521,19 @@ function Customization() {
                 <p className="text-lg text-black/80 dark:text-white/90 mt-4">
                   {t("customization.text8")}{" "}
                 </p>
+
+
+                <div className="flex items-center mt-4">
+                  <a
+                    href={currentCode === "pl" ? "/assets/pdfs/instrukcja_pl.pdf" : "/assets/pdfs/instrukcja_en.pdf"}
+                    download={currentCode === "pl" ? "instrukcja.pdf" : "instruction.pdf"}
+                    className="flex items-center space-x-2"
+                  >
+                    <AiOutlineFilePdf size={20} color={theme === "dark" ? "white" : "black"} />
+                    <p className="text-lg text-black/80 dark:text-white/90">{t("customization.text16")}</p>
+                  </a>
+                </div>
+
               </div>
             </div>
           </div>

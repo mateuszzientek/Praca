@@ -69,8 +69,6 @@
     "button": "Wyślij!"
   },
   "footer": {
-    "delivery": "Dostawa",
-    "return": "Zwrot",
     "rights": "Wszelkie prawa zastrzeżone."
   },
   "newslatter": {
@@ -446,7 +444,8 @@
     "text12": "Wystąpił błąd",
     "text13": "Projekt pomyślnie zapisany",
     "text14": "Istnieje już projekt o takiej nazwie",
-    "text15": "Możesz wpisać do 20 znaków"
+    "text15": "Możesz wpisać do 20 znaków",
+    "text16": "Pobierz instrukcję narzędzi personalizacji"
   },
   "designSection": {
     "text1": "Powrót",

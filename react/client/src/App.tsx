@@ -4,6 +4,14 @@ import ButtonToUp from "./components/elements/ButtonToUp";
 import axios from "axios";
 import Footer from "./components/sections/Footer";
 import Home from "./components/pages/Home";
+import {
+  ref,
+  uploadBytes,
+  deleteObject,
+  listAll,
+  getDownloadURL,
+} from "firebase/storage";
+import storage from "../src/firebase";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
 import { UserProvider } from "./components/elements/UserProvider";
 import { FilterProvider } from "./components/elements/FilterProvider";
@@ -28,7 +36,6 @@ const Customization = lazy(() => import("./components/pages/Customization"));
 const Checkout = lazy(() => import("./components/pages/Checkout"));
 const Profile = lazy(() => import("./components/pages/Profile"));
 const Design = lazy(() => import("./components/pages/Design"));
-const ShoeType = lazy(() => import("./components/pages/ShoeType"));
 const RedirectAfterGoogleLogin = lazy(
   () => import("./components/pages/RedirectAfterGoogleLogin")
 );
@@ -36,6 +43,7 @@ const SubmitOrder = lazy(() => import("./components/pages/SubmitOrder"));
 const Order = lazy(() => import("./components/pages/Order"));
 const AdminPanel = lazy(() => import("./components/pages/AdminPanel"));
 const MyProjects = lazy(() => import("./components/pages/MyProjects"));
+
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -57,7 +65,30 @@ const App: React.FC = () => {
   }, [location]);
 
   useEffect(() => {
-    axios.delete("/deleteExpiredCustomDesign");
+    axios.delete("/deleteExpiredCustomDesign")
+      .then(async (response) => {
+        const userIds = response.data.userIds;
+
+        if (userIds.length !== 0) {
+          for (const id of userIds) {
+            const customImagesFolderRef = ref(storage, `customImages/${id}`);
+
+            if (customImagesFolderRef) {
+              const avatarFilesList = await listAll(customImagesFolderRef);
+
+              const deletePromises = avatarFilesList.items
+                .filter((item) => {
+                  return item.name.startsWith(`left`) || item.name.startsWith(`right`);
+                })
+                .map((item) => deleteObject(item));
+
+              await Promise.all(deletePromises);
+            }
+          }
+        }
+      }).catch((error) => {
+        console.log("Błąd podczas usuwania danych w App")
+      })
   }, []);
 
   return (
@@ -110,14 +141,6 @@ const App: React.FC = () => {
                     element={
                       <Suspense fallback={<LoadingAnimation />}>
                         <Design />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/shoeType"
-                    element={
-                      <Suspense fallback={<LoadingAnimation />}>
-                        <ShoeType />
                       </Suspense>
                     }
                   />

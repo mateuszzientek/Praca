@@ -69,8 +69,6 @@
     "button": "Send!"
   },
   "footer": {
-    "delivery": "Delivery",
-    "return": "Return",
     "rights": "All rights reserved."
   },
   "newslatter": {
@@ -447,7 +445,9 @@
     "text12": "An error occurred",
     "text13": "Project successfully saved",
     "text14": "A project with this name already exists",
-    "text15": "You can enter up to 20 characters"
+    "text15": "You can enter up to 20 characters",
+    "text16": "Download the customization tools guide"
+
   },
   "designSection": {
     "text1": "Back",
