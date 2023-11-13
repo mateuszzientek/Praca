@@ -411,8 +411,9 @@
     "deliverd": "Dostarczono"
   },
   "adminPanel": {
-    "text1": "Użytkownicy",
-    "text2": "Zamówienia",
+    "users": "Użytkownicy",
+    "orders": "Zamówienia",
+    "customOrders": "Projekty",
     "text3": "Usuń",
     "text4": "Usunięto użytkownika",
     "text5": "Zapisano status!",

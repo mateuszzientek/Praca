@@ -412,8 +412,9 @@
     "delivered": "Delivered"
   },
   "adminPanel": {
-    "text1": "Users",
-    "text2": "Orders",
+    "users": "Users",
+    "orders": "Orders",
+    "customOrders": "Projects",
     "text3": "Delete",
     "text4": "User deleted",
     "text5": "Status saved!",

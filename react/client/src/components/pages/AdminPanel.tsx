@@ -53,9 +53,13 @@ function AdminPanel() {
   const [showSort, setShowSort] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
   const [selectedSort, setSelectedSort] = useState("all");
+  const [selectedType, setSelectedType] = useState("users");
   const [selectedStatus, setSelectedStatus] = useState("");
   const sortType = ["all", "submitted", "preparing", "shipped", "delivered"];
   const [message, setMessage] = useState("");
+
+  const actionType = ["users", "orders", "customOrders"]
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -71,6 +75,18 @@ function AdminPanel() {
         return "text-black/80";
     }
   };
+
+  useEffect(() => {
+    if (showDiv) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showDiv]);
 
   useEffect(() => {
     if (message) {
@@ -95,6 +111,11 @@ function AdminPanel() {
     const selectedSort = event.target.value;
     setSelectedSort(selectedSort);
     setShowSort(false);
+  };
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedBrand = event.target.value;
+    setSelectedType(selectedBrand);
   };
 
   const handleStatusChange = (status: string) => {
@@ -259,23 +280,14 @@ function AdminPanel() {
 
       {showDiv && (
         <div className="fixed w-screen h-screen flex justify-center items-center m-auto  bg-black/40 backdrop-blur-sm  z-[2]">
-          <div className="relative flex flex-col lg:flex-row bg-white dark:bg-black  pt-10 px-10 xl:px-20 max-h-[80vh] w-[90vw]  xl:w-[70rem] overflow-y-auto">
-            <div onClick={() => setShowDiv(!showDiv)}>
-              <AiOutlineClose
-                size={30}
-                color={theme === "dark" ? "white" : "black"}
-                className="absolute right-2 md:right-8 top-10 cursor-pointer hover:scale-125"
-              />
-            </div>
-            <div className="flex items-center absolute top-10 left-10 xl:left-20 space-x-10 ">
-              <p className=" text-2xl text-black dark:text-white font-semibold">
-                {t("order.text7")} {singleOrder?.orderNumber}
-              </p>
+          <div className="flex-col  bg-white dark:bg-black  pt-10 px-10 xl:px-20 max-h-[80vh] w-[90vw]  xl:w-[70rem] overflow-y-auto">
 
-              <div className="py-2 border-[2px] border-black/10 dark:border-white dark:text-white text-black/60 rounded-md">
+
+            <div className="flex justify-end  relative  mb-4">
+              <div className="flex items-center space-x-10">
                 <button
                   onClick={() => setShowStatus(!showStatus)}
-                  className="flex items-center space-x-1 px-2"
+                  className="flex items-center space-x-1 px-2 py-2 border-[2px] border-black/10 dark:border-white dark:text-white text-black/60 rounded-md"
                 >
                   <p
                     className={`${getStatusColor(
@@ -290,137 +302,153 @@ function AdminPanel() {
                     <AiOutlineDown size={15} />
                   )}
                 </button>
-                {showStatus && (
-                  <div className="animate-sort-in absolute top-12 right-0 whitespace-nowrap bg-white shadow-button mt-1 rounded z-10">
-                    {sortType.map((status) => (
-                      <label
-                        key={status}
-                        className={`${
-                          singleOrder?.status === status
-                            ? "cursor-default"
-                            : "cursor-pointer"
-                        }`}
-                      >
-                        <button
-                          className="peer sr-only"
-                          name="status"
-                          disabled={singleOrder?.status === status}
-                          onClick={() => handleStatusChange(status)}
-                        />
-                        <p
-                          className={`text-black/80 px-3 py-2  peer-checked:font-bold hover:bg-black/10 ${getStatusColor(
-                            status
-                          )}`}
-                        >
-                          {t(`status.${status}`)}
-                        </p>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="h-full w-full lg:w-[50%] mt-20 ">
-              <p className="text-xl text-black/80  dark:text-white/80">
-                {t("order.text8")}
-              </p>
-              <div className="text-lg text-black/50  dark:text-white/50">
-                <p className="mt-6">
-                  {t("order.text1")}{" "}
-                  <span className="text-black/80  dark:text-white/80">
-                    {singleOrder?.orderNumber}
-                  </span>
-                </p>
-                <p className="mt-2">
-                  {t("order.text9")}{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {singleOrder
-                      ? new Date(singleOrder.orderDate).toLocaleString()
-                      : ""}
-                  </span>
-                </p>
-                <p className="mt-2">
-                  {t("order.text10")}{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {singleOrder?.deliveryMethod}
-                  </span>
-                </p>
-                <p className="mt-2">
-                  {t("order.text11")}{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {t(`payment.${singleOrder?.paymentMethod}`)}
-                  </span>
-                </p>
-              </div>
 
-              <p className="text-xl text-black/80  dark:text-white/80 mt-10 ">
-                {t("order.text12")}
-              </p>
-
-              <div className="text-lg text-black/50 dark:text-white/50  pb-10">
-                <p className="mt-6">
-                  Email:{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {singleOrder?.address.email}
-                  </span>
-                </p>
-                <p className="mt-2">
-                  {t("checkout.text23")}{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {singleOrder?.address.name} {singleOrder?.address.surname}
-                  </span>
-                </p>
-
-                <p className="mt-2">
-                  {t("checkout.text24")}{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {singleOrder?.address.telephone}
-                  </span>
-                </p>
-                <p className="mt-2">
-                  {t("checkout.text25")}{" "}
-                  <span className="text-black/80 dark:text-white/80">
-                    {singleOrder?.address.street},
-                  </span>
-                </p>
-                <p className="mt-2 text-black/80 dark:text-white/80">
-                  {singleOrder?.address.postalCode} {singleOrder?.address.city},
-                </p>
-                <p className="mt-2 text-black/80 dark:text-white/80">
-                  {t(`country.${singleOrder?.address.country}`)}
-                </p>
-              </div>
-            </div>
-
-            <div className="h-full w-full lg:w-[50%]  lg:mt-20  ">
-              <p className="text-xl text-black/80  dark:text-white/80 mb-10">
-                {t("order.text13")}
-              </p>
-              {matchingShoes.map((product) => (
-                <div key={product._idProduct}>
-                  <CheckoutProductTemplate
-                    key={product._idProduct}
-                    imageUrl={product.imageUrl || ""}
-                    brand={product.brand}
-                    name={product.name}
-                    cartSize={product.size || ""}
-                    cartQuantity={product.quantity || 0}
-                    price={product.price}
+                <div onClick={() => setShowDiv(!showDiv)}>
+                  <AiOutlineClose
+                    size={30}
+                    color={theme === "dark" ? "white" : "black"}
+                    className="cursor-pointer hover:scale-125"
                   />
                 </div>
-              ))}
-              <div className="h-[1px] w-full bg-black/50 dark:bg-white/50 mt-6"></div>
-              <div className="flex flex-col space-y-2 text-lg text-black/80 dark:text-white/80 text-end mt-6 pb-10">
-                <p>
-                  {t("order.text3")}{" "}
-                  {singleOrder && (
-                    <span className="font-bold">
-                      {formatPrice(singleOrder.price, t)}
-                    </span>
-                  )}
+              </div>
+
+              {showStatus && (
+                <div className="animate-sort-in absolute top-12 right-16 whitespace-nowrap bg-white shadow-button mt-1 rounded z-10">
+                  {sortType.map((status) => (
+                    <label
+                      key={status}
+                      className={`${singleOrder?.status === status
+                        ? "cursor-default"
+                        : "cursor-pointer"
+                        }`}
+                    >
+                      <button
+                        className="peer sr-only"
+                        name="status"
+                        disabled={singleOrder?.status === status}
+                        onClick={() => handleStatusChange(status)}
+                      />
+                      <p
+                        className={`text-black/80 px-3 py-2  peer-checked:font-bold hover:bg-black/10 ${getStatusColor(
+                          status
+                        )}`}
+                      >
+                        {t(`status.${status}`)}
+                      </p>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <p className=" text-2xl text-black dark:text-white font-semibold">
+              {t("order.text7")} {singleOrder?.orderNumber}
+            </p>
+
+            <div className="flex flex-col lg:flex-row">
+              <div className="h-full w-full lg:w-[50%] mt-10 ">
+                <p className="text-xl text-black/80  dark:text-white/80">
+                  {t("order.text8")}
                 </p>
+                <div className="text-lg text-black/50  dark:text-white/50">
+                  <p className="mt-6">
+                    {t("order.text1")}{" "}
+                    <span className="text-black/80  dark:text-white/80">
+                      {singleOrder?.orderNumber}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("order.text9")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrder
+                        ? new Date(singleOrder.orderDate).toLocaleString()
+                        : ""}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("order.text10")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrder?.deliveryMethod}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("order.text11")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {t(`payment.${singleOrder?.paymentMethod}`)}
+                    </span>
+                  </p>
+                </div>
+
+                <p className="text-xl text-black/80  dark:text-white/80 mt-10 ">
+                  {t("order.text12")}
+                </p>
+
+                <div className="text-lg text-black/50 dark:text-white/50  pb-10">
+                  <p className="mt-6">
+                    Email:{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrder?.address.email}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("checkout.text23")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrder?.address.name} {singleOrder?.address.surname}
+                    </span>
+                  </p>
+
+                  <p className="mt-2">
+                    {t("checkout.text24")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrder?.address.telephone}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("checkout.text25")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrder?.address.street},
+                    </span>
+                  </p>
+                  <p className="mt-2 text-black/80 dark:text-white/80">
+                    {singleOrder?.address.postalCode} {singleOrder?.address.city},
+                  </p>
+                  <p className="mt-2 text-black/80 dark:text-white/80">
+                    {t(`country.${singleOrder?.address.country}`)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="h-full w-full lg:w-[50%]  lg:mt-10 ">
+                <p className="text-xl text-black/80  dark:text-white/80 mb-10">
+                  {t("order.text13")}
+                </p>
+                {matchingShoes.map((product) => (
+                  <div key={product._idProduct}>
+                    <CheckoutProductTemplate
+                      key={product._idProduct}
+                      imageUrl={product.imageUrl || ""}
+                      brand={product.brand}
+                      name={product.name}
+                      cartSize={product.size || ""}
+                      cartQuantity={product.quantity || 0}
+                      price={product.price}
+                    />
+                  </div>
+                ))}
+                <div className="h-[1px] w-full bg-black/50 dark:bg-white/50 mt-6"></div>
+                <div className="flex flex-col space-y-2 text-lg text-black/80 dark:text-white/80 text-end mt-6 pb-10">
+                  <p>
+                    {t("order.text3")}{" "}
+                    {singleOrder && (
+                      <span className="font-bold">
+                        {formatPrice(singleOrder.price, t)}
+                      </span>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       )}
@@ -431,101 +459,126 @@ function AdminPanel() {
           shadow="none"
           extra="border-b border-black/20 dark:border-white/20"
         />
-        <div className="flex flex-col lg:flex-row justify-center mx-auto  mt-10  w-[90%] 2xl:w-screen   lg:space-x-10">
+
+        <div className="flex items-center justify-center bg-white w-full h-[8rem] shadow-lg">
+
+          <div className="flex space-x-4 md:space-x-10">
+            {actionType.map((type) => (
+              <label key={type} className="cursor-pointer ">
+                <input
+                  type="radio"
+                  className="peer sr-only"
+                  name="actionType"
+                  value={type}
+                  onChange={handleTypeChange}
+                  checked={type === selectedType}
+                />
+                <div className="flex justify-center items-center w-[8rem] h-[3rem]  border-[2px] border-black/10 dark:border-white text-black/60 dark:text-white  rounded-md peer-checked:bg-[#97DEFF] peer-checked:text-black/60  peer-checked:border-none hover:scale-105 transform ease-in-out duration-500">
+                  <p> {t(`adminPanel.${type}`)}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+
+        </div>
+        <div className="flex items-center justify-center mx-auto  mt-10  w-full    lg:space-x-10">
           {!isDataFetched ? (
             <div className="flex justify-center items-center h-[50vh]">
               <LoadingAnimationSmall />
             </div>
           ) : (
             <>
-              <div className="flex-col items-center text-center w-full lg:w-[40%]  ">
-                <p className="text-2xl text-black/80 dark:text-white/80 mb-10">
-                  {t("adminPanel.text1")}
-                </p>
-                {users?.map((user) => (
-                  <div key={user._id}>
-                    <UserTemplate
-                      id={user._id}
-                      email={user.email}
-                      name={user.name}
-                      surname={user.surname}
-                      role={user.role}
-                      handleDelete={handleDelete}
-                      handleError={handleError}
-                    />
-                  </div>
-                ))}
+              {selectedType === "users" && (
+                <div className="flex-col items-center text-center w-[80%] xl:w-[70%] ">
 
-                <Pagination page={page} pages={pages} changePage={setPage} />
-              </div>
-              <div className=" w-full lg:w-[60%] 2xl:w-[50%] mt-20 lg:mt-0 flex-col items-center text-center ">
-                <div className="relative ">
-                  <p className="text-2xl text-black/80 dark:text-white/80 mb-10">
-                    {t("adminPanel.text2")}
-                  </p>
+                  {users?.map((user) => (
+                    <div key={user._id}>
+                      <UserTemplate
+                        id={user._id}
+                        email={user.email}
+                        name={user.name}
+                        surname={user.surname}
+                        role={user.role}
+                        handleDelete={handleDelete}
+                        handleError={handleError}
+                      />
+                    </div>
+                  ))}
 
-                  <div className="md:absolute w-[60%] mx-auto md:w-auto top-0 right-0 flex h-[3rem] border-[2px] border-black/10 dark:border-white dark:text-white text-black/60 rounded-md">
-                    <button
-                      onClick={() => setShowSort(!showSort)}
-                      className="flex items-center space-x-1 px-2 w-full "
-                    >
-                      <p>{t(`status.${selectedSort}`)}</p>
-                      {showSort ? (
-                        <AiOutlineUp size={15} />
-                      ) : (
-                        <AiOutlineDown size={15} />
-                      )}
-                    </button>
-                    {showSort && (
-                      <div className="animate-sort-in absolute top-12 right-0 whitespace-nowrap bg-white shadow-button mt-1 rounded z-[1]">
-                        {sortType.map((sort) => (
-                          <label key={sort} className="cursor-pointer ">
-                            <input
-                              type="radio"
-                              className="peer sr-only"
-                              name="sortAdmin"
-                              value={sort}
-                              onChange={handleSortChange}
-                              checked={sort === selectedSort}
-                            />
-                            <p className="text-black/80 px-3 py-2 peer-checked:font-bold hover:bg-black/10 ">
-                              {t(`status.${sort}`)}
-                            </p>
-                          </label>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <Pagination page={page} pages={pages} changePage={setPage} />
                 </div>
+              )}
 
-                {orders?.length === 0 ? (
-                  <p className="text-2xl text-black/80 dark:text-white/80 mt-20">
-                    {t(`adminPanel.text6`)}
-                  </p>
-                ) : (
-                  <>
-                    {orders?.map((order) => (
-                      <div key={order._id}>
-                        <OrderTemplate
-                          orderId={order._id}
-                          orderNumber={order.orderNumber}
-                          orderProducts={order.products}
-                          shoes={shoes}
-                          price={order.price}
-                          status={order.status}
-                          clickDetails={clickDetails}
-                        />
-                      </div>
-                    ))}
+              {selectedType === "orders" && (
+                <>
+                  <div className="flex flex-col w-[85%] xl:w-[70%] ">
+                    <div className="relative flex justify-end  mb-10 w-full">
+                      <button
+                        onClick={() => setShowSort(!showSort)}
+                        className="flex justify-end items-center space-x-1 px-4 py-3 bg-white border-[2px] border-black/10 rounded-full  "
+                      >
+                        <p>{t(`status.${selectedSort}`)}</p>
+                        {showSort ? (
+                          <AiOutlineUp size={15} />
+                        ) : (
+                          <AiOutlineDown size={15} />
+                        )}
+                      </button>
+                      {showSort && (
+                        <div className="animate-sort-in absolute top-12 right-0 whitespace-nowrap bg-white shadow-button mt-1 rounded z-[1]">
+                          {sortType.map((sort) => (
+                            <label key={sort} className="cursor-pointer ">
+                              <input
+                                type="radio"
+                                className="peer sr-only"
+                                name="sortAdmin"
+                                value={sort}
+                                onChange={handleSortChange}
+                                checked={sort === selectedSort}
+                              />
+                              <p className="text-black/80 px-3 py-2 peer-checked:font-bold hover:bg-black/10 ">
+                                {t(`status.${sort}`)}
+                              </p>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className=" w-full flex-col items-center text-center ">
 
-                    <Pagination
-                      page={pageOrder}
-                      pages={pagesOrder}
-                      changePage={setPageOrder}
-                    />
-                  </>
-                )}
-              </div>
+                      {orders?.length === 0 ? (
+                        <p className="text-2xl text-black/80 dark:text-white/80 mt-20">
+                          {t(`adminPanel.text6`)}
+                        </p>
+                      ) : (
+                        <>
+                          {orders?.map((order) => (
+                            <div key={order._id}>
+                              <OrderTemplate
+                                orderId={order._id}
+                                orderNumber={order.orderNumber}
+                                orderProducts={order.products}
+                                shoes={shoes}
+                                price={order.price}
+                                status={order.status}
+                                clickDetails={clickDetails}
+                              />
+                            </div>
+                          ))}
+
+                          <Pagination
+                            page={pageOrder}
+                            pages={pagesOrder}
+                            changePage={setPageOrder}
+                          />
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+
+
             </>
           )}
         </div>

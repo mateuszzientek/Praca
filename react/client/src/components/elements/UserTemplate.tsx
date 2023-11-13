@@ -47,10 +47,10 @@ function UserTemplate(props: UserTemplateProps) {
                 <p className='text-black/80 dark:text-white/80'>{t("adminPanel.text4")}</p>
             ) : (
                 <div className={`flex justify-between items-center`}>
-                    <div className='flex flex-col md:flex-row lg:flex-col 2xl:flex-row flex-wrap justify-start text-start ml-4 text-black/80 dark:text-white/80 w-[85%]'>
+                    <div className='flex flex-col md:flex-row  flex-wrap justify-start text-start ml-4 text-black/80 dark:text-white/80 w-[85%]'>
                         <p className='pr-4'>{props.id}</p>
                         <p className='pr-4'>{props.name} {props.surname} </p>
-                        <p className='pr-4'>{props.email}</p>
+                        <p className='pr-4 font-medium'>{props.email}</p>
                         <p>{props.role}</p>
                     </div>
                     <button onClick={handleDeleteUser} className='px-3 py-1 bg-[#97DEFF] rounded-lg'>
