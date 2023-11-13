@@ -8,12 +8,12 @@ import { UserContext } from "../elements/UserProvider";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import CartProductTemplate from "../elements/CartProductTemplate";
 import { ref, getDownloadURL } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { CartContext } from "../elements/CartProvider";
 import { ThemeContext } from "../elements/ThemeContext";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { useTranslation } from "react-i18next";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import { ProductInterface } from "src/types";
 
 function Cart() {

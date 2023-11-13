@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { AiOutlineClose } from "react-icons/ai";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 

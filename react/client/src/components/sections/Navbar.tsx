@@ -36,14 +36,14 @@ import { GiWorld } from "react-icons/gi";
 import { FaPencilAlt } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 import logo2 from "../../assets/images/logo-black.png";
-import languages from "../../languages";
+import languages from "../../resources/languages";
 import i18next from "i18next";
 import ProfileLink from "../elements/ProfileLink";
 import ProfileLinkMobile from "../elements/ProfileLinkMobile";
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import { UserContext } from "../elements/UserProvider";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FilterContext } from "../elements/FilterProvider";
 import { CartContext } from "../elements/CartProvider";
@@ -230,14 +230,12 @@ const Navbar: React.FC<NavbarProps> = (props) => {
       )}
 
       <div
-        className={`${props.background || "bg-[#F8F6F4]"} ${
-          props.darkBackground || "dark:bg-[#292929]"
-        } ${props.shadow || "shadow-2xl"} ${props.extra}`}
+        className={`${props.background || "bg-[#F8F6F4]"} ${props.darkBackground || "dark:bg-[#292929]"
+          } ${props.shadow || "shadow-2xl"} ${props.extra}`}
       >
         <div
-          className={`flex justify-center md:justify-between items-center ${
-            props.height || "h-32"
-          }  md:max-w-[100rem] md:px-20 mx-auto pt-1 `}
+          className={`flex justify-center md:justify-between items-center ${props.height || "h-32"
+            }  md:max-w-[100rem] md:px-20 mx-auto pt-1 `}
         >
           {/* switcher -show mobile menu */}
           <div className=" md:hidden pl-8">
@@ -550,23 +548,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 </p>
                 {dropdown
                   ? languages.map(({ code, name, country_code }) => {
-                      if (code !== (i18next as any).language) {
-                        return (
-                          <button
-                            key={country_code}
-                            onClick={() => {
-                              (i18next as any).changeLanguage(code);
-                              setDropdown(!dropdown);
-                            }}
-                          >
-                            <span
-                              className={`fi fi-${country_code} mr-2 text-xl hover:scale-125 ease-in-out duration-300`}
-                            />
-                          </button>
-                        );
-                      }
-                      return null;
-                    })
+                    if (code !== (i18next as any).language) {
+                      return (
+                        <button
+                          key={country_code}
+                          onClick={() => {
+                            (i18next as any).changeLanguage(code);
+                            setDropdown(!dropdown);
+                          }}
+                        >
+                          <span
+                            className={`fi fi-${country_code} mr-2 text-xl hover:scale-125 ease-in-out duration-300`}
+                          />
+                        </button>
+                      );
+                    }
+                    return null;
+                  })
                   : ""}
               </div>
 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 
 interface CustomContextProps {
   selectedColors: {

@@ -4,7 +4,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { ThemeContext } from "./ThemeContext";
 import { Swiper, SwiperSlide } from "swiper/react";
-import comments from "../../comments";
+import comments from "../../resources/comments";
 
 // Import Swiper styles
 import "swiper/css";

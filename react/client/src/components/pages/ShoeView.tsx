@@ -8,14 +8,14 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { CartContext } from "../elements/CartProvider";
 import { UserContext } from "../elements/UserProvider";
 import { useNavigate } from "react-router-dom";
 import tick from "../../assets/images/tick.png";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import CircleSvg from "../elements/CircleSvg";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import { ShoeInterface } from "src/types";
 
 interface ShoeSize {
@@ -276,11 +276,10 @@ function ShoeView() {
                   {photos.map((photo, index) => (
                     <div
                       key={index}
-                      className={`cursor-pointer w-[5rem] h-[5rem] md:w-[7rem] md:h-[7rem] lg:w-[5rem] lg:h-[5rem] xl:w-[7rem] xl:h-[7rem] bg-white dark:bg-black/50 shadow-lg ${
-                        selectedPhotoIndex === index
-                          ? "border-2 border-[#97DEFF]"
-                          : ""
-                      }`}
+                      className={`cursor-pointer w-[5rem] h-[5rem] md:w-[7rem] md:h-[7rem] lg:w-[5rem] lg:h-[5rem] xl:w-[7rem] xl:h-[7rem] bg-white dark:bg-black/50 shadow-lg ${selectedPhotoIndex === index
+                        ? "border-2 border-[#97DEFF]"
+                        : ""
+                        }`}
                       onClick={() => setSelectedPhotoIndex(index)}
                     >
                       <img className="w-full h-full" src={photo} />
@@ -317,9 +316,8 @@ function ShoeView() {
                     {shoe.sizes.map((size) => (
                       <label
                         key={size.size}
-                        className={` ${
-                          size.quantity === 0 ? "cursor-auto" : "cursor-pointer"
-                        }`}
+                        className={` ${size.quantity === 0 ? "cursor-auto" : "cursor-pointer"
+                          }`}
                       >
                         <input
                           type="radio"
@@ -331,11 +329,10 @@ function ShoeView() {
                           checked={size.size === selectedSize}
                         />
                         <div
-                          className={` flex justify-center space-x-1 items-center rounded w-[4rem] h-[2rem] xl:w-[5rem] xl:h-[3rem] text-black/80 dark:text-white  shadow-md ${
-                            size.quantity === 0
-                              ? "bg-black/10 "
-                              : "bg-white dark:bg-black/30 transition-all active:scale-95 peer-checked:bg-[#97DEFF] peer-checked:text-black/80"
-                          } `}
+                          className={` flex justify-center space-x-1 items-center rounded w-[4rem] h-[2rem] xl:w-[5rem] xl:h-[3rem] text-black/80 dark:text-white  shadow-md ${size.quantity === 0
+                            ? "bg-black/10 "
+                            : "bg-white dark:bg-black/30 transition-all active:scale-95 peer-checked:bg-[#97DEFF] peer-checked:text-black/80"
+                            } `}
                         >
                           <p>{currentCode !== "pl" ? "US" : "EU"}</p>
                           <p>{t(`sizes.${size.size}`)}</p>

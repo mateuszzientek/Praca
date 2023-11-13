@@ -10,11 +10,11 @@ import axios from "axios";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import OrderTemplate from "../elements/OrderTemplate";
 import { ref, getDownloadURL } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { AiOutlineClose } from "react-icons/ai";
 import CheckoutProductTemplate from "../elements/CheckoutProductTemplate";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import {
   OrderInterface,
   ShoeInterface,
@@ -229,8 +229,8 @@ function Order() {
                   <span className="text-black/80 dark:text-white/80">
                     {singleOrderCustomShoes
                       ? new Date(
-                          singleOrderCustomShoes.orderDate
-                        ).toLocaleString()
+                        singleOrderCustomShoes.orderDate
+                      ).toLocaleString()
                       : ""}
                   </span>
                 </p>
@@ -318,7 +318,7 @@ function Order() {
                   {singleOrderCustomShoes?.deliveryMethod && (
                     <span className="font-bold">
                       {singleOrderCustomShoes?.deliveryMethod ===
-                      "Poczta Polska"
+                        "Poczta Polska"
                         ? formatPrice(4, t)
                         : formatPrice(0, t)}
                     </span>

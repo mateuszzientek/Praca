@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { CloudinaryContext } from "cloudinary-react";
 import TransformedImage from "../elements/TransformedImage";
 import side_left from "../../assets/images/side_left.png"
-import renderPatch from 'src/renderPatch';
+import renderPatch from 'src/resources/renderPatch';
 import { CustomContext } from "../elements/CustomProvider";
 import { SelectedColors, SelectedColorsText } from "src/types";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { UserContext } from "../elements/UserProvider";
 import { useTranslation } from "react-i18next";
 

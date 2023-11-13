@@ -16,12 +16,12 @@ import {
   listAll,
   getDownloadURL,
 } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import RoundedColor from "../elements/RoundedColor";
 import { CloudinaryContext } from "cloudinary-react";
 import { ChromePicker } from "react-color";
 import TransformedImage from "../elements/TransformedImage";
-import colorsData from "../../colorsData";
+import colorsData from "../../resources/colorsData";
 import TypeButtonDesign from "../elements/TypeButtonDesign";
 import { CustomContext } from "../elements/CustomProvider";
 import {
@@ -32,8 +32,8 @@ import {
   changeColorToRed,
   shouldShowButton,
   handleDeleteColor,
-} from "../../colorsUtlils";
-import { onSelectFile, getCroppedImageFile } from "src/graphicsUtils";
+} from "../../resources/colorsUtlils";
+import { onSelectFile, getCroppedImageFile } from "src/resources/graphicsUtils";
 import axios from "axios";
 import { ThemeContext } from "../elements/ThemeContext";
 import side_left from "../../assets/images/side_left.png";
@@ -51,7 +51,7 @@ import {
   textArrayWithBothCroppedImageWithoutSwooshLeft,
   textArrayWithBothCroppedImageWithoutSwooshRight,
   textArrayWithBothCroppedImageWithoutSwoosh,
-} from "../../textArraysCustom";
+} from "../../resources/textArraysCustom";
 import ColoPickerTextDiv from "../elements/ColoPickerTextDiv";
 import PatchesDiv from "../elements/PatchesDiv";
 import { useTranslation } from "react-i18next";
@@ -59,7 +59,7 @@ import { useNavigate } from "react-router-dom";
 import CircleSvg from "../elements/CircleSvg";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import InfoDivBottom from "../elements/InfoDivBottom";
-import renderPatch from "src/renderPatch";
+import renderPatch from "src/resources/renderPatch";
 
 interface DesignSectionProps {
   photos: string[];
@@ -617,9 +617,8 @@ function DesignSection(props: DesignSectionProps) {
             <button
               onClick={saveDesign}
               disabled={loading}
-              className={`px-8 py-3 bg-black/80 dark:bg-white/80 disabled:bg-[#c9c9c9] text-white dark:text-black rounded-full ${
-                !loading ? "hover:bg-black hover:dark:bg-white" : ""
-              }`}
+              className={`px-8 py-3 bg-black/80 dark:bg-white/80 disabled:bg-[#c9c9c9] text-white dark:text-black rounded-full ${!loading ? "hover:bg-black hover:dark:bg-white" : ""
+                }`}
             >
               <div className="flex items-center justify-center">
                 {loading && (
@@ -643,9 +642,8 @@ function DesignSection(props: DesignSectionProps) {
               <p className=" text-black dark:text-white">
                 {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
               </p>
-              <p className=" text-black/50 dark:text-white/60">{`${
-                currentTextIndex + 1
-              }/${textArray.length}`}</p>
+              <p className=" text-black/50 dark:text-white/60">{`${currentTextIndex + 1
+                }/${textArray.length}`}</p>
             </div>
 
             <AiOutlineArrowRight
@@ -682,8 +680,8 @@ function DesignSection(props: DesignSectionProps) {
                             leftSideImageCropped
                               ? URL.createObjectURL(leftSideImageCropped)
                               : imagesUrls.leftSideImageCroppedUrl
-                              ? imagesUrls.leftSideImageCroppedUrl
-                              : ""
+                                ? imagesUrls.leftSideImageCroppedUrl
+                                : ""
                           }
                           className="h-[8rem]  absolute top-[4.7rem] left-[10.3rem] opacity-80"
                         />
@@ -717,7 +715,7 @@ function DesignSection(props: DesignSectionProps) {
                             rgb={selectedColors.selectedColorSwosh_1.rgb}
                             opacity={
                               imagesUrls.leftSideImageCroppedUrl ||
-                              leftSideImageCropped
+                                leftSideImageCropped
                                 ? "opacity-100"
                                 : "opacity-70"
                             }
@@ -765,8 +763,8 @@ function DesignSection(props: DesignSectionProps) {
                             rightSideImageCropped
                               ? URL.createObjectURL(rightSideImageCropped)
                               : imagesUrls.rightSideImageCroppedUrl
-                              ? imagesUrls.rightSideImageCroppedUrl
-                              : ""
+                                ? imagesUrls.rightSideImageCroppedUrl
+                                : ""
                           }
                           className="h-[8rem] absolute top-[4.7rem] left-[1.7rem] opacity-80"
                         />
@@ -806,7 +804,7 @@ function DesignSection(props: DesignSectionProps) {
                             rgb={selectedColors.selectedColorSwosh_2.rgb}
                             opacity={
                               imagesUrls.rightSideImageCroppedUrl ||
-                              rightSideImageCropped
+                                rightSideImageCropped
                                 ? "opacity-100"
                                 : "opacity-70"
                             }
@@ -859,9 +857,8 @@ function DesignSection(props: DesignSectionProps) {
               <p className=" text-black dark:text-white">
                 {t(`textArrayCustom.${textArray[currentTextIndex]}`)}
               </p>
-              <p className=" text-black/50 dark:text-white/60">{`${
-                currentTextIndex + 1
-              }/${textArray.length}`}</p>
+              <p className=" text-black/50 dark:text-white/60">{`${currentTextIndex + 1
+                }/${textArray.length}`}</p>
             </div>
 
             <AiOutlineArrowRight
@@ -1057,7 +1054,7 @@ function DesignSection(props: DesignSectionProps) {
 
                 <div className="flex items-center mt-6">
                   {!leftSideImageCropped &&
-                  !imagesUrls.leftSideImageCroppedUrl ? (
+                    !imagesUrls.leftSideImageCroppedUrl ? (
                     <label
                       className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}
                     >
@@ -1079,8 +1076,8 @@ function DesignSection(props: DesignSectionProps) {
                           imagesUrls.leftSideImageCroppedUrl
                             ? imagesUrls.leftSideImageCroppedUrl
                             : leftSideImageCropped
-                            ? URL.createObjectURL(leftSideImageCropped)
-                            : ""
+                              ? URL.createObjectURL(leftSideImageCropped)
+                              : ""
                         }
                         className="h-[5rem] rounded-lg"
                       />
@@ -1112,7 +1109,7 @@ function DesignSection(props: DesignSectionProps) {
 
                 <div className="flex items-center mt-6">
                   {!rightSideImageCropped &&
-                  !imagesUrls.rightSideImageCroppedUrl ? (
+                    !imagesUrls.rightSideImageCroppedUrl ? (
                     <label
                       className={`py-2 px-4 border-2 cursor-pointer text-base ${buttonStyle} `}
                     >
@@ -1134,8 +1131,8 @@ function DesignSection(props: DesignSectionProps) {
                           imagesUrls.rightSideImageCroppedUrl
                             ? imagesUrls.rightSideImageCroppedUrl
                             : rightSideImageCropped
-                            ? URL.createObjectURL(rightSideImageCropped)
-                            : ""
+                              ? URL.createObjectURL(rightSideImageCropped)
+                              : ""
                         }
                         className="h-[5rem] rounded-lg"
                       />
@@ -1159,35 +1156,35 @@ function DesignSection(props: DesignSectionProps) {
 
                 {(leftSideImageCropped ||
                   imagesUrls.leftSideImageCroppedUrl) && (
-                  <div className="flex items-center mt-10">
-                    <p className="text-xl text-black/80 dark:text-white/80 ">
-                      {t("designSection.text17")}
-                    </p>
-                    <ToogleButtonSwosh
-                      isSwooshVisible={swooshVisibility.isLeftSwooshVisible}
-                      setIsSwooshVisible={setSwooshVisibility}
-                      side="left"
-                      setSideView={setSideView}
-                      swooshVisibility={swooshVisibility}
-                    />
-                  </div>
-                )}
+                    <div className="flex items-center mt-10">
+                      <p className="text-xl text-black/80 dark:text-white/80 ">
+                        {t("designSection.text17")}
+                      </p>
+                      <ToogleButtonSwosh
+                        isSwooshVisible={swooshVisibility.isLeftSwooshVisible}
+                        setIsSwooshVisible={setSwooshVisibility}
+                        side="left"
+                        setSideView={setSideView}
+                        swooshVisibility={swooshVisibility}
+                      />
+                    </div>
+                  )}
 
                 {(rightSideImageCropped ||
                   imagesUrls.rightSideImageCroppedUrl) && (
-                  <div className="flex items-center mt-10">
-                    <p className="text-xl text-black/80 dark:text-white/80">
-                      {t("designSection.text18")}
-                    </p>
-                    <ToogleButtonSwosh
-                      isSwooshVisible={swooshVisibility.isRightSwooshVisible}
-                      setIsSwooshVisible={setSwooshVisibility}
-                      side="right"
-                      setSideView={setSideView}
-                      swooshVisibility={swooshVisibility}
-                    />
-                  </div>
-                )}
+                    <div className="flex items-center mt-10">
+                      <p className="text-xl text-black/80 dark:text-white/80">
+                        {t("designSection.text18")}
+                      </p>
+                      <ToogleButtonSwosh
+                        isSwooshVisible={swooshVisibility.isRightSwooshVisible}
+                        setIsSwooshVisible={setSwooshVisibility}
+                        side="right"
+                        setSideView={setSideView}
+                        swooshVisibility={swooshVisibility}
+                      />
+                    </div>
+                  )}
               </div>
             )}
 

@@ -10,7 +10,7 @@ import { FilterContext } from "../elements/FilterProvider";
 import { ThemeContext } from "../elements/ThemeContext";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { useTranslation } from "react-i18next";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import { SizesInterface } from "src/types";
 
 interface CartProductTemplateProps {
@@ -82,7 +82,7 @@ function CartProductTemplate(props: CartProductTemplateProps) {
 
     axios
       .post("/updateQuantityCart", requestData)
-      .then((response) => {})
+      .then((response) => { })
       .catch((error) => {
         if (
           error.response &&
@@ -168,11 +168,10 @@ function CartProductTemplate(props: CartProductTemplateProps) {
 
               <div className={`flex md:hidden space-x-2`}>
                 <p
-                  className={`text-lg ' ${
-                    props.discountPrice !== 0
+                  className={`text-lg ' ${props.discountPrice !== 0
                       ? "text-red-500"
                       : "text-black dark:text-white"
-                  } `}
+                    } `}
                 >
                   {formatPrice(shoePrice, t)}
                 </p>
@@ -257,16 +256,14 @@ function CartProductTemplate(props: CartProductTemplateProps) {
             </p>
 
             <div
-              className={`flex-col hidden md:flex absolute ${
-                currentCode === "pl" ? "right-[2.4rem]" : "right-[2rem]"
-              }  space-y-1`}
+              className={`flex-col hidden md:flex absolute ${currentCode === "pl" ? "right-[2.4rem]" : "right-[2rem]"
+                }  space-y-1`}
             >
               <p
-                className={`text-lg ' ${
-                  props.discountPrice !== 0
+                className={`text-lg ' ${props.discountPrice !== 0
                     ? "text-red-500"
                     : "text-black dark:text-white"
-                } `}
+                  } `}
               >
                 {formatPrice(shoePrice, t)}
               </p>

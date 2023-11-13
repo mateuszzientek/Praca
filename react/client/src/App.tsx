@@ -11,18 +11,18 @@ import {
   listAll,
   getDownloadURL,
 } from "firebase/storage";
-import storage from "../src/firebase";
+import storage from "./resources/firebase";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
 import { UserProvider } from "./components/elements/UserProvider";
 import { FilterProvider } from "./components/elements/FilterProvider";
 import { LoginProvider } from "./components/elements/LoginProvider";
 import { CustomProvider } from "./components/elements/CustomProvider";
 import LoadingAnimation from "./components/elements/LoadingAnimation";
-import PrivateRoutes from "./PrivateRoutes";
+import PrivateRoutes from "./routes/PrivateRoutes";
 import { CartProvider } from "./components/elements/CartProvider";
-import CheckoutRoute from "./CheckoutRoute";
-import SubmitOrderRoute from "./SubmitOrderRoute";
-import AdminPanelRoute from "./AdminPanelRoute";
+import CheckoutRoute from "./routes/CheckoutRoute";
+import SubmitOrderRoute from "./routes/SubmitOrderRoute";
+import AdminPanelRoute from "./routes/AdminPanelRoute";
 const Login = lazy(() => import("./components/pages/Login"));
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));

@@ -5,7 +5,7 @@ import axios from "axios";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { UserContext } from "../elements/UserProvider";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ShoeInterface } from "src/types";

@@ -7,7 +7,7 @@ import FilterSection from "../sections/FilterSection";
 import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { ref, getDownloadURL } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Pagination from "../elements/Pagination";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";

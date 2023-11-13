@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import LeftViewDesignShoe from '../sections/LeftViewDesignShoe';
 import { ProjectItem } from "src/types";
 

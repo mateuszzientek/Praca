@@ -11,10 +11,10 @@ import CheckoutProductTemplate from "../elements/CheckoutProductTemplate";
 import axios from "axios";
 import { UserContext } from "../elements/UserProvider";
 import { ref, getDownloadURL } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { CartContext } from "../elements/CartProvider";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import { useTranslation } from "react-i18next";
 import InputCheckout from "../elements/InputCheckout";
 import AddressTemplateCheckout from "../elements/AddressTemplateCheckout";
@@ -188,12 +188,12 @@ function Checkout() {
     return (
       Object.keys(
         newErrors.email ||
-          newErrors.name ||
-          newErrors.surname ||
-          newErrors.street ||
-          newErrors.city ||
-          newErrors.postalCode ||
-          newErrors.telephone
+        newErrors.name ||
+        newErrors.surname ||
+        newErrors.street ||
+        newErrors.city ||
+        newErrors.postalCode ||
+        newErrors.telephone
       ).length === 0
     );
   };
@@ -861,9 +861,8 @@ function Checkout() {
 
                   <div className="flex space-x-1 items-center">
                     <p
-                      className={`px-4 text-black/80 dark:text-white/80 whitespace-nowrap  text-lg ${
-                        type.price === 0 ? "text-green-500" : "text-black/80"
-                      }`}
+                      className={`px-4 text-black/80 dark:text-white/80 whitespace-nowrap  text-lg ${type.price === 0 ? "text-green-500" : "text-black/80"
+                        }`}
                     >
                       {formatPrice(type.price, t)}
                     </p>
@@ -967,11 +966,10 @@ function Checkout() {
                     {t("checkout.text17")}
                   </p>
                   <p
-                    className={`${
-                      selectedDelivery.price === 0
-                        ? "text-green-500"
-                        : "text-black/80 dark:text-white/80 "
-                    } font-bold`}
+                    className={`${selectedDelivery.price === 0
+                      ? "text-green-500"
+                      : "text-black/80 dark:text-white/80 "
+                      } font-bold`}
                   >
                     {formatPrice(selectedDelivery.price, t)}
                   </p>

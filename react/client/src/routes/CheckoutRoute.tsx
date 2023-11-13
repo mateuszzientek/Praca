@@ -1,7 +1,7 @@
 import React, { useContext, Suspense, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { CartContext } from './components/elements/CartProvider';
-import LoadingAnimation from './components/elements/LoadingAnimation';
+import { CartContext } from '../components/elements/CartProvider';
+import LoadingAnimation from '../components/elements/LoadingAnimation';
 
 const CheckoutRoute = () => {
 

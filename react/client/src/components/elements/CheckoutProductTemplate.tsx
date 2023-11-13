@@ -2,7 +2,7 @@ import React from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { useTranslation } from "react-i18next";
-import { formatPrice } from 'src/currencyUtils';
+import { formatPrice } from 'src/resources/currencyUtils';
 
 
 interface CartProductTemplateProps {

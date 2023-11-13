@@ -16,7 +16,7 @@ import axios from "axios";
 import CircleSvg from "../elements/CircleSvg";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import { useTranslation } from "react-i18next";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import {
   ref,
   uploadBytes,
@@ -275,12 +275,12 @@ function Profile() {
     return (
       Object.keys(
         newErrors.name ||
-          newErrors.surname ||
-          newErrors.day ||
-          newErrors.month ||
-          newErrors.year ||
-          newErrorsPassword.old ||
-          newErrorsPassword.new
+        newErrors.surname ||
+        newErrors.day ||
+        newErrors.month ||
+        newErrors.year ||
+        newErrorsPassword.old ||
+        newErrorsPassword.new
       ).length === 0
     );
   };
@@ -641,9 +641,8 @@ function Profile() {
             <button
               disabled={isLoadingEditData}
               onClick={handleImageUpload}
-              className={`flex items-center justify-center py-2 px-4 border-2 border-black/80 ${
-                isLoadingEditData ? "bg-[#c9c9c9]" : "bg-transparent"
-              } dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300`}
+              className={`flex items-center justify-center py-2 px-4 border-2 border-black/80 ${isLoadingEditData ? "bg-[#c9c9c9]" : "bg-transparent"
+                } dark:border-white/80  dark:text-white/80 rounded-md hover:scale-105 ease-in-out duration-300`}
             >
               {isLoadingEditData && (
                 <CircleSvg
@@ -677,9 +676,8 @@ function Profile() {
 
               <form className="w-full" onSubmit={handleEditEmail}>
                 <input
-                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                    errorEmail ? "border-red-500" : "border-black/50"
-                  } `}
+                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorEmail ? "border-red-500" : "border-black/50"
+                    } `}
                   value={email}
                   type="email"
                   onChange={handleEmailChange}
@@ -735,9 +733,8 @@ function Profile() {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                      errorsPassword.old ? "border-red-500" : "border-black/50"
-                    } `}
+                    className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorsPassword.old ? "border-red-500" : "border-black/50"
+                      } `}
                     value={oldPassword}
                     onChange={handleOldPasswordChange}
                     onBlur={handleBlur}
@@ -767,9 +764,8 @@ function Profile() {
                 )}
                 <div className="relative">
                   <input
-                    className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                      errorsPassword.new ? "border-red-500" : "border-black/50"
-                    } `}
+                    className={`mt-10 w-full px-2 h-[3rem] border-2 ${errorsPassword.new ? "border-red-500" : "border-black/50"
+                      } `}
                     type={showPasswordSec ? "text" : "password"}
                     value={newPassword}
                     onChange={handleNewPasswordChange}
@@ -843,9 +839,8 @@ function Profile() {
 
               <form className="w-full " onSubmit={handleSubmitEditData}>
                 <input
-                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${
-                    errors.name ? "border-red-500" : "border-black/50"
-                  } `}
+                  className={`mt-10 w-full px-2 h-[3rem] border-2 ${errors.name ? "border-red-500" : "border-black/50"
+                    } `}
                   value={name}
                   onChange={handleNameChange}
                   onBlur={handleBlur}
@@ -856,9 +851,8 @@ function Profile() {
                 )}
 
                 <input
-                  className={`mt-6 w-full  px-2 h-[3rem] border-2 ${
-                    errors.surname ? "border-red-500" : "border-black/50"
-                  } `}
+                  className={`mt-6 w-full  px-2 h-[3rem] border-2 ${errors.surname ? "border-red-500" : "border-black/50"
+                    } `}
                   value={surname}
                   onChange={handleSurnameChange}
                   onBlur={handleBlur}
@@ -875,9 +869,8 @@ function Profile() {
                 <div className="flex w-full  mt-6 space-x-4">
                   <div className="w-[33%] ">
                     <input
-                      className={`w-full px-2 h-[3rem]  border-2 ${
-                        errors.day ? "border-red-500" : "border-black/50"
-                      }`}
+                      className={`w-full px-2 h-[3rem]  border-2 ${errors.day ? "border-red-500" : "border-black/50"
+                        }`}
                       value={day}
                       onChange={handleDayChange}
                       onBlur={handleBlur}
@@ -891,9 +884,8 @@ function Profile() {
 
                   <div className="w-[33%] ">
                     <input
-                      className={`w-full px-2 h-[3rem]  border-2 ${
-                        errors.month ? "border-red-500" : "border-black/50"
-                      }`}
+                      className={`w-full px-2 h-[3rem]  border-2 ${errors.month ? "border-red-500" : "border-black/50"
+                        }`}
                       value={month}
                       onChange={handleMonthChange}
                       onBlur={handleBlur}
@@ -909,9 +901,8 @@ function Profile() {
 
                   <div className="w-[33%] ">
                     <input
-                      className={`w-full px-2 h-[3rem]  border-2 ${
-                        errors.year ? "border-red-500" : "border-black/50"
-                      }`}
+                      className={`w-full px-2 h-[3rem]  border-2 ${errors.year ? "border-red-500" : "border-black/50"
+                        }`}
                       value={year}
                       onChange={handleYearChange}
                       onBlur={handleBlur}

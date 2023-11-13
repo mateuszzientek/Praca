@@ -3,7 +3,7 @@ import { CustomContext } from "../elements/CustomProvider";
 import { CloudinaryContext } from "cloudinary-react";
 import TransformedImage from "../elements/TransformedImage";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { UserContext } from "../elements/UserProvider";
 import {
@@ -12,7 +12,7 @@ import {
 } from "react-icons/md";
 import side_left from "../../assets/images/side_left.png"
 import side_right from "../../assets/images/side_right.png"
-import renderPatch from 'src/renderPatch';
+import renderPatch from 'src/resources/renderPatch';
 import { SelectedColors, SelectedColorsText, SelectedPatches, SwooshVisibility, SideText } from "src/types";
 
 interface PersonalizedShoesViewProps {

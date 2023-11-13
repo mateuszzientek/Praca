@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import LoadingAnimation from "./components/elements/LoadingAnimation";
+import LoadingAnimation from "../components/elements/LoadingAnimation";
 
 const SubmitOrderRoute = () => {
   const lastVisitedPath = localStorage.getItem("lastVisitedPath");

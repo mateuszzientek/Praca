@@ -9,13 +9,13 @@ import {
   deleteObject,
   uploadBytes,
 } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import color from "../../assets/images/color.png";
 import { AiOutlinePlus, AiOutlineFilePdf } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 import DesignSection from "../sections/DesignSection";
 import PersonalizedShoesView from "../sections/PersonalizedShoesView";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import axios from "axios";
 import { UserContext } from "../elements/UserProvider";
 import { CustomContext } from "../elements/CustomProvider";

@@ -9,11 +9,11 @@ import { useTranslation } from "react-i18next";
 import Pagination from "../elements/Pagination";
 import OrderTemplate from "../elements/OrderTemplate";
 import { ref, getDownloadURL } from "firebase/storage";
-import storage from "../../firebase";
+import storage from "../../resources/firebase";
 import { AiOutlineDown, AiOutlineUp, AiOutlineClose } from "react-icons/ai";
 import { ThemeContext } from "../elements/ThemeContext";
 import CheckoutProductTemplate from "../elements/CheckoutProductTemplate";
-import { formatPrice } from "src/currencyUtils";
+import { formatPrice } from "src/resources/currencyUtils";
 import { OrderInterface } from "src/types";
 import { ShoeInterface } from "src/types";
 
