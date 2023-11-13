@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 import session, { SessionData } from "express-session";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import multer from "multer";
 import i18next from "i18next";
 import i18nextMiddleware from "i18next-http-middleware";
 import Backend from "i18next-node-fs-backend";
@@ -136,27 +135,11 @@ app.use(
     },
   })
 );
-const uploadsFolder = "./uploads";
-if (!fs.existsSync(uploadsFolder)) {
-  fs.mkdirSync(uploadsFolder);
-}
-
-// Ustawiamy middleware do obsługi przesyłania plików.
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
-    },
-  }), 
-});
 
 app.use(cookieParser("secret_key"));
 app.use(passport.initialize());
 app.use(passport.session());
-require("./passportConfig")(passport);
+require("./resources/passportConfig")(passport);
 
 //------------database----------------
 
@@ -221,7 +204,7 @@ app.post("/deleteDiscount", deleteDiscountHandler);
 app.post("/changeDefaultAddress", changeDefaultAddressHandler);
 app.post("/editAddress", editAddressHandler);
 app.post("/saveAddress", saveAddressHandler);
-app.post("/uploadImage", upload.single("avatar"), uploadImageHandler);
+app.post("/uploadImage", uploadImageHandler);
 app.post("/register", registerHandler);
 app.post("/login", loginHandler);
 app.post("/logout", logoutHandler);

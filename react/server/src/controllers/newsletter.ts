@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const validateWithReq = require('../validation'); 
+const validateWithReq = require('../resources/validation'); 
 import fs from "fs";
 import {body, validationResult} from "express-validator";
 import User from "../schemas/user"
@@ -37,7 +37,6 @@ const newsletterHandler = [
         // Sprawdź, czy plik Excel istnieje
         fs.access(filePath, fs.constants.F_OK, (err) => {
           if (err) {
-            // Jeśli plik nie istnieje, utwórz nowy plik i zapisz go
             workbook.xlsx
               .writeFile(filePath)
               .then(() => {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-const validateWithReq = require("../validation");
+const validateWithReq = require('../resources/validation'); 
 import User from "../schemas/user";
 import bcrypt from "bcryptjs";
 

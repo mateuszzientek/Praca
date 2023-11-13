@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import {body, validationResult } from "express-validator";
-const validateWithReq = require('../validation'); 
+const validateWithReq = require('../resources/validation'); 
 import passport from "passport";
 
 const loginHandler = [

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const validateWithReq = require('../validation'); 
+const validateWithReq = require('../resources/validation'); 
 import nodemailer from "nodemailer";
 import fs from "fs";
 import ejs from "ejs";

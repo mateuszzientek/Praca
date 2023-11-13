@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-const validateWithReq = require("../validation");
+const validateWithReq = require('../resources/validation'); 
 import OrderCustomProject from "../schemas/orderCustomProjects";
-import { generateOrderNumberV2 } from "../orderUtils";
+import { generateOrderNumberV2 } from "../resources/orderUtils";
 import CustomShoeTemporary from "../schemas/customShoeTemporary";
 
 const saveOrderCustomShoeHandler = [

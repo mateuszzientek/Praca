@@ -4,10 +4,9 @@ import User from "../schemas/user";
 
 const uploadImageHandler = [
   async (req: Request, res: Response) => {
-    const userId = req.body.id;
+    const userId = req.body.userId;
 
-    if (req.file) {
-      console.log(req.file);
+   
       try {
         const user = await User.findById(userId);
 
@@ -18,14 +17,18 @@ const uploadImageHandler = [
             .json({ error: "Użytkownik nie został znaleziony" });
         }
 
-        user.avatar = userId + '_' + req.file.filename;
+        const currentDate = new Date().toISOString().replace(/[-T:.Z]/g, ""); // Format date as YYYYMMDDHHmmss
+        const newAvatar = `${userId}_${currentDate}`;
+
+        user.avatar = newAvatar;
+
         await user.save();
 
         console.log('Pole "avatar" zostało zaktualizowane');
 
         return res.status(200).json({
           message: "Plik został przesłany i zapisany",
-          filename: req.file.filename,
+          filename: newAvatar,
         });
       } catch (error) {
         console.log('Błąd podczas aktualizacji pola "avatar":', error);
@@ -33,12 +36,6 @@ const uploadImageHandler = [
           .status(500)
           .json({ error: 'Wystąpił błąd podczas aktualizacji pola "avatar"' });
       }
-    } else {
-      console.log("Nie znaleziono przesłanego pliku");
-      return res
-        .status(400)
-        .json({ error: "Nie znaleziono przesłanego pliku" });
-    }
   },
 ];
 

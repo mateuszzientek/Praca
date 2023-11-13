@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-const validateWithReq = require("../validation");
 import FavoriteShoes, { FavoriteShoesInterface } from "../schemas/favoriteShoes";
 
 const getFavoriteShoesByIdHandler = async (req: Request, res: Response) => {

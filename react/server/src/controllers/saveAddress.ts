@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Address from "../schemas/address";
 import { body, validationResult } from "express-validator";
-const validateWithReq = require("../validation");
+const validateWithReq = require('../resources/validation'); 
 
 const saveAddressHandler = [
   validateWithReq([

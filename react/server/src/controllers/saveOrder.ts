@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import Shoes from "../schemas/shoes";
 import DiscountUser from "../schemas/discountUser";
 import { body, validationResult } from "express-validator";
-const validateWithReq = require("../validation");
+const validateWithReq = require('../resources/validation'); 
 const { v4: uuidv4 } = require("uuid");
 import Order from "../schemas/order";
 import Cart from "../schemas/cart";
-import { generateOrderNumber } from "../orderUtils";
+import { generateOrderNumber } from "../resources/orderUtils";
 
 const saveOrderHandler = [
   validateWithReq([

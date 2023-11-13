@@ -545,19 +545,17 @@ function Profile() {
       );
 
       // Create FormData with the File
-      const data = new FormData();
-      data.append("avatar", croppedImageFile);
-      data.append("id", user?._id || "");
+      const userId = user?._id ? user?._id : ""
 
       // Use the FormData in the uploadImageHandler
-      const response = await axios.post("/uploadImage", data);
+      const response = await axios.post("/uploadImage", { userId });
 
       if (user && croppedImageFile) {
         await deleteAvatarFiles(user._id);
 
         const storageRef = ref(
           storage,
-          `avatars/${user._id}_${response.data.filename}`
+          `avatars/${response.data.filename}`
         );
         await uploadBytes(storageRef, croppedImageFile);
 
