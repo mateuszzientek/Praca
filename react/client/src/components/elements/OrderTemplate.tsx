@@ -41,7 +41,7 @@ function OrderTemplate(props: OrderTemplateProps) {
       case "preparing":
         return "text-yellow-500";
       case "shipped":
-        return "text-[#8c03fc]";
+        return "text-violet-500";
       case "delivered":
         return "text-green-500";
       default:

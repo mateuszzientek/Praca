@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 
 interface LeftViewDesignShoeProps {
     isLeftSwooshVisible: boolean
+    userId: string
     leftText: string
     selectedLeftPatch: string
     selectedColors: SelectedColors
@@ -37,7 +38,7 @@ function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
                 if (props.designName) {
                     userStorageRef = ref(storage, `/designProject/${user?._id}/${props.designName}`);
                 } else if (props.orderNumber) {
-                    userStorageRef = ref(storage, `/orderCustomProjects/${user?._id}/${props.orderNumber}`);
+                    userStorageRef = ref(storage, `/orderCustomProjects/${props.userId}/${props.orderNumber}`);
                 } else {
                     userStorageRef = ref(storage, `/customImages/${user?._id}`);
                 }

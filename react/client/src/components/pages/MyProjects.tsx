@@ -173,6 +173,7 @@ function MyProjects() {
                         selectedColorsText={project.selectedColorsText}
                         designName={project.designName}
                         setError={setErrorsServer}
+                        userId={user?._id ? user?._id : ""}
                       />
                     </div>
 

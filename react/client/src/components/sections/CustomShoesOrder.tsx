@@ -832,6 +832,7 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
                     selectedColorsText={props.project.selectedColorsText}
                     designName={props.project.designName}
                     setError={setErrorsServer}
+                    userId={user?._id ? user?._id : ""}
                   />
                 </div>
                 <div className=" text-left">

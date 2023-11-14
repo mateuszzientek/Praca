@@ -7,8 +7,12 @@ const getOrdersCustomShoeHandler = [
     const userId = req.query.userId;
 
     try {
-      const orders = await OrderCustomProject.find({ userId: userId });
+      let orders = await OrderCustomProject.find({ userId: userId });
 
+      if(orders){
+        orders= orders.reverse()
+      }
+    
       res.status(200).json({ orders: orders });
     } catch (error) {
       console.log(error);

@@ -28,8 +28,6 @@ import "react-image-crop/dist/ReactCrop.css";
 import { Link } from "react-router-dom";
 import { ErrorInterface } from "src/types";
 import Cropper from "react-easy-crop";
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
 
 function Profile() {
   const inputRef = useRef(null);

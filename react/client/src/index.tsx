@@ -1,6 +1,5 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
-import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";

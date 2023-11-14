@@ -14,8 +14,9 @@ import { AiOutlineDown, AiOutlineUp, AiOutlineClose } from "react-icons/ai";
 import { ThemeContext } from "../elements/ThemeContext";
 import CheckoutProductTemplate from "../elements/CheckoutProductTemplate";
 import { formatPrice } from "src/resources/currencyUtils";
-import { OrderInterface } from "src/types";
-import { ShoeInterface } from "src/types";
+import { OrderInterface, ShoeInterface, OrderCustomShoeInterface } from "src/types";
+import OrderCustomShoeTemplate from "../elements/OrderCustomShoeTemplate";
+import PersonalizedShoesView from "../sections/PersonalizedShoesView";
 
 interface Shoe extends ShoeInterface {
   brand: string;
@@ -40,6 +41,11 @@ function AdminPanel() {
 
   const [users, setUsers] = useState<User[] | null>(null);
   const [orders, setOrders] = useState<OrderInterface[] | null>(null);
+  const [ordersCustomShoe, setOrdersCustomShoe] = useState<
+    OrderCustomShoeInterface[] | null
+  >(null);
+  const [singleOrderCustomShoes, setSingleOrderCustomShoes] =
+    useState<OrderCustomShoeInterface | null>(null);
   const [singleOrder, setSingleOrder] = useState<OrderInterface | null>(null);
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [matchingShoes, setMatchingShoes] = useState<Shoe[]>([]);
@@ -49,14 +55,19 @@ function AdminPanel() {
   const [pages, setPages] = useState(1);
   const [pageOrder, setPageOrder] = useState(1);
   const [pagesOrder, setPagesOrder] = useState(1);
+  const [pageOrderCustomShoe, setPageOrderCustomShoe] = useState(1);
+  const [pagesOrderCustomShoe, setPagesOrderCustomShoe] = useState(1);
   const [showDiv, setShowDiv] = useState(false);
   const [showSort, setShowSort] = useState(false);
+  const [showSortCustomShoe, setShowSortCustomShoe] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
   const [selectedSort, setSelectedSort] = useState("all");
+  const [selectedSortCustomShoe, setSelectedSortCustomShoe] = useState("all");
   const [selectedType, setSelectedType] = useState("users");
-  const [selectedStatus, setSelectedStatus] = useState("");
   const sortType = ["all", "submitted", "preparing", "shipped", "delivered"];
+  const statusType = ["submitted", "preparing", "shipped", "delivered"];
   const [message, setMessage] = useState("");
+  const [showDivCustomShoe, setShowDivCustomShoe] = useState(false);
 
   const actionType = ["users", "orders", "customOrders"]
 
@@ -68,7 +79,7 @@ function AdminPanel() {
       case "preparing":
         return "text-yellow-500";
       case "shipped":
-        return "text-[#8c03fc]";
+        return "text-violet-500";
       case "delivered":
         return "text-green-500";
       default:
@@ -77,7 +88,7 @@ function AdminPanel() {
   };
 
   useEffect(() => {
-    if (showDiv) {
+    if (showDiv || showDivCustomShoe) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
@@ -86,7 +97,7 @@ function AdminPanel() {
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [showDiv]);
+  }, [showDiv, showDivCustomShoe]);
 
   useEffect(() => {
     if (message) {
@@ -107,10 +118,27 @@ function AdminPanel() {
     }
   };
 
+  const clickDetailsCustomShoe = (orderId: string) => {
+    setShowDivCustomShoe(!showDivCustomShoe);
+
+    if (ordersCustomShoe) {
+      const singleOrder = ordersCustomShoe.filter(
+        (order) => order._id === orderId
+      );
+      setSingleOrderCustomShoes(singleOrder.length > 0 ? singleOrder[0] : null);
+    }
+  };
+
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedSort = event.target.value;
     setSelectedSort(selectedSort);
     setShowSort(false);
+  };
+
+  const handleSortCustomShoeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedSort = event.target.value;
+    setSelectedSortCustomShoe(selectedSort);
+    setShowSortCustomShoe(false);
   };
 
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,6 +194,58 @@ function AdminPanel() {
 
     setShowStatus(false);
   };
+
+  const handleStatusCustomShoeChange = (status: string) => {
+    const selectedStatus = status;
+
+    const data = {
+      status: selectedStatus,
+      orderNumber: singleOrderCustomShoes?.orderNumber,
+    };
+
+    axios
+      .post("/updateStatusCustomShoe", data)
+      .then((response) => {
+
+        const updatedSingleOrder = {
+          ...singleOrderCustomShoes,
+          status: selectedStatus,
+        };
+
+        setSingleOrderCustomShoes(updatedSingleOrder as OrderCustomShoeInterface);
+
+        const updatedOrders = ordersCustomShoe?.map((order) => {
+          if (order._id === singleOrderCustomShoes?._id) {
+            return {
+              ...order,
+              status: selectedStatus,
+            };
+          }
+          return order;
+        });
+
+        // Aktualizujemy stan 'orders' za pomocą nowej tablicy 'updatedOrders'
+        setOrdersCustomShoe(updatedOrders as OrderCustomShoeInterface[]);
+
+        const message = t("adminPanel.text5");
+        setMessage(message);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorsServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      });
+
+    setShowStatus(false);
+  };
+
+
   useEffect(() => {
     setIsDataFetched(false);
     axios
@@ -194,7 +274,34 @@ function AdminPanel() {
   useEffect(() => {
     setIsDataFetched(false);
     axios
-      .get(`/getOrdersAdmin?page=${pageOrder}&sort=${selectedSort}`)
+      .get(`/getOrdersCustomShoeAdmin?page=${pageOrderCustomShoe}&sort=${selectedSortCustomShoe}`)
+      .then(async (response) => {
+
+        setPageOrderCustomShoe(response.data.page);
+        setPagesOrderCustomShoe(response.data.pages);
+        setOrdersCustomShoe(response.data.orders);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorsServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      })
+      .finally(() => {
+        setIsDataFetched(true);
+      });
+  }, [user, pageOrderCustomShoe, selectedSortCustomShoe]);
+
+
+  useEffect(() => {
+    setIsDataFetched(false);
+    axios
+      .get(`/getOrdersAdmin?page?page=${pageOrder}&sort=${selectedSort}`)
       .then(async (response) => {
         const fetchedShoes: any[] = response.data.shoes || [];
 
@@ -266,6 +373,7 @@ function AdminPanel() {
     setMatchingShoes(matchingShoesWithQuantityAndSize);
   }, [singleOrder]);
 
+
   return (
     <>
       <div className="flex justify-center z-[3]">
@@ -277,6 +385,198 @@ function AdminPanel() {
           <InfoDivBottom color="bg-red-500" text={errorsServer} />
         )}
       </div>
+
+      {showDivCustomShoe && (
+        <div className="fixed w-screen h-screen flex justify-center items-center m-auto z-10  bg-black/40 backdrop-blur-sm  ">
+          <div className="flex flex-col  bg-white dark:bg-black  pt-10 px-2  sm:px-10 xl:px-20 max-h-[80vh] w-full md:w-[90vw]  xl:w-[70rem] overflow-y-auto">
+
+            <div className="flex justify-end  relative  mb-4">
+              <div className="flex items-center space-x-10">
+                <button
+                  onClick={() => setShowStatus(!showStatus)}
+                  className="flex items-center space-x-1 px-2 py-2 border-[2px] border-black/10 dark:border-white dark:text-white text-black/60 rounded-md"
+                >
+                  <p
+                    className={`${getStatusColor(
+                      singleOrderCustomShoes?.status ? singleOrderCustomShoes?.status : ""
+                    )}`}
+                  >
+                    {t(`status.${singleOrderCustomShoes?.status}`)}
+                  </p>
+                  {showSortCustomShoe ? (
+                    <AiOutlineUp size={15} />
+                  ) : (
+                    <AiOutlineDown size={15} />
+                  )}
+                </button>
+
+                <div onClick={() => setShowDivCustomShoe(!showDivCustomShoe)}>
+                  <AiOutlineClose
+                    size={30}
+                    color={theme === "dark" ? "white" : "black"}
+                    className="cursor-pointer hover:scale-125"
+                  />
+                </div>
+              </div>
+
+              {showStatus && (
+                <div className="animate-sort-in absolute top-12 right-16 whitespace-nowrap bg-white shadow-button mt-1 rounded z-10">
+                  {statusType.map((status) => (
+                    <label
+                      key={status}
+                      className={`${singleOrderCustomShoes?.status === status
+                        ? "cursor-default"
+                        : "cursor-pointer"
+                        }`}
+                    >
+                      <button
+                        className="peer sr-only"
+                        name="status"
+                        disabled={singleOrderCustomShoes?.status === status}
+                        onClick={() => handleStatusCustomShoeChange(status)}
+                      />
+                      <p
+                        className={`text-black/80 px-3 py-2  peer-checked:font-bold hover:bg-black/10 ${getStatusColor(
+                          status
+                        )}`}
+                      >
+                        {t(`status.${status}`)}
+                      </p>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col lg:flex-row mt-10">
+              <div className="h-full w-full lg:w-[50%]  ">
+                <p className="text-xl text-black/80  dark:text-white/80">
+                  {t("order.text8")}
+                </p>
+                <div className="text-lg text-black/50  dark:text-white/50">
+                  <p className="mt-6">
+                    {t("order.text1")}{" "}
+                    <span className="text-black/80  dark:text-white/80">
+                      {singleOrderCustomShoes?.orderNumber}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("order.text9")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrderCustomShoes
+                        ? new Date(
+                          singleOrderCustomShoes.orderDate
+                        ).toLocaleString()
+                        : ""}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("order.text10")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrderCustomShoes?.deliveryMethod}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("order.text11")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {t(`payment.${singleOrderCustomShoes?.paymentMethod}`)}
+                    </span>
+                  </p>
+                </div>
+
+                <p className="text-xl text-black/80  dark:text-white/80 mt-10 ">
+                  {t("order.text12")}
+                </p>
+
+                <div className="text-lg text-black/50 dark:text-white/50  pb-10">
+                  <p className="mt-6">
+                    Email:{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrderCustomShoes?.address.email}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("checkout.text23")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrderCustomShoes?.address.name}{" "}
+                      {singleOrderCustomShoes?.address.surname}
+                    </span>
+                  </p>
+
+                  <p className="mt-2">
+                    {t("checkout.text24")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrderCustomShoes?.address.telephone}
+                    </span>
+                  </p>
+                  <p className="mt-2">
+                    {t("checkout.text25")}{" "}
+                    <span className="text-black/80 dark:text-white/80">
+                      {singleOrderCustomShoes?.address.street},
+                    </span>
+                  </p>
+                  <p className="mt-2 text-black/80 dark:text-white/80">
+                    {singleOrderCustomShoes?.address.postalCode}{" "}
+                    {singleOrderCustomShoes?.address.city},
+                  </p>
+                  <p className="mt-2 text-black/80 dark:text-white/80">
+                    {t(`country.${singleOrderCustomShoes?.address.country}`)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="h-full w-full lg:w-[50%]   ">
+                <div className="flex justify-center transform scale-[80%] sm:scale-[90%] md:scale-[100%] lg:scale-[110%]">
+                  {singleOrderCustomShoes && (
+                    <PersonalizedShoesView
+                      selectedColors={
+                        singleOrderCustomShoes.project.selectedColors
+                      }
+                      selectedColorsText={
+                        singleOrderCustomShoes.project.selectedColorsText
+                      }
+                      selectedPatches={
+                        singleOrderCustomShoes.project.selectedPatches
+                      }
+                      swooshVisibility={
+                        singleOrderCustomShoes.project.swooshVisibility
+                      }
+                      sideText={singleOrderCustomShoes.project.sideText}
+                      orderNumber={singleOrderCustomShoes.orderNumber}
+                      userId={singleOrderCustomShoes.userId}
+                    />
+                  )}
+                </div>
+
+                <div className="h-[1px] w-full bg-black/50 dark:bg-white/50 mt-6"></div>
+                <div className="flex flex-col space-y-2 text-lg text-black/80 dark:text-white/80 text-end mt-6 pb-10">
+                  <p>
+                    {t("order.text15")}{" "}
+                    {singleOrderCustomShoes?.deliveryMethod && (
+                      <span className="font-bold">
+                        {singleOrderCustomShoes?.deliveryMethod ===
+                          "Poczta Polska"
+                          ? formatPrice(4, t)
+                          : formatPrice(0, t)}
+                      </span>
+                    )}
+                  </p>
+
+                  <p>
+                    {t("order.text3")}{" "}
+                    {singleOrderCustomShoes && (
+                      <span className="font-bold">
+                        {formatPrice(singleOrderCustomShoes.price, t)}
+                      </span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {showDiv && (
         <div className="fixed w-screen h-screen flex justify-center items-center m-auto  bg-black/40 backdrop-blur-sm  z-[2]">
@@ -314,7 +614,7 @@ function AdminPanel() {
 
               {showStatus && (
                 <div className="animate-sort-in absolute top-12 right-16 whitespace-nowrap bg-white shadow-button mt-1 rounded z-10">
-                  {sortType.map((status) => (
+                  {statusType.map((status) => (
                     <label
                       key={status}
                       className={`${singleOrder?.status === status
@@ -460,7 +760,7 @@ function AdminPanel() {
           extra="border-b border-black/20 dark:border-white/20"
         />
 
-        <div className="flex items-center justify-center bg-white w-full h-[8rem] shadow-lg">
+        <div className="flex items-center justify-center  w-full h-[8rem] shadow-lg">
 
           <div className="flex space-x-4 md:space-x-10">
             {actionType.map((type) => (
@@ -576,6 +876,75 @@ function AdminPanel() {
                     </div>
                   </div>
                 </>
+              )}
+              {selectedType === "customOrders" && (
+                <div className="flex flex-col w-[85%] xl:w-[70%] ">
+                  <div className="relative flex justify-end  mb-10 w-full">
+                    <button
+                      onClick={() => setShowSortCustomShoe(!showSortCustomShoe)}
+                      className="flex justify-end items-center space-x-1 px-4 py-3 bg-white border-[2px] border-black/10 rounded-full  "
+                    >
+                      <p>{t(`status.${selectedSortCustomShoe}`)}</p>
+                      {showSortCustomShoe ? (
+                        <AiOutlineUp size={15} />
+                      ) : (
+                        <AiOutlineDown size={15} />
+                      )}
+                    </button>
+                    {showSortCustomShoe && (
+                      <div className="animate-sort-in absolute top-12 right-0 whitespace-nowrap bg-white shadow-button mt-1 rounded z-[1]">
+                        {sortType.map((sort) => (
+                          <label key={sort} className="cursor-pointer ">
+                            <input
+                              type="radio"
+                              className="peer sr-only"
+                              name="sortAdmin2"
+                              value={sort}
+                              onChange={handleSortCustomShoeChange}
+                              checked={sort === selectedSortCustomShoe}
+                            />
+                            <p className="text-black/80 px-3 py-2 peer-checked:font-bold hover:bg-black/10 ">
+                              {t(`status.${sort}`)}
+                            </p>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+
+                  <div className=" w-full flex-col items-center text-center ">
+
+                    {ordersCustomShoe?.length === 0 ? (
+                      <p className="text-2xl text-black/80 dark:text-white/80 mt-20">
+                        {t(`adminPanel.text6`)}
+                      </p>
+                    ) : (
+                      <>
+                        {ordersCustomShoe?.map((order) => (
+                          <div key={order._id}>
+                            <OrderCustomShoeTemplate
+                              _id={order._id}
+                              userId={order.userId}
+                              orderNumber={order.orderNumber}
+                              status={order.status}
+                              price={order.price}
+                              project={order.project}
+                              clickDetails={clickDetailsCustomShoe}
+                            />
+                          </div>
+                        ))}
+
+                        <Pagination
+                          page={pageOrderCustomShoe}
+                          pages={pagesOrderCustomShoe}
+                          changePage={setPageOrderCustomShoe}
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+
               )}
 
 

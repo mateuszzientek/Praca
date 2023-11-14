@@ -3,6 +3,7 @@ const validateWithReq = require('../resources/validation');
 import fs from "fs";
 import {body, validationResult} from "express-validator";
 import User from "../schemas/user"
+import path from 'path'; 
 import exceljs from "exceljs";
 
 
@@ -14,85 +15,58 @@ const newsletterHandler = [
       .isEmail()
       .withMessage("loginError.email"),
   ]),
-  (req:Request, res:Response) => {
+  async (req:Request, res:Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors);
       return res.status(400).json({ errors: errors.array() });
     }
-
+    try {
     const { email } = req.body;
 
-    User.findOne({ email })
-      .then((existingUser) => {
-        const workbook = new exceljs.Workbook();
-        const worksheet = workbook.addWorksheet("Newslatter");
+    const filePath = path.join(__dirname, '../../newslatter.xlsx'); // File path in the server/src folder
 
-        if (worksheet) {
-          worksheet.addRow([email]);
-        } 
+    const workbook = new exceljs.Workbook();
+    let worksheet;
 
-        const filePath = "C:/Users/mateu/Desktop/Praca/newslatter.xlsx";
+    // Check if the file exists
+    const fileExists = fs.existsSync(filePath);
 
-        // Sprawdź, czy plik Excel istnieje
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-          if (err) {
-            workbook.xlsx
-              .writeFile(filePath)
-              .then(() => {
-                console.log("Plik Excel został zapisany");
-                return res.status(200).json({
-                  message:
-                    "Zmieniono newslatter i zapisano e-mail w pliku Excel",
-                });
-              })
-              .catch((error) => {
-                console.log("Błąd podczas zapisywania pliku Excel:", error);
-                return res.status(500).json({ error: "Wystąpił błąd serwera" });
-              });
-          } else {
-            // Jeśli plik istnieje, wczytaj go i dodaj nowy wiersz z e-mailem
-            workbook.xlsx
-              .readFile(filePath)
-              .then(() => {
-                const worksheet = workbook.getWorksheet("Newslatter");
-                if (worksheet) {
-                  worksheet.addRow([email]);
-                } 
+    if (fileExists) {
+      // If the file exists, read it and add a new row
+      await workbook.xlsx.readFile(filePath);
+      worksheet = workbook.getWorksheet('Newslatter');
+      if (worksheet) {
+        worksheet.addRow([email]);
+      }
+    } else {
+      // If the file does not exist, create it and add a new row
+      worksheet = workbook.addWorksheet('Newslatter');
+      worksheet.addRow([email]);
+    }
 
-                return workbook.xlsx.writeFile(filePath);
-              })
-              .then(() => {
-                console.log("E-mail został dodany do istniejącego pliku Excel");
-                return res.status(200).json({
-                  message:
-                    "Zmieniono newslatter i dodano e-mail do istniejącego pliku Excel",
-                });
-              })
-              .catch((error) => {
-                console.log("Błąd podczas zapisywania pliku Excel:", error);
-                return res.status(500).json({ error: "Wystąpił błąd serwera" });
-              });
-          }
-        });
+    // Write the workbook to the file
+    await workbook.xlsx.writeFile(filePath);
 
-        if (existingUser) {
-          existingUser.newsletter = true;
+    // Find the user by email
+    const existingUser = await User.findOne({ email });
 
-          existingUser
-            .save()
-            .then(() => {
-              console.log("Zmieniono newslatter");
-            })
-            .catch((error: Error) => {
-              console.log("Wystąpił błąd");
-            });
-        }
-      })
-      .catch((error: Error) => {
-        console.error("Błąd podczas wyszukiwania użytkownika:");
-        return res.status(500).json({ error: "Wystąpił błąd" });
-      });
+    if (existingUser) {
+      existingUser.newsletter = true;
+
+      // Save the user changes
+      await existingUser.save();
+      console.log('Zmieniono newslatter');
+    }
+
+    // Respond to the client
+    return res.status(200).json({
+      message: 'Zmieniono newslatter i dodano e-mail do pliku Excel',
+    });
+  } catch (error) {
+    console.error('Błąd podczas obsługi zgłoszenia:', error);
+    return res.status(500).json({ error: 'Wystąpił błąd serwera' });
+  }
   }
 ];
 

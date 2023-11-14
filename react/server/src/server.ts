@@ -10,16 +10,6 @@ import i18next from "i18next";
 import i18nextMiddleware from "i18next-http-middleware";
 import Backend from "i18next-node-fs-backend";
 
-import Order from "./schemas/order";
-import Shoes from "./schemas/shoes";
-import FavoriteShoes from "./schemas/favoriteShoes";
-import User, { IUser } from "./schemas/user";
-import Address from "./schemas/address";
-import Cart from "./schemas/cart";
-import Discount from "./schemas/discount";
-import DiscountUser from "./schemas/discountUser";
-import CustomShoeTemporary from "./schemas/customShoeTemporary";
-import DesignProject from "./schemas/designProject";
 const path = require("path");
 
 const fs = require("fs");
@@ -85,6 +75,8 @@ import saveCustomShoeTemporaryHandler from "./controllers/saveCustomShoeTemporar
 import getCustomShoeTemporaryHandler from "./controllers/getCustomShoeTemporary";
 import saveOrderCustomShoeHandler from "./controllers/saveOrderCustomShoe";
 import getOrdersCustomShoeHandler from "./controllers/getOrderCustomShoe";
+import getOrdersCustomShoeAdminHandler from "./controllers/getOrdersCustomShoeAdmin";
+import updateStatusCustomShoeHandler from "./controllers/updateStatusCustomShoe";
 
 //-------------i18next----------------------------------
 
@@ -161,6 +153,7 @@ app.delete("/deleteUser/:userId", deleteUserHandler);
 app.delete("/deleteAddress/:addressId", deleteAddressHandler);
 app.delete("/removeFavoriteShoe/:userId/:shoeId", removeFavoriteShoeHandler);
 
+app.get("/getOrdersCustomShoeAdmin", getOrdersCustomShoeAdminHandler);
 app.get("/getOrderCustomShoe", getOrdersCustomShoeHandler );
 app.get("/getCustomShoeTemporary", getCustomShoeTemporaryHandler);
 app.get("/getProjects", getProjectsHandler );
@@ -189,6 +182,7 @@ app.get("/user", (req, res) => {
   res.send(req.user);
 });
 
+app.post("/updateStatusCustomShoe", updateStatusCustomShoeHandler);
 app.post("/saveOrderCustomShoe", saveOrderCustomShoeHandler);
 app.post("/saveCustomShoeTemporary", saveCustomShoeTemporaryHandler);
 app.post("/saveDesignProject", saveDesignProjectHandler);

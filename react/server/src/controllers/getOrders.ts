@@ -8,7 +8,7 @@ const getOrdersHandler = [
     const userId = req.query.userId;
 
     try {
-      const orders = await Order.find({ userId: userId });
+      let orders = await Order.find({ userId: userId });
 
       // Collect all unique shoeIds from products
       const shoeIds = orders.flatMap((order) =>
@@ -18,7 +18,10 @@ const getOrdersHandler = [
       // Retrieve shoe objects based on shoeIds
       const shoes = await Shoes.find({ _id: shoeIds });
 
-      console.log(userId)
+      
+      if(orders){
+        orders= orders.reverse()
+      }
 
       res.status(200).json({ orders: orders, shoes: shoes });
     } catch (error) {

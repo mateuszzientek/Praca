@@ -23,6 +23,7 @@ interface PersonalizedShoesViewProps {
     swooshVisibility: SwooshVisibility
     sideText: SideText
     orderNumber?: string
+    userId?: string
 }
 
 function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
@@ -48,7 +49,7 @@ function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
         if (props.orderNumber) {
             const fetchData = async () => {
                 try {
-                    const userStorageRef = ref(storage, `/orderCustomProjects/${user?._id}/${props.orderNumber}`);
+                    const userStorageRef = ref(storage, `/orderCustomProjects/${props.userId}/${props.orderNumber}`);
 
                     const data = await listAll(userStorageRef);
 

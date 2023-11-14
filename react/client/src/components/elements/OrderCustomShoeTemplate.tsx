@@ -6,6 +6,7 @@ import { ProjectItem } from "src/types";
 
 interface OrderCustomShoeTemplateProps {
     orderNumber: string;
+    userId: string
     _id: string
     status: string;
     price: number
@@ -26,7 +27,7 @@ function OrderCustomShoeTemplate(props: OrderCustomShoeTemplateProps) {
             case "preparing":
                 return "text-yellow-500";
             case "shipped":
-                return "text-[#8c03fc]";
+                return "text-violet-500";
             case "delivered":
                 return "text-green-500";
             default:
@@ -54,6 +55,8 @@ function OrderCustomShoeTemplate(props: OrderCustomShoeTemplateProps) {
                 </div>
             </div>
 
+
+
             <div className="flex mt-4">
 
                 <LeftViewDesignShoe
@@ -69,6 +72,7 @@ function OrderCustomShoeTemplate(props: OrderCustomShoeTemplateProps) {
                     designName={""}
                     orderNumber={props.orderNumber}
                     setError={setErrorsServer}
+                    userId={props.userId}
                 />
 
             </div>
