@@ -31,16 +31,17 @@ interface Address extends AddressInterface {
 function Checkout() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user, isUserLoggedIn } = useContext(UserContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
+  const { theme } = useContext(ThemeContext);
   const {
     discountName,
     discountAmount,
     setDiscountName,
     setDiscountAmount,
-    quantityCart,
     setQuantityCart,
   } = useContext(CartContext);
+
+  //////////Variables////////////
 
   const typeAddress = ["individual", "company"];
   const countries = [
@@ -101,12 +102,10 @@ function Checkout() {
     name: "Kurier Inpost",
     price: 0,
   });
-
   const [showLoading, setLoading] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState({ name: "" });
   const [showCountryDiv, setShowCountryDiv] = useState(false);
   const [terms, setTerms] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [errorsServer, setErrorsServer] = useState("");
   const [showAddressDiv, setShowAddressDiv] = useState(false);
@@ -120,11 +119,9 @@ function Checkout() {
   const [telephone, setTelephone] = useState("");
   const [extra, setExtra] = useState("");
   const [country, setCountry] = useState("");
-
   const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<
     ErrorInterface[]
   >([]);
-
   const [errors, setErrors] = useState({
     email: "",
     name: "",
@@ -135,11 +132,25 @@ function Checkout() {
     telephone: "",
     country: "",
   });
-
   const [errorsChecked, setErrorsChecked] = useState({
     payment: "",
     terms: "",
   });
+
+  const discountValue = (totalPrice * discountAmount) / 100;
+  const roundedDiscount = Math.round(discountValue * 10) / 10; // Zaokrąglenie do jednego miejsca po przecinku
+
+  let finalDiscount;
+  if (roundedDiscount % 1 === 0.5) {
+    finalDiscount = Math.ceil(roundedDiscount); // Zaokrąglanie do góry, gdy wartość dziesiętna jest równa 0.5
+  } else {
+    finalDiscount = Math.floor(roundedDiscount); // Zaokrąglanie w dół, gdy wartość dziesiętna nie jest równa 0.5
+  }
+  const priceAfterDiscount =
+    totalPrice - finalDiscount + selectedDelivery.price;
+
+
+  /////////Functions////////////
 
   const validateData = () => {
     const newErrors = {
@@ -202,18 +213,6 @@ function Checkout() {
     validateData();
   };
 
-  useEffect(() => {
-    if (showAddressDiv) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [showAddressDiv]);
-
   const calculateTotalPrice = (shoes: ProductInterface[]) => {
     let totalPrice = 0;
     shoes.forEach((product) => {
@@ -221,22 +220,6 @@ function Checkout() {
     });
     setTotalPrice(totalPrice);
   };
-
-  useEffect(() => {
-    calculateTotalPrice(shoes);
-  }, [shoes]);
-
-  const discountValue = (totalPrice * discountAmount) / 100;
-  const roundedDiscount = Math.round(discountValue * 10) / 10; // Zaokrąglenie do jednego miejsca po przecinku
-
-  let finalDiscount;
-  if (roundedDiscount % 1 === 0.5) {
-    finalDiscount = Math.ceil(roundedDiscount); // Zaokrąglanie do góry, gdy wartość dziesiętna jest równa 0.5
-  } else {
-    finalDiscount = Math.floor(roundedDiscount); // Zaokrąglanie w dół, gdy wartość dziesiętna nie jest równa 0.5
-  }
-  const priceAfterDiscount =
-    totalPrice - finalDiscount + selectedDelivery.price;
 
   const handleTermsChange = () => {
     setTerms(!terms);
@@ -290,124 +273,6 @@ function Checkout() {
     setCountry(name);
     setShowCountryDiv(false);
   };
-
-  useEffect(() => {
-    const userId = user ? user._id : "";
-
-    setDataFetched(false);
-
-    axios
-      .get(`/getShoesCart?userId=${userId}`)
-      .then(async (response) => {
-        setShoes(response.data.shoesWithCartSizes);
-
-        const fetchedShoes: any[] = response.data.shoesWithCartSizes || [];
-
-        const shoeImages = await Promise.all(
-          fetchedShoes.map(async (product) => {
-            const pathReference = ref(
-              storage,
-              `/mainPhoto/${product.shoe.image}.png`
-            );
-            const url = await getDownloadURL(pathReference);
-            return {
-              ...product,
-              imageUrl: url,
-            };
-          })
-        );
-
-        setShoes(shoeImages);
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error
-        ) {
-          setErrorsServer(error.response.data.error);
-        } else {
-          console.log(error);
-        }
-      })
-      .finally(() => {
-        setDataFetched(true);
-      });
-  }, [user]);
-
-  useEffect(() => {
-    const userId = user?._id ? user?._id : "";
-
-    setDataFetched(false);
-
-    axios
-      .get(`/getDiscount?userId=${userId}`)
-      .then((response) => {
-        const { discountAmount, discountName } = response.data;
-
-        setDiscountName(discountName);
-        setDiscountAmount(discountAmount);
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error
-        ) {
-          setErrorsServer(error.response.data.error);
-        } else {
-          console.log(error);
-        }
-      })
-      .finally(() => {
-        setDataFetched(true);
-      });
-  }, []);
-
-  useEffect(() => {
-    setDataFetched(false);
-
-    if (user) {
-      axios
-        .get(`/getAddresses/?userId=${user?._id}`)
-        .then((response) => {
-          setAddresses(response.data.addresses);
-
-          const defaultAddress = response.data.addresses.find(
-            (address: AddressInterface) => address.isDefault === true
-          );
-          setDefaultAddress(defaultAddress);
-        })
-        .catch((error) => {
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.error
-          ) {
-            setErrorsServer(error.response.data.error);
-          } else {
-            console.log(error);
-          }
-        })
-        .finally(() => {
-          setDataFetched(true);
-        });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (defaultAddress) {
-      setEmail((prevEmail) => prevEmail || user?.email || "");
-      setName(capitalizeFirstLetter(defaultAddress.name));
-      setSurname(capitalizeFirstLetter(defaultAddress.surname));
-      setStreet(capitalizeFirstLetter(defaultAddress.street));
-      setCity(capitalizeFirstLetter(defaultAddress.city));
-      setPostalCode(defaultAddress.postalCode);
-      setTelephone(defaultAddress.telephone);
-      setExtra(defaultAddress.extra);
-      setCountry(defaultAddress.country);
-    }
-  }, [defaultAddress]);
 
   const handleSetDefaultAddress = (addressId: string) => {
     axios
@@ -549,6 +414,141 @@ function Checkout() {
         });
     }
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (showAddressDiv) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showAddressDiv]);
+
+  useEffect(() => {
+    calculateTotalPrice(shoes);
+  }, [shoes]);
+
+  useEffect(() => {
+    const userId = user ? user._id : "";
+
+    setDataFetched(false);
+
+    axios
+      .get(`/getShoesCart?userId=${userId}`)
+      .then(async (response) => {
+        setShoes(response.data.shoesWithCartSizes);
+
+        const fetchedShoes: any[] = response.data.shoesWithCartSizes || [];
+
+        const shoeImages = await Promise.all(
+          fetchedShoes.map(async (product) => {
+            const pathReference = ref(
+              storage,
+              `/mainPhoto/${product.shoe.image}.png`
+            );
+            const url = await getDownloadURL(pathReference);
+            return {
+              ...product,
+              imageUrl: url,
+            };
+          })
+        );
+
+        setShoes(shoeImages);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorsServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      })
+      .finally(() => {
+        setDataFetched(true);
+      });
+  }, [user]);
+
+  useEffect(() => {
+    const userId = user?._id ? user?._id : "";
+
+    setDataFetched(false);
+
+    axios
+      .get(`/getDiscount?userId=${userId}`)
+      .then((response) => {
+        const { discountAmount, discountName } = response.data;
+
+        setDiscountName(discountName);
+        setDiscountAmount(discountAmount);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorsServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      })
+      .finally(() => {
+        setDataFetched(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    setDataFetched(false);
+
+    if (user) {
+      axios
+        .get(`/getAddresses/?userId=${user?._id}`)
+        .then((response) => {
+          setAddresses(response.data.addresses);
+
+          const defaultAddress = response.data.addresses.find(
+            (address: AddressInterface) => address.isDefault === true
+          );
+          setDefaultAddress(defaultAddress);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            setErrorsServer(error.response.data.error);
+          } else {
+            console.log(error);
+          }
+        })
+        .finally(() => {
+          setDataFetched(true);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (defaultAddress) {
+      setEmail((prevEmail) => prevEmail || user?.email || "");
+      setName(capitalizeFirstLetter(defaultAddress.name));
+      setSurname(capitalizeFirstLetter(defaultAddress.surname));
+      setStreet(capitalizeFirstLetter(defaultAddress.street));
+      setCity(capitalizeFirstLetter(defaultAddress.city));
+      setPostalCode(defaultAddress.postalCode);
+      setTelephone(defaultAddress.telephone);
+      setExtra(defaultAddress.extra);
+      setCountry(defaultAddress.country);
+    }
+  }, [defaultAddress]);
 
   return (
     <>

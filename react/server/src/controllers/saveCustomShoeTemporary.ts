@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import CustomShoeTemporary from "../schemas/customShoeTemporary";
 
-
 const saveCustomShoeTemporaryHandler = [
     async (req: Request, res: Response) => {
         const { customContextData, userId } = req.body;

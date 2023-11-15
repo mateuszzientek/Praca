@@ -1,15 +1,12 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import ButtonToUp from "./components/elements/ButtonToUp";
 import axios from "axios";
 import Footer from "./components/sections/Footer";
-import Home from "./components/pages/Home";
 import {
   ref,
-  uploadBytes,
   deleteObject,
   listAll,
-  getDownloadURL,
 } from "firebase/storage";
 import storage from "./resources/firebase";
 import { ThemeContextProvider } from "./components/elements/ThemeContext";
@@ -23,6 +20,11 @@ import { CartProvider } from "./components/elements/CartProvider";
 import CheckoutRoute from "./routes/CheckoutRoute";
 import SubmitOrderRoute from "./routes/SubmitOrderRoute";
 import AdminPanelRoute from "./routes/AdminPanelRoute";
+
+
+//////////// Pages ////////////////////
+
+const Home = lazy(() => import("./components/pages/Home"));
 const Login = lazy(() => import("./components/pages/Login"));
 const PageNotFound = lazy(() => import("./components/pages/PageNotFound"));
 const Contact = lazy(() => import("./components/pages/Contact"));
@@ -44,16 +46,14 @@ const Order = lazy(() => import("./components/pages/Order"));
 const AdminPanel = lazy(() => import("./components/pages/AdminPanel"));
 const MyProjects = lazy(() => import("./components/pages/MyProjects"));
 
-
 const App: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Przewiń do góry po zmianie ścieżki
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
-    // Sprawdzamy, czy bieżąca ścieżka nie jest '/login' ani '/redirectAfterGoogleLogin'
     if (
       location.pathname !== "/login" &&
       location.pathname !== "/redirectAfterGoogleLogin" &&
@@ -119,7 +119,6 @@ const App: React.FC = () => {
                   <Route element={<SubmitOrderRoute />}>
                     <Route element={<SubmitOrder />} path="/submitOrder" />
                   </Route>
-                  <Route path="/" element={<Home />} />
                   <Route
                     path="/favorite"
                     element={
@@ -189,6 +188,14 @@ const App: React.FC = () => {
                     element={
                       <Suspense fallback={<LoadingAnimation />}>
                         <Login />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/"
+                    element={
+                      <Suspense fallback={<LoadingAnimation />}>
+                        <Home />
                       </Suspense>
                     }
                   />

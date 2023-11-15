@@ -1,4 +1,3 @@
-
 export const convertPriceToPLN = (priceUSD: number) => {
     const exchangeRateUSDToPLN = 4.08;
     const pricePLN = priceUSD * exchangeRateUSDToPLN;
@@ -6,7 +5,7 @@ export const convertPriceToPLN = (priceUSD: number) => {
     return roundedPricePLN;
   };
 
-  export const formatPrice = (price: number, t: any) => {
+export const formatPrice = (price: number, t: any) => {
     const currentCode = localStorage.getItem('i18nextLng')
 
     if (currentCode === "pl") {

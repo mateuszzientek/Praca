@@ -13,7 +13,9 @@ interface ColoPickerTextDivProps {
 }
 
 function ColoPickerTextDiv(props: ColoPickerTextDivProps) {
+
   const { t } = useTranslation();
+
   const [selectedColorTemporary, setSelectedColorTemporary] = useState({
     rgb: props.color,
   });

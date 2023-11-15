@@ -24,8 +24,10 @@ interface LeftViewDesignShoeProps {
 }
 
 function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
+
     const { user } = useContext(UserContext);
     const { t } = useTranslation();
+
     const { patches, photos, isPhotos_Patches } = useContext(CustomContext);
     const [imageUrl, setImageUrl] = useState("");
     const [isReady, setIsReady] = useState(false);

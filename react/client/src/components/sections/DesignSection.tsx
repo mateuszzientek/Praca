@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IoColorFillOutline, IoTextOutline } from "react-icons/io5";
 import { BsFlower1 } from "react-icons/bs";
 import {
@@ -7,14 +7,12 @@ import {
   AiOutlineArrowRight,
   AiOutlineClose,
 } from "react-icons/ai";
-
 import { UserContext } from "../elements/UserProvider";
 import {
   ref,
   uploadBytes,
   deleteObject,
   listAll,
-  getDownloadURL,
 } from "firebase/storage";
 import storage from "../../resources/firebase";
 import RoundedColor from "../elements/RoundedColor";
@@ -57,7 +55,6 @@ import PatchesDiv from "../elements/PatchesDiv";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import CircleSvg from "../elements/CircleSvg";
-import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import renderPatch from "src/resources/renderPatch";
 
@@ -68,26 +65,11 @@ interface DesignSectionProps {
 }
 
 function DesignSection(props: DesignSectionProps) {
-  const { theme, setTheme } = useContext(ThemeContext);
+
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
-  const [errorsServer, setErrorsServer] = useState("");
-  const [croppedArea, setCroppedArea] = useState<Blob | null>(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [deleteLeftImage, setDeleteLeftImage] = useState(false);
-  const [deleteRightImage, setDeleteRightImage] = useState(false);
-  const [isDataFetched, setIsDataFetched] = useState(false);
-  const [isColorChanging, setIsColorChanging] = useState(false);
-  const [sideView, setSideView] = useState("");
-  const [showColorPicker, setShowColorPicker] = useState("");
-  const [showPatchesDiv, setShowPatchesDiv] = useState("");
-  const [isDivBackVisible, setIsDivBackVisible] = useState(false);
-  const [selectedType, setSelectedType] = useState<number | null>(0);
-  const [leftSideImage, setLeftSideImage] = useState<string | null>(null);
-  const [rightSideImage, setRightSideImage] = useState<string | null>(null);
   const {
     selectedColors,
     setSelectedColors,
@@ -106,8 +88,25 @@ function DesignSection(props: DesignSectionProps) {
     setImagesUrls,
     imagesUrls,
   } = useContext(CustomContext);
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
+  //////////Variables/////////////
+
+  const [errorsServer, setErrorsServer] = useState("");
+  const [croppedArea, setCroppedArea] = useState<Blob | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [deleteLeftImage, setDeleteLeftImage] = useState(false);
+  const [deleteRightImage, setDeleteRightImage] = useState(false);
+  const [isColorChanging, setIsColorChanging] = useState(false);
+  const [sideView, setSideView] = useState("");
+  const [showColorPicker, setShowColorPicker] = useState("");
+  const [showPatchesDiv, setShowPatchesDiv] = useState("");
+  const [isDivBackVisible, setIsDivBackVisible] = useState(false);
+  const [selectedType, setSelectedType] = useState<number | null>(0);
+  const [leftSideImage, setLeftSideImage] = useState<string | null>(null);
+  const [rightSideImage, setRightSideImage] = useState<string | null>(null);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const textArray = (() => {
     if (
       (leftSideImageCropped || imagesUrls.leftSideImageCroppedUrl) &&
@@ -154,6 +153,15 @@ function DesignSection(props: DesignSectionProps) {
 
   const buttonStyle =
     "text-black bg-white dark:bg-[#3b3b3b] dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white ";
+
+  const buttonVisible = shouldShowButton(
+    currentTextIndex,
+    selectedColors,
+    isColorChanging,
+    textArray
+  );
+
+  /////////Functions//////////
 
   const handleChangeTextLeft = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -212,29 +220,6 @@ function DesignSection(props: DesignSectionProps) {
       setSelectedType(index);
     }
   };
-
-  useEffect(() => {
-    // Wywołaj changeColorToRed i ustaw isColorChanging na true
-    changeColorToRed(
-      selectedColors,
-      setSelectedColors,
-      currentTextIndex,
-      textArray
-    );
-    setIsColorChanging(true);
-
-    setTimeout(() => {
-      // Po określonym czasie ustaw isColorChanging z powrotem na false
-      setIsColorChanging(false);
-    }, 500);
-  }, [currentTextIndex]);
-
-  const buttonVisible = shouldShowButton(
-    currentTextIndex,
-    selectedColors,
-    isColorChanging,
-    textArray
-  );
 
   async function deleteCustomImages(id: any) {
     const projectName = props.param;
@@ -447,6 +432,22 @@ function DesignSection(props: DesignSectionProps) {
     }
     setImageCropped(null);
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    changeColorToRed(
+      selectedColors,
+      setSelectedColors,
+      currentTextIndex,
+      textArray
+    );
+    setIsColorChanging(true);
+
+    setTimeout(() => {
+      setIsColorChanging(false);
+    }, 500);
+  }, [currentTextIndex]);
 
   useEffect(() => {
     if (!sideText.rightText || !sideText.leftText) {

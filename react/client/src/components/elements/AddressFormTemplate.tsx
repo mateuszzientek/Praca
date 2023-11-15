@@ -24,25 +24,15 @@ interface AddressFormTemplateProps {
 }
 
 function AddressFormTemplate(props: AddressFormTemplateProps) {
-  const { t } = useTranslation();
-  const { theme, setTheme } = useContext(ThemeContext);
 
-  useEffect(() => {
-    if (props.isOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [props.isOpen]);
+  const { t } = useTranslation();
+  const { theme } = useContext(ThemeContext);
+
+  //////////Variables/////////////
 
   const capitalizeFirstLetter = (str: string) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-
   const [name, setName] = useState(
     props.name ? capitalizeFirstLetter(props.name) : ""
   );
@@ -61,6 +51,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
   const [telephone, setTelephone] = useState(
     props.telephone ? props.telephone : ""
   );
+  const [showCountryDiv, setShowCountryDiv] = useState(false);
   const [extra, setExtra] = useState(props.extra ? props.extra : "");
   const [country, setCountry] = useState(props.country ? props.country : "");
   const [errors, setErrors] = useState({
@@ -96,7 +87,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
     },
   ];
 
-  const [showCountryDiv, setShowCountryDiv] = useState(false);
+  /////////Functions//////////
 
   const handleChangeCountry = (name: string) => {
     setCountry(name);
@@ -143,6 +134,10 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
     setExtra(event.target.value);
   };
 
+  const handleBlur = () => {
+    validateData();
+  };
+
   const validateData = () => {
     const newErrors = {
       name: "",
@@ -185,17 +180,13 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
     return (
       Object.keys(
         newErrors.name ||
-          newErrors.surname ||
-          newErrors.street ||
-          newErrors.city ||
-          newErrors.postalCode ||
-          newErrors.telephone
+        newErrors.surname ||
+        newErrors.street ||
+        newErrors.city ||
+        newErrors.postalCode ||
+        newErrors.telephone
       ).length === 0
     );
-  };
-
-  const handleBlur = () => {
-    validateData();
   };
 
   const handleClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -212,7 +203,6 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
       !telephone ||
       !country
     ) {
-      // Przynajmniej jedno z pól jest puste
       setErrors({
         name: !name ? t("loginError.nameReq") : "",
         surname: !surname ? t("loginError.surnameReq") : "",
@@ -222,7 +212,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
         telephone: !telephone ? t("address.telephoneReq") : "",
         country: !country ? t("address.countryReq") : "",
       });
-      return; // Zwracamy funkcję, jeśli którekolwiek pole jest puste
+      return;
     }
 
     if (isValid) {
@@ -242,6 +232,20 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
       props.onSubmit(editedAddress);
     }
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (props.isOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [props.isOpen]);
+
 
   return (
     <div className="bg-black/40 backdrop-blur-sm fixed w-full h-screen z-10 flex justify-center items-center min-h-screen overflow-y-auto">
@@ -300,11 +304,10 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
               onBlur={handleBlur}
             />
             <p
-              className={`text-sm ml-3 mt-1 ${
-                errors.street
-                  ? "text-red-500"
-                  : "text-black/50 dark:text-white/50"
-              }`}
+              className={`text-sm ml-3 mt-1 ${errors.street
+                ? "text-red-500"
+                : "text-black/50 dark:text-white/50"
+                }`}
             >
               {errors.street ? errors.street : t("address.text1")}
             </p>
@@ -332,11 +335,10 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
                 />
 
                 <p
-                  className={`text-sm ml-3 mt-1 ${
-                    errors.postalCode
-                      ? "text-red-500"
-                      : "text-black/50 dark:text-white/50"
-                  }`}
+                  className={`text-sm ml-3 mt-1 ${errors.postalCode
+                    ? "text-red-500"
+                    : "text-black/50 dark:text-white/50"
+                    }`}
                 >
                   {errors.postalCode ? errors.postalCode : t("address.text3")}
                 </p>
@@ -351,11 +353,10 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
                 />
 
                 <p
-                  className={`text-sm ml-3 mt-1 ${
-                    errors.city
-                      ? "text-red-500"
-                      : "text-black/50 dark:text-white/50"
-                  }`}
+                  className={`text-sm ml-3 mt-1 ${errors.city
+                    ? "text-red-500"
+                    : "text-black/50 dark:text-white/50"
+                    }`}
                 >
                   {errors.city ? errors.city : t("address.text4")}
                 </p>
@@ -369,11 +370,10 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
               onBlur={handleBlur}
             />
             <p
-              className={`text-sm ml-3 mt-1 ${
-                errors.telephone
-                  ? "text-red-500"
-                  : "text-black/50 dark:text-white/50"
-              }`}
+              className={`text-sm ml-3 mt-1 ${errors.telephone
+                ? "text-red-500"
+                : "text-black/50 dark:text-white/50"
+                }`}
             >
               {errors.telephone ? errors.telephone : t("address.text5")}
             </p>

@@ -4,7 +4,6 @@ import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { AddressInterface } from "src/types";
 
-
 interface AddressTemplateProps {
   name: string;
   surname: string;
@@ -26,14 +25,16 @@ function AddressTemplate(props: AddressTemplateProps) {
 
   const currentCode = localStorage.getItem('i18nextLng')
   const { t } = useTranslation();
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+
+  /////////Functions//////////
 
   const handleDeleteClick = () => {
-    props.onDelete(props.addressId); // Pass the addressId to onDelete
+    props.onDelete(props.addressId);
   };
 
   const handleDefaultClick = () => {
-    props.onDefaultChange(props.addressId); // Pass the addressId to onDelete
+    props.onDefaultChange(props.addressId);
   };
 
   const handleShowEdit = () => {

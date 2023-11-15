@@ -33,18 +33,28 @@ interface CartProductTemplateProps {
 }
 
 function CartProductTemplate(props: CartProductTemplateProps) {
-  const { selectedBrand, setSelectedBrand } = useContext(FilterContext);
-
+  const { setSelectedBrand } = useContext(FilterContext);
   const currentCode = localStorage.getItem("i18nextLng");
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, isUserLoggedIn } = useContext(UserContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
+  const { theme } = useContext(ThemeContext);
+
+  //////////Variables/////////////
 
   const [showMessageDelete, setShowMessageDelete] = useState(false);
   const [showQuantity, setShowQuantity] = useState(false);
   const [error, setError] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState(props.cartQuantity);
+
+  const shoePrice = selectedQuantity
+    ? selectedQuantity * props.price
+    : props.cartQuantity * props.price;
+  const shoeDiscountPrice = selectedQuantity
+    ? selectedQuantity * props.discountPrice
+    : props.cartQuantity * props.discountPrice;
+
+  /////////Functions//////////
 
   const handleShoeClick = () => {
     navigate(`/shoeView/${props.idShoe}`);
@@ -55,46 +65,11 @@ function CartProductTemplate(props: CartProductTemplateProps) {
     navigate(`/shop`);
   };
 
-  const shoePrice = selectedQuantity
-    ? selectedQuantity * props.price
-    : props.cartQuantity * props.price;
-  const shoeDiscountPrice = selectedQuantity
-    ? selectedQuantity * props.discountPrice
-    : props.cartQuantity * props.discountPrice;
-
   const handleSizeClick = (quantity: number) => {
     setSelectedQuantity(quantity);
     setShowQuantity(false);
     props.updateQuantityInShoes(props.idShoe, props.cartSize, quantity);
   };
-
-  useEffect(() => {
-    const requestData = {
-      shoeId: props.idShoe,
-      size: props.cartSize,
-      quantity: selectedQuantity,
-      userId: "",
-    };
-
-    if (user?._id) {
-      requestData.userId = user._id;
-    }
-
-    axios
-      .post("/updateQuantityCart", requestData)
-      .then((response) => { })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error
-        ) {
-          setError(error.response.data.error);
-        } else {
-          console.log(error);
-        }
-      });
-  }, [selectedQuantity]);
 
   const handleDeleteClick = () => {
     const data = {
@@ -124,6 +99,36 @@ function CartProductTemplate(props: CartProductTemplateProps) {
         }
       });
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    const requestData = {
+      shoeId: props.idShoe,
+      size: props.cartSize,
+      quantity: selectedQuantity,
+      userId: "",
+    };
+
+    if (user?._id) {
+      requestData.userId = user._id;
+    }
+
+    axios
+      .post("/updateQuantityCart", requestData)
+      .then((response) => { })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setError(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      });
+  }, [selectedQuantity]);
 
   return (
     <>
@@ -169,8 +174,8 @@ function CartProductTemplate(props: CartProductTemplateProps) {
               <div className={`flex md:hidden space-x-2`}>
                 <p
                   className={`text-lg ' ${props.discountPrice !== 0
-                      ? "text-red-500"
-                      : "text-black dark:text-white"
+                    ? "text-red-500"
+                    : "text-black dark:text-white"
                     } `}
                 >
                   {formatPrice(shoePrice, t)}
@@ -261,8 +266,8 @@ function CartProductTemplate(props: CartProductTemplateProps) {
             >
               <p
                 className={`text-lg ' ${props.discountPrice !== 0
-                    ? "text-red-500"
-                    : "text-black dark:text-white"
+                  ? "text-red-500"
+                  : "text-black dark:text-white"
                   } `}
               >
                 {formatPrice(shoePrice, t)}

@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 function ChangeColorImage(props: any) {
+
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [selectedColor, setSelectedColor] = useState('#FF0000'); // Domyślny kolor czerwony
+    const [selectedColor, setSelectedColor] = useState('#FF0000');
+
+    const handleColorChange = (newColor: any) => {
+        setSelectedColor(newColor);
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return; // Sprawdź, czy canvas nie jest null
+        if (!canvas) return;
         const context = canvas.getContext('2d');
-        if (!context) return; // Sprawdź, czy context nie jest null
+        if (!context) return;
 
         const img = new Image();
 
-        img.src = props.imageSrc; // Ścieżka do twojego obrazu PNG
+        img.src = props.imageSrc;
 
         img.onload = () => {
             canvas.width = img.width;
@@ -25,10 +30,6 @@ function ChangeColorImage(props: any) {
             context.fillRect(0, 0, img.width, img.height);
         };
     }, [selectedColor, props.imageSrc]);
-
-    const handleColorChange = (newColor: any) => {
-        setSelectedColor(newColor);
-    };
 
     return (
         <div>

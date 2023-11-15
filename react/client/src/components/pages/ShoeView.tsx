@@ -29,13 +29,16 @@ interface Shoe extends ShoeInterface {
 }
 
 function ShoeView() {
+
   const navigate = useNavigate();
   const currentCode = localStorage.getItem("i18nextLng");
   const { t } = useTranslation();
   const { id } = useParams();
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { user, isUserLoggedIn, isUserDataLoaded } = useContext(UserContext);
-  const { quantityCart, setQuantityCart } = useContext(CartContext);
+  const { setQuantityCart } = useContext(CartContext);
+
+  //////////Variables////////////
 
   const [shoe, setShoe] = useState<Shoe>({} as Shoe);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,61 +52,13 @@ function ShoeView() {
   const [showQuantityMessage, setShowQuantityMessage] = useState(true);
   const [errorsServer, setErrorsServer] = useState("");
 
+  /////////Functions////////////
+
   const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowQuantityMessage(true);
     setError("");
     setSelectedSize(event.target.value);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/getShoeById?id=${id}`);
-        setShoe(response.data);
-
-        if (response.data) {
-          const folderRef = ref(
-            storage,
-            `shoeViewPhotos/${response.data.image}`
-          );
-          const res = await listAll(folderRef);
-          const urls: string[] = [];
-
-          for (const itemRef of res.items) {
-            try {
-              const url = await getDownloadURL(itemRef);
-              urls.push(url);
-            } catch (error) {
-              console.log(error);
-            }
-          }
-
-          setPhotos(urls);
-          setArePhotosLoaded(true); // Oznaczamy, że zdjęcia zostały załadowane
-
-          if (response.data._id && user?._id) {
-            const favoriteShoesResponse = await axios.get(
-              `/getFavoriteShoesById?userId=${user._id}`
-            );
-            const favoriteShoeIds = favoriteShoesResponse.data.favoriteShoes;
-
-            console.log(favoriteShoesResponse.data);
-
-            const isFavorite = favoriteShoeIds.includes(response.data._id);
-            setShoe((prevShoe) => ({ ...prevShoe, isHearted: isFavorite }));
-            setIsLoading(false);
-          } else {
-            setIsLoading(false);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleHeartClick = () => {
     if (isUserDataLoaded && !isUserLoggedIn) {
@@ -213,6 +168,58 @@ function ShoeView() {
         setIsDataFetched(false);
       });
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/getShoeById?id=${id}`);
+        setShoe(response.data);
+
+        if (response.data) {
+          const folderRef = ref(
+            storage,
+            `shoeViewPhotos/${response.data.image}`
+          );
+          const res = await listAll(folderRef);
+          const urls: string[] = [];
+
+          for (const itemRef of res.items) {
+            try {
+              const url = await getDownloadURL(itemRef);
+              urls.push(url);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          setPhotos(urls);
+          setArePhotosLoaded(true); // Oznaczamy, że zdjęcia zostały załadowane
+
+          if (response.data._id && user?._id) {
+            const favoriteShoesResponse = await axios.get(
+              `/getFavoriteShoesById?userId=${user._id}`
+            );
+            const favoriteShoeIds = favoriteShoesResponse.data.favoriteShoes;
+
+            console.log(favoriteShoesResponse.data);
+
+            const isFavorite = favoriteShoeIds.includes(response.data._id);
+            setShoe((prevShoe) => ({ ...prevShoe, isHearted: isFavorite }));
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>

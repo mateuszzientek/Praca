@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import BrandCard from "../elements/BrandCard";
 import adidas from "../../assets/images/adidas.jpg";

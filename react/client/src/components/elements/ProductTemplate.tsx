@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { ThemeContext } from "../elements/ThemeContext";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
@@ -25,14 +25,14 @@ interface ProductTemplateProps {
 }
 
 function ProductTemplate(props: ProductTemplateProps) {
+
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme, setTheme } = useContext(ThemeContext);
-  const currentCode = localStorage.getItem("i18nextLng");
+  const { theme } = useContext(ThemeContext);
 
   const handleHeartIconClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Zatrzymaj propagację zdarzenia, aby uniknąć przenoszenia do "/shoeView"
-    props.handleHeartClick(props.shoe); // Wywołaj funkcję obsługującą kliknięcie na ikonę serca
+    event.stopPropagation();
+    props.handleHeartClick(props.shoe);
   };
 
   const handleCardClick = () => {

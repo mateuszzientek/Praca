@@ -62,9 +62,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSizes, setSelectedSizes] = useState<Array<string>>([]);
 
-
     useEffect(() => {
-        // Check if filters exist in localStorage
         const searchTerm = localStorage.getItem('searchTerm');
         const savedFilters = localStorage.getItem('shopFilters');
         if (savedFilters) {

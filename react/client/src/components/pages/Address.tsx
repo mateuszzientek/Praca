@@ -16,9 +16,12 @@ import AddressFormTemplate from "../elements/AddressFormTemplate";
 import { AddressInterface, ErrorInterface } from "src/types";
 
 function Address() {
+
   const { t } = useTranslation();
   const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+
+  //////////Variables////////////
 
   const [openEditDiv, setOpenEditDiv] = useState(false);
   const [isDataFetched, setIsDataFetched] = useState(false);
@@ -35,6 +38,18 @@ function Address() {
     ErrorInterface[]
   >([]);
   const [errorsServer, setErrorsServer] = useState("");
+
+  const sortedAddresses = addresses.slice().sort((a, b) => {
+    if (a.isDefault && !b.isDefault) {
+      return -1;
+    } else if (!a.isDefault && b.isDefault) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  /////////Functions////////////
 
   const handleOpenEditDiv = () => {
     setOpenEditDiv(!openEditDiv);
@@ -59,51 +74,6 @@ function Address() {
     setErrorsVadlidationServer([]);
   };
 
-  const sortedAddresses = addresses.slice().sort((a, b) => {
-    if (a.isDefault && !b.isDefault) {
-      return -1;
-    } else if (!a.isDefault && b.isDefault) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
-
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage("");
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
-    if (isUserDataLoaded) {
-      axios
-        .get(`/getAddresses/?userId=${user?._id}`)
-        .then((response) => {
-          setAddresses(response.data.addresses);
-          setIsDataFetched(true);
-        })
-        .catch((error) => {
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.error
-          ) {
-            setErrorsServer(error.response.data.error);
-          } else {
-            console.log(error);
-          }
-        });
-    }
-  }, [user]);
 
   const handleClickSubmit = (address: AddressInterface) => {
     const data = {
@@ -277,6 +247,45 @@ function Address() {
         setIsLoading(false);
       });
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    if (isUserDataLoaded) {
+      axios
+        .get(`/getAddresses/?userId=${user?._id}`)
+        .then((response) => {
+          setAddresses(response.data.addresses);
+          setIsDataFetched(true);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            setErrorsServer(error.response.data.error);
+          } else {
+            console.log(error);
+          }
+        });
+    }
+  }, [user]);
+
 
   return (
     <>

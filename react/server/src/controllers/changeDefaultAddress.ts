@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Address from "../schemas/address";
 
-
 const changeDefaultAddressHandler = [
     async (req:Request, res:Response) => {
         const addressId = req.body.addressId;

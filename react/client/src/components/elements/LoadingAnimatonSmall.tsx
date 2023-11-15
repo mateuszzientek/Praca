@@ -3,7 +3,6 @@ import BounceLoader from "react-spinners/BounceLoader";
 
 function LoadingAnimationSmall() {
     return (
-
         <BounceLoader
             color={"#48c5fe"}
             size={150}

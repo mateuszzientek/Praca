@@ -6,18 +6,21 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { UserContext } from "../elements/UserProvider";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { BsSend } from "react-icons/bs";
-import photo from "../../assets/images/newslatter.png";
-import photo_black from "../../assets/images/newslatter-black.png";
 import axios from "axios";
 import validator from "validator";
 import { ErrorInterface } from "src/types";
+import photo from "../../assets/images/newslatter.png";
+import photo_black from "../../assets/images/newslatter-black.png";
 
 function Newslatter() {
-  const { theme, setTheme } = useContext(ThemeContext);
-  const [showNewslatter, setShowNewslatter] = useState(false);
+
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
-  const { user, setUser, isUserLoggedIn, setIsUserLoggedIn } =
-    useContext(UserContext);
+  const { user } = useContext(UserContext);
+
+  //////////Variables////////////
+
+  const [showNewslatter, setShowNewslatter] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [errorsVadlidationServer, setErrorsVadlidationServer] = useState<
@@ -25,9 +28,7 @@ function Newslatter() {
   >([]);
   const [errorsServer, setErrorsServer] = useState("");
 
-  {
-    /* show up newslatter */
-  }
+  /////////Functions//////////
 
   const validateData = () => {
     setMessage("");
@@ -39,35 +40,6 @@ function Newslatter() {
     }
     return true;
   };
-
-  useEffect(() => {
-    if (user?.newsletter === false || !user) {
-      const timer = setTimeout(() => {
-        const storedExpiryTime = localStorage.getItem("newslatter");
-
-        setEmail("");
-
-        const saveLocalNewstatter = () => {
-          setShowNewslatter(true);
-          const currentTime = new Date().getTime();
-          const expiryTime = currentTime + 10 * 60 * 1000; // 10 minut
-          localStorage.setItem("newslatter", expiryTime.toString());
-        };
-
-        if (storedExpiryTime) {
-          const currentTime = new Date().getTime();
-          const expiryTime = parseInt(storedExpiryTime);
-
-          if (currentTime >= expiryTime) {
-            saveLocalNewstatter();
-          }
-        } else {
-          saveLocalNewstatter();
-        }
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [user?.newsletter]);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -109,6 +81,37 @@ function Newslatter() {
         }
       });
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (user?.newsletter === false || !user) {
+      const timer = setTimeout(() => {
+        const storedExpiryTime = localStorage.getItem("newslatter");
+
+        setEmail("");
+
+        const saveLocalNewstatter = () => {
+          setShowNewslatter(true);
+          const currentTime = new Date().getTime();
+          const expiryTime = currentTime + 10 * 60 * 1000; // 10 minut
+          localStorage.setItem("newslatter", expiryTime.toString());
+        };
+
+        if (storedExpiryTime) {
+          const currentTime = new Date().getTime();
+          const expiryTime = parseInt(storedExpiryTime);
+
+          if (currentTime >= expiryTime) {
+            saveLocalNewstatter();
+          }
+        } else {
+          saveLocalNewstatter();
+        }
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [user?.newsletter]);
 
   return (
     <div>

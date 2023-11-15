@@ -2,19 +2,19 @@ import React, { useState, useContext, useEffect } from 'react';
 import { ThemeContext } from './ThemeContext';
 
 function ToogleButton() {
-    const [isSelected, setIsSelected] = useState(false);
-
     const { theme, setTheme } = useContext(ThemeContext);
 
-    useEffect(() => {
-        (theme === 'dark' ? setIsSelected(true) : setIsSelected(false))
-    }, [theme])
+    const [isSelected, setIsSelected] = useState(false);
 
     const handleClick = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
         localStorage.setItem('theme', newTheme);
     };
+
+    useEffect(() => {
+        (theme === 'dark' ? setIsSelected(true) : setIsSelected(false))
+    }, [theme])
 
     return (
         <div

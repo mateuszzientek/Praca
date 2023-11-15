@@ -9,6 +9,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 function PageNotFound() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
   return (
     <div className="bg-[#ECF8F9] dark:bg-[#4f4f4f]  flex flex-col  justify-start items-center pb-16 min-h-screen">
       <LazyLoadImage

@@ -5,16 +5,15 @@ import CircleOpinion from "../elements/CircleOpinion";
 import SlideOpinions from "../elements/SlideOpinions";
 
 function OpinionSection() {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
 
   return (
     <div
-      className={`h-[65rem] ${
-        theme === "dark"
+      className={`h-[65rem] ${theme === "dark"
           ? "opinion-black-background"
           : "opinion-white-background"
-      } opinion-white-background font-roboto `}
+        } opinion-white-background font-roboto `}
     >
       {/* main text */}
 

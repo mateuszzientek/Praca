@@ -4,8 +4,6 @@ import {
   ref,
   getDownloadURL,
   listAll,
-  updateMetadata,
-  getMetadata,
   deleteObject,
   uploadBytes,
 } from "firebase/storage";
@@ -24,15 +22,15 @@ import CircleSvg from "../elements/CircleSvg";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomShoesOrder from "../sections/CustomShoesOrder";
-import { ProjectItem, DesignProjectInterface } from "src/types";
+import { ProjectItem } from "src/types";
 import { ThemeContext } from "../elements/ThemeContext";
 
 
 function Customization() {
-  const { theme, setTheme } = useContext(ThemeContext);
+
+  const { theme } = useContext(ThemeContext);
   const { projectName } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const {
     setSelectedColors,
     setSwooshVisibility,
@@ -52,6 +50,10 @@ function Customization() {
     setRightSideImageCropped,
   } = useContext(CustomContext);
   const { user } = useContext(UserContext);
+
+  //////////Variables////////////
+
+  const [loading, setLoading] = useState(false);
   const [showDesignPanel, setShowDesignPanel] = useState(false);
   const currentCode = localStorage.getItem("i18nextLng");
   const { t } = useTranslation();
@@ -72,6 +74,7 @@ function Customization() {
   const [orderMessageSize, setOrderMessageSize] = useState("");
   const [showCustomShoesOrder, setShowCustomShoesOrder] = useState(false);
 
+  /////////Functions////////////
 
   const handleChangeDesignName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -81,22 +84,111 @@ function Customization() {
     setDesignName(event.target.value);
   };
 
+  const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedSize(event.target.value);
+    setShowSizes(!showSizes);
+  };
+
+  const saveProject = async () => {
+    setProjectNameError("");
+
+    if (!designName) {
+      const text = t("customization.text11");
+      setProjectNameError(text);
+      return;
+    }
+
+    const userId = user ? user._id : "";
+
+    const customContextData = {
+      selectedColors,
+      selectedColorsText,
+      selectedPatches,
+      swooshVisibility,
+      sideText,
+      designName,
+    };
+
+    try {
+      const response = await axios.post("/saveDesignProject", {
+        customContextData,
+        userId,
+      });
+
+      if (response.data.taken) {
+        const text = t("customization.text14");
+        setTakenDesignName(text);
+        return;
+      }
+      setLoading(true);
+
+      const userStorageRef = ref(storage, `/customImages/${userId}`);
+      const userImages = await listAll(userStorageRef);
+
+      const newStorageRef = ref(
+        storage,
+        `/designProject/${userId}/${designName}`
+      );
+
+      for (const imageRef of userImages.items) {
+        const fileName = imageRef.name;
+
+        const imageUrl = await getDownloadURL(imageRef);
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+
+        const newImageRef = ref(newStorageRef, fileName);
+        await uploadBytes(newImageRef, blob); // Zapisanie pliku w nowym folderze
+      }
+
+      for (const imageRef of userImages.items) {
+        if (
+          imageRef.name.startsWith(`left`) ||
+          imageRef.name.startsWith(`right`)
+        ) {
+          await deleteObject(imageRef);
+        }
+      }
+
+      const text = t("customization.text13");
+      setMessage(text);
+      setTimeout(() => {
+        navigate("/myProjects");
+      }, 700);
+    } catch (error) {
+      const text = t("customization.text12");
+      setErrorsServer(text);
+    }
+  };
+
+  const handleOrder = () => {
+    setOrderMessageProject("");
+    setOrderMessageSize("");
+
+    if (!canOrder) {
+      setOrderMessageProject("Stwórz projekt aby dokonać zakupu");
+      return;
+    }
+    if (!selectedSize) {
+      setOrderMessageSize("Wybierz rozmiar obuwia");
+      return;
+    }
+
+    setShowCustomShoesOrder(true);
+  };
+
+  /////////UseEffects///////////
+
   useEffect(() => {
     if (showDesignPanel) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-    // Clean up the effect
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
   }, [showDesignPanel]);
-
-  const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedSize(event.target.value);
-    setShowSizes(!showSizes);
-  };
 
   useEffect(() => {
     if (projectName) {
@@ -213,94 +305,6 @@ function Customization() {
 
     setIsReady(true);
   }, []);
-
-  const saveProject = async () => {
-    setProjectNameError("");
-
-    if (!designName) {
-      const text = t("customization.text11");
-      setProjectNameError(text);
-      return;
-    }
-
-    const userId = user ? user._id : "";
-
-    const customContextData = {
-      selectedColors,
-      selectedColorsText,
-      selectedPatches,
-      swooshVisibility,
-      sideText,
-      designName,
-    };
-
-    try {
-      const response = await axios.post("/saveDesignProject", {
-        customContextData,
-        userId,
-      });
-
-      if (response.data.taken) {
-        const text = t("customization.text14");
-        setTakenDesignName(text);
-        return;
-      }
-      setLoading(true);
-
-      const userStorageRef = ref(storage, `/customImages/${userId}`);
-      const userImages = await listAll(userStorageRef);
-
-      const newStorageRef = ref(
-        storage,
-        `/designProject/${userId}/${designName}`
-      );
-
-      for (const imageRef of userImages.items) {
-        const fileName = imageRef.name;
-
-        const imageUrl = await getDownloadURL(imageRef);
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-
-        const newImageRef = ref(newStorageRef, fileName);
-        await uploadBytes(newImageRef, blob); // Zapisanie pliku w nowym folderze
-      }
-
-      for (const imageRef of userImages.items) {
-        if (
-          imageRef.name.startsWith(`left`) ||
-          imageRef.name.startsWith(`right`)
-        ) {
-          await deleteObject(imageRef);
-        }
-      }
-
-      const text = t("customization.text13");
-      setMessage(text);
-      setTimeout(() => {
-        navigate("/myProjects");
-      }, 700);
-    } catch (error) {
-      const text = t("customization.text12");
-      setErrorsServer(text);
-    }
-  };
-
-  const handleOrder = () => {
-    setOrderMessageProject("");
-    setOrderMessageSize("");
-
-    if (!canOrder) {
-      setOrderMessageProject("Stwórz projekt aby dokonać zakupu");
-      return;
-    }
-    if (!selectedSize) {
-      setOrderMessageSize("Wybierz rozmiar obuwia");
-      return;
-    }
-
-    setShowCustomShoesOrder(true);
-  };
 
   return (
     <>

@@ -5,7 +5,6 @@ import TransformedImage from "../elements/TransformedImage";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import storage from "../../resources/firebase";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
-import { UserContext } from "../elements/UserProvider";
 import {
     MdArrowForwardIos,
     MdArrowBackIos
@@ -16,7 +15,6 @@ import renderPatch from 'src/resources/renderPatch';
 import { SelectedColors, SelectedColorsText, SelectedPatches, SwooshVisibility, SideText } from "src/types";
 
 interface PersonalizedShoesViewProps {
-
     selectedColors: SelectedColors,
     selectedColorsText: SelectedColorsText
     selectedPatches: SelectedPatches
@@ -28,7 +26,6 @@ interface PersonalizedShoesViewProps {
 
 function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
 
-    const { user } = useContext(UserContext);
     const { imagesUrls, patches, photos, isPhotos_Patches } = useContext(CustomContext);
     const [currentIndex, setCurrentIndex,] = useState(0);
     const [imageUrlLeft, setImageUrlLeft] = useState("");
@@ -79,10 +76,7 @@ function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
             };
             fetchData();
         }
-
-
     }, []);
-
 
     return (
         <>

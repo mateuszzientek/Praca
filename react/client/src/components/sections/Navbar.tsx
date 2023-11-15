@@ -27,7 +27,6 @@ import { IoPersonOutline } from "react-icons/io5";
 import {
   BsCart2,
   BsFillCartFill,
-  BsBookFill,
   BsFillPersonFill,
   BsArrowLeft,
 } from "react-icons/bs";
@@ -44,7 +43,7 @@ import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import { UserContext } from "../elements/UserProvider";
 import storage from "../../resources/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import { FilterContext } from "../elements/FilterProvider";
 import { CartContext } from "../elements/CartProvider";
 import InfoDivBottom from "../elements/InfoDivBottom";
@@ -58,43 +57,37 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = (props) => {
+
+  const currentCode = localStorage.getItem("i18nextLng");
+  const lastVisitedPath = localStorage.getItem("lastVisitedPath");
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { quantityCart } = useContext(CartContext);
+  const { setLoginSelected } = useContext(LoginContext) || {};
+  const { theme } = useContext(ThemeContext);
+  const { user, setUser, isUserLoggedIn, setIsUserLoggedIn } = useContext(UserContext);
   const {
-    selectedBrand,
     setSelectedBrand,
-    selectedCategory,
     setSelectedCategory,
-    selectedPrice,
     setSelectedPrice,
-    selectedMin,
     setSelectedMin,
-    selectedMax,
     setSelectedMax,
-    selectedSizes,
     setSelectedSizes,
-    selectedSort,
     setSelectedSort,
     searchTerm,
     setSearchTerm,
   } = useContext(FilterContext);
 
-  const lastVisitedPath = localStorage.getItem("lastVisitedPath");
+  //////////Variables/////////////
 
-  const { isLoginSelected, setLoginSelected } = useContext(LoginContext) || {};
-  const { theme, setTheme } = useContext(ThemeContext);
-  const { user, setUser, isUserLoggedIn, setIsUserLoggedIn } =
-    useContext(UserContext);
   const [nav, setNav] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const [isSecondDivVisible, setSecondDivVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const { quantityCart, setQuantityCart } = useContext(CartContext);
   const [errorsServer, setErrorsServer] = useState("");
   const [showSearchDiv, setShowSearchDiv] = useState(false);
 
-  const currentCode = localStorage.getItem("i18nextLng");
-
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  /////////Functions//////////
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value.toLowerCase();
@@ -122,12 +115,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      handleImageLoad();
-    }
-  }, [user]);
-
   const handleClickRegister = () => {
     setLoginSelected(false);
     navigate("/login");
@@ -137,18 +124,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     setLoginSelected(true);
     navigate("/login");
   };
-
-  useEffect(() => {
-    if (nav || showSearchDiv) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [nav, showSearchDiv]);
 
   const handleDivClick = () => {
     setSecondDivVisible(!isSecondDivVisible);
@@ -178,6 +153,25 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     localStorage.setItem("searchTerm", searchTerm);
     navigate(`/shop`);
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (user) {
+      handleImageLoad();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (nav || showSearchDiv) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [nav, showSearchDiv]);
 
   return (
     <>

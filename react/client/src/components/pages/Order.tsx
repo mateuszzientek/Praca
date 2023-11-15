@@ -31,10 +31,12 @@ interface Shoe extends ShoeInterface {
 }
 
 function Order() {
-  const { theme, setTheme } = useContext(ThemeContext);
+
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
-  const { user, isUserLoggedIn, isUserDataLoaded, fetchUserData } =
-    useContext(UserContext);
+  const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
+
+  //////////Variables////////////
 
   const [matchingShoes, setMatchingShoes] = useState<Shoe[]>([]);
   const [showDiv, setShowDiv] = useState(false);
@@ -54,21 +56,7 @@ function Order() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
 
-  useEffect(() => {
-    if (showDivCustomShoe || showDiv) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [showDivCustomShoe, showDiv]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  /////////Functions////////////
 
   const clickDetails = (orderId: string) => {
     setShowDiv(!showDiv);
@@ -89,6 +77,24 @@ function Order() {
       setSingleOrderCustomShoes(singleOrder.length > 0 ? singleOrder[0] : null);
     }
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (showDivCustomShoe || showDiv) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showDivCustomShoe, showDiv]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     if (singleOrder) {
@@ -177,7 +183,6 @@ function Order() {
   }, [user]);
 
   useEffect(() => {
-    // Czyszczenie poprzednich pasujących butów
     setMatchingShoes([]);
 
     const matchingShoesWithQuantityAndSize: any = [];
@@ -197,8 +202,6 @@ function Order() {
 
     setMatchingShoes(matchingShoesWithQuantityAndSize);
   }, [singleOrder]);
-
-  console.log(singleOrderCustomShoes)
 
   return (
     <>

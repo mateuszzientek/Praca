@@ -9,7 +9,7 @@ interface User {
   role: string | null;
   newsletter: boolean;
   email_offert: boolean;
-  dateOfBirth?: Date | null; // Pole data urodzenia
+  dateOfBirth?: Date | null;
   gender?: string | null;
   avatar?: string | null;
 }
@@ -20,7 +20,7 @@ interface UserContextProps {
   isUserLoggedIn: boolean;
   setIsUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   isUserDataLoaded: boolean;
-  fetchUserData: () => void; // Dodatkowy stan śledzący, czy dane użytkownika zostały pobrane
+  fetchUserData: () => void;
 }
 
 export const UserContext = createContext<UserContextProps>({

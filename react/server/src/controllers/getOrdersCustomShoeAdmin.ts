@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import OrderCustomProject from "../schemas/orderCustomProjects";
 
-
 const getOrdersCustomShoeAdminHandler = [
     async (req:Request, res:Response) => {
         const page = parseInt(req.query.page as string);

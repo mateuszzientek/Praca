@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Address from "../schemas/address";
 
-
 const editAddressHandler = [
     async (req:Request, res:Response) => {
         try {

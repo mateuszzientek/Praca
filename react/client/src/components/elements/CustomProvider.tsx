@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import storage from "../../resources/firebase";
 
@@ -77,7 +77,6 @@ const CustomContext = createContext<CustomContextProps>(
   {} as CustomContextProps
 );
 
-// Utwórz dostawcę kontekstu, który będzie zawierać stan wybranych kolorów
 const CustomProvider: React.FC<CustomContextProviderChildren> = ({
   children,
 }) => {
@@ -127,7 +126,7 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
     setIsPhotos_Patches(true)
   }, []);
 
-  const [photos, setPhotos] = useState<string[]>([]); // Dodaj photos
+  const [photos, setPhotos] = useState<string[]>([]);
   const [patches, setPatches] = useState<Array<{ url: string; name: string }>>([]);
   const [selectedColors, setSelectedColors] = useState({
     selectedColorSwosh_1: { rgb: { r: 255, g: 255, b: 255 } },
@@ -166,7 +165,6 @@ const CustomProvider: React.FC<CustomContextProviderChildren> = ({
     leftSideImageCroppedUrl: "",
     rightSideImageCroppedUrl: "",
   });
-
 
   return (
     <CustomContext.Provider value={{

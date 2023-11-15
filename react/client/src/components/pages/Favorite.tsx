@@ -4,7 +4,7 @@ import ProductTemplate from "../elements/ProductTemplate";
 import axios from "axios";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import { UserContext } from "../elements/UserProvider";
-import { ref, getDownloadURL, listAll } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import storage from "../../resources/firebase";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -17,9 +17,29 @@ interface Shoe extends ShoeInterface {
 function Favorite() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user, isUserDataLoaded } = useContext(UserContext);
+
   const [isLoadingImages, setIsLoadingImages] = useState(true); // Nowy stan
-  const { user, isUserLoggedIn, isUserDataLoaded } = useContext(UserContext);
   const [favoriteShoes, setFavoriteShoes] = useState<Shoe[]>([]);
+
+  const handleHeartClick = (shoe: Shoe) => {
+    axios
+      .delete(`/removeFavoriteShoe/${user?._id}/${shoe._id}`)
+      .then((response) => {
+        console.log("Ulubiony but został usunięty z bazy danych");
+        const updatedShoes = favoriteShoes.filter(
+          (prevShoe) => prevShoe._id !== shoe._id
+        );
+        setFavoriteShoes(updatedShoes);
+      })
+      .catch((error) => {
+        console.error(
+          "Błąd podczas usuwania ulubionego buta z bazy danych",
+          error
+        );
+      });
+  };
+
 
   useEffect(() => {
     const fetchFavoriteShoes = async () => {
@@ -57,24 +77,6 @@ function Favorite() {
 
     fetchFavoriteShoes();
   }, [user]);
-
-  const handleHeartClick = (shoe: Shoe) => {
-    axios
-      .delete(`/removeFavoriteShoe/${user?._id}/${shoe._id}`)
-      .then((response) => {
-        console.log("Ulubiony but został usunięty z bazy danych");
-        const updatedShoes = favoriteShoes.filter(
-          (prevShoe) => prevShoe._id !== shoe._id
-        );
-        setFavoriteShoes(updatedShoes);
-      })
-      .catch((error) => {
-        console.error(
-          "Błąd podczas usuwania ulubionego buta z bazy danych",
-          error
-        );
-      });
-  };
 
   return (
     <div className="bg-white dark:bg-black/80 min-h-screen pb-10">

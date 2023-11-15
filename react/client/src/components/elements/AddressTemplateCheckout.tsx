@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from "../elements/ThemeContext";
+import React from 'react';
 import { useTranslation } from "react-i18next";
 
 interface AddressTemplateCheckoutProps {
@@ -19,7 +18,6 @@ interface AddressTemplateCheckoutProps {
 function AddressTemplateCheckout(props: AddressTemplateCheckoutProps) {
 
     const { t } = useTranslation();
-    const { theme, setTheme } = useContext(ThemeContext);
 
     const handleAddressClick = () => {
         props.handleSetDefaultAddress(props.addressId);

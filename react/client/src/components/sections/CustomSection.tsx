@@ -3,12 +3,12 @@ import { ThemeContext } from "../elements/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useNavigate } from "react-router-dom";
 import custom from "../../assets/images/custom.jpg";
 import custom1 from "../../assets/images/custom1.jpg";
-import { useNavigate } from "react-router-dom";
 
 function CustomSection() {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
 

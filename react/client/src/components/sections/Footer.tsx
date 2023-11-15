@@ -8,10 +8,11 @@ import logo from "../../assets/images/logo2.png";
 import { useNavigate } from "react-router-dom";
 
 function Footer() {
-  let iconStyles = { color: "white" };
+
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  let iconStyles = { color: "white" };
 
   const handleIconClick = (type: string) => {
     let targetUrl;
@@ -26,7 +27,6 @@ function Footer() {
 
     window.open(targetUrl, "_blank");
   };
-
 
   return (
     <div>

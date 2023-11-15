@@ -21,11 +21,11 @@ export const CartContext = createContext<CartContextData>({
   discountName: "",
   quantityCart: 0,
   isDataLoaded: false,
-  setQuantityCart: () => {},
-  setDiscountAmount: () => {},
-  setDiscountName: () => {},
-  setIsEmptyCart: () => {},
-  setIsDataLoaded: () => {},
+  setQuantityCart: () => { },
+  setDiscountAmount: () => { },
+  setDiscountName: () => { },
+  setIsEmptyCart: () => { },
+  setIsDataLoaded: () => { },
 });
 
 export function useCart() {
@@ -33,13 +33,15 @@ export function useCart() {
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+
+  const { user, isUserDataLoaded } = useContext(UserContext);
+
   const [quantityCart, setQuantityCart] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [isEmptyCart, setIsEmptyCart] = useState<boolean | null>(null);
   const [discountName, setDiscountName] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const { user, isUserDataLoaded } = useContext(UserContext);
 
   useEffect(() => {
     const userIdParam = user?._id || "";

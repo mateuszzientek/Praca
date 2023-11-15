@@ -1,12 +1,11 @@
-import React, { useContext, Suspense, useEffect, useState } from 'react';
+import React, { useContext, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { CartContext } from '../components/elements/CartProvider';
 import LoadingAnimation from '../components/elements/LoadingAnimation';
 
 const CheckoutRoute = () => {
 
-    const { quantityCart, isDataLoaded } = useContext(CartContext);
-
+    const { quantityCart } = useContext(CartContext);
 
     if (quantityCart <= 0) {
         window.location.replace("/cart");

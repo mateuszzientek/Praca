@@ -15,6 +15,7 @@ interface UserTemplateProps {
 function UserTemplate(props: UserTemplateProps) {
 
     const { t } = useTranslation();
+
     const [showMessageDelete, setShowMessageDelete] = useState(false);
 
     const handleDeleteUser = () => {

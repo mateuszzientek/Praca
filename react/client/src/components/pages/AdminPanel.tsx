@@ -34,12 +34,14 @@ interface User {
 }
 
 function AdminPanel() {
-  const { t } = useTranslation();
-  const { theme, setTheme } = useContext(ThemeContext);
-  const { user, isUserLoggedIn, isUserDataLoaded, fetchUserData } =
-    useContext(UserContext);
 
+  const { t } = useTranslation();
+  const { theme } = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
   const [users, setUsers] = useState<User[] | null>(null);
+
+  //////////Variables////////////
+
   const [orders, setOrders] = useState<OrderInterface[] | null>(null);
   const [ordersCustomShoe, setOrdersCustomShoe] = useState<
     OrderCustomShoeInterface[] | null
@@ -71,6 +73,7 @@ function AdminPanel() {
 
   const actionType = ["users", "orders", "customOrders"]
 
+  /////////Functions////////////
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -86,28 +89,6 @@ function AdminPanel() {
         return "text-black/80";
     }
   };
-
-  useEffect(() => {
-    if (showDiv || showDivCustomShoe) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [showDiv, showDivCustomShoe]);
-
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage("");
-      }, 1500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
 
   const clickDetails = (orderId: string) => {
     setShowDiv(!showDiv);
@@ -245,6 +226,39 @@ function AdminPanel() {
     setShowStatus(false);
   };
 
+  const handleDelete = (userId: string) => {
+    if (users) {
+      const updatedUsers = users?.filter((prevUser) => prevUser._id !== userId);
+      setUsers(updatedUsers);
+    }
+  };
+
+  const handleError = (error: string) => {
+    setErrorsServer(error);
+  };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (showDiv || showDivCustomShoe) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showDiv, showDivCustomShoe]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   useEffect(() => {
     setIsDataFetched(false);
@@ -297,7 +311,6 @@ function AdminPanel() {
       });
   }, [user, pageOrderCustomShoe, selectedSortCustomShoe]);
 
-
   useEffect(() => {
     setIsDataFetched(false);
     axios
@@ -340,19 +353,7 @@ function AdminPanel() {
       });
   }, [user, pageOrder, selectedSort]);
 
-  const handleDelete = (userId: string) => {
-    if (users) {
-      const updatedUsers = users?.filter((prevUser) => prevUser._id !== userId);
-      setUsers(updatedUsers);
-    }
-  };
-
-  const handleError = (error: string) => {
-    setErrorsServer(error);
-  };
-
   useEffect(() => {
-    // Czyszczenie poprzednich pasujących butów
     setMatchingShoes([]);
 
     const matchingShoesWithQuantityAndSize: any = [];
@@ -372,7 +373,6 @@ function AdminPanel() {
 
     setMatchingShoes(matchingShoesWithQuantityAndSize);
   }, [singleOrder]);
-
 
   return (
     <>

@@ -11,7 +11,6 @@ const validateWithReq = (validations: ValidationChain[]) => {
       }
   
       const translatedErrors = errors.array().map((error) => {
-        // Tłumaczenie wiadomości błędu przy użyciu req.t
         return {
           ...error,
           msg: req.t(error.msg),

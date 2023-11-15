@@ -43,11 +43,10 @@ function SubmitOrder() {
         )}
         <button
           onClick={() => navigate("/")}
-          className={` h-[3.5rem] rounded-full px-4 border-2 border-[#97DEFF] mt-6  ${
-            !user
+          className={` h-[3.5rem] rounded-full px-4 border-2 border-[#97DEFF] mt-6  ${!user
               ? "bg-[#97DEFF] hover:bg-[#48c5ff]"
               : "bg-transparent hover:bg-[#97DEFF]"
-          } hover:text-black/80`}
+            } hover:text-black/80`}
         >
           <p className="text-md lg:text-xl text-black/80 dark:text-white/80 ">
             {t("submitOrder.text6")}

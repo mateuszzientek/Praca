@@ -10,7 +10,6 @@ import BackgroundMain from "../elements/BackgroundMain";
 import Newslatter from "../elements/Newslatter";
 
 function Home() {
-
     return (
         <>
             <Newslatter />

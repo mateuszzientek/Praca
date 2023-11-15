@@ -15,11 +15,15 @@ import { ProjectItem, DesignProjectInterface } from "src/types";
 import { CustomContext } from "../elements/CustomProvider";
 
 function MyProjects() {
+
   const { setImagesUrls, setLeftSideImageCropped, setRightSideImageCropped } =
     useContext(CustomContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
-  const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
+  const { user, isUserDataLoaded } = useContext(UserContext);
+
+  //////////Variables////////////
+
   const [projects, setProjects] = useState<DesignProjectInterface | null>(null);
   const [singleProject, setSingleProject] = useState<ProjectItem | null>(null);
   const [isDataFetched, setIsDataFetched] = useState(false);
@@ -27,13 +31,27 @@ function MyProjects() {
   const [showDetailsDiv, setShowDetailsDiv] = useState(false);
   const [errorsServer, setErrorsServer] = useState("");
 
+  /////////Functions////////////
+
+  const clickDetails = (projectId: string) => {
+    if (projects) {
+      const singleProject = projects.projects.filter(
+        (project) => project._id === projectId
+      );
+      setSingleProject(singleProject.length > 0 ? singleProject[0] : null);
+    }
+
+    setShowDetailsDiv(!showDetailsDiv);
+  };
+
+  /////////UseEffects///////////
+
   useEffect(() => {
     if (showDetailsDiv) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-    // Clean up the effect
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
@@ -66,17 +84,6 @@ function MyProjects() {
         }, 1000);
       });
   }, []);
-
-  const clickDetails = (projectId: string) => {
-    if (projects) {
-      const singleProject = projects.projects.filter(
-        (project) => project._id === projectId
-      );
-      setSingleProject(singleProject.length > 0 ? singleProject[0] : null);
-    }
-
-    setShowDetailsDiv(!showDetailsDiv);
-  };
 
   return (
     <>

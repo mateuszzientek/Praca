@@ -12,7 +12,7 @@ import blazer from "../../assets/images/blazer.png";
 import { useNavigate } from "react-router-dom";
 
 const MainHome = () => {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
 

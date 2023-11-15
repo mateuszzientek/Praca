@@ -3,7 +3,6 @@ import { AiOutlineRight, AiOutlineLeft } from 'react-icons/ai';
 import classnames from 'classnames';
 import { ThemeContext } from '../elements/ThemeContext';
 
-
 interface PaginationProps {
     page: number;
     pages: number;
@@ -12,7 +11,7 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ page, pages, changePage }) => {
 
-    const { theme, setTheme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
 
     const buttonStyles = {
         base: 'py-2 px-4 border-2 border-black/80 dark:border-white',
@@ -23,7 +22,6 @@ const Pagination: React.FC<PaginationProps> = ({ page, pages, changePage }) => {
         base: 'text-black dark:text-white font-bold',
         disabled: 'font-normal',
     };
-
 
     let middlePagination;
     if (pages <= 5) {

@@ -22,8 +22,6 @@ import {
   ref,
   getDownloadURL,
   listAll,
-  updateMetadata,
-  getMetadata,
   deleteObject,
   uploadBytes,
 } from "firebase/storage";
@@ -41,11 +39,15 @@ interface CustomShoesOrderProps {
 }
 
 function CustomShoesOrder(props: CustomShoesOrderProps) {
+
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
+
+  //////////Variables/////////////
+
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const { user, isUserLoggedIn } = useContext(UserContext);
   const [dataFetched, setDataFetched] = useState(true);
   const [errorsServer, setErrorsServer] = useState("");
   const [showCountryDiv, setShowCountryDiv] = useState(false);
@@ -135,6 +137,8 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
     payment: "",
     terms: "",
   });
+
+  /////////Functions//////////
 
   const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedValue = event.target.value;
@@ -252,37 +256,6 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  useEffect(() => {
-    setDataFetched(false);
-
-    if (user) {
-      axios
-        .get(`/getAddresses/?userId=${user?._id}`)
-        .then((response) => {
-          setAddresses(response.data.addresses);
-
-          const defaultAddress = response.data.addresses.find(
-            (address: AddressInterface) => address.isDefault === true
-          );
-          setDefaultAddress(defaultAddress);
-        })
-        .catch((error) => {
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.error
-          ) {
-            setErrorsServer(error.response.data.error);
-          } else {
-            console.log(error);
-          }
-        })
-        .finally(() => {
-          setDataFetched(true);
-        });
-    }
-  }, []);
-
   const handleSetDefaultAddress = (addressId: string) => {
     axios
       .post("/changeDefaultAddress", {
@@ -319,20 +292,6 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
         }
       });
   };
-
-  useEffect(() => {
-    if (defaultAddress) {
-      setEmail((prevEmail) => prevEmail || user?.email || "");
-      setName(capitalizeFirstLetter(defaultAddress.name));
-      setSurname(capitalizeFirstLetter(defaultAddress.surname));
-      setStreet(capitalizeFirstLetter(defaultAddress.street));
-      setCity(capitalizeFirstLetter(defaultAddress.city));
-      setPostalCode(defaultAddress.postalCode);
-      setTelephone(defaultAddress.telephone);
-      setExtra(defaultAddress.extra);
-      setCountry(defaultAddress.country);
-    }
-  }, [defaultAddress]);
 
   const handleSubmit = async () => {
     const isValid = validateData();
@@ -451,6 +410,55 @@ function CustomShoesOrder(props: CustomShoesOrderProps) {
       }
     }
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    setDataFetched(false);
+
+    if (user) {
+      axios
+        .get(`/getAddresses/?userId=${user?._id}`)
+        .then((response) => {
+          setAddresses(response.data.addresses);
+
+          const defaultAddress = response.data.addresses.find(
+            (address: AddressInterface) => address.isDefault === true
+          );
+          setDefaultAddress(defaultAddress);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            setErrorsServer(error.response.data.error);
+          } else {
+            console.log(error);
+          }
+        })
+        .finally(() => {
+          setDataFetched(true);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (defaultAddress) {
+      setEmail((prevEmail) => prevEmail || user?.email || "");
+      setName(capitalizeFirstLetter(defaultAddress.name));
+      setSurname(capitalizeFirstLetter(defaultAddress.surname));
+      setStreet(capitalizeFirstLetter(defaultAddress.street));
+      setCity(capitalizeFirstLetter(defaultAddress.city));
+      setPostalCode(defaultAddress.postalCode);
+      setTelephone(defaultAddress.telephone);
+      setExtra(defaultAddress.extra);
+      setCountry(defaultAddress.country);
+    }
+  }, [defaultAddress]);
+
+
   return (
     <>
       {showAfterOrder && (

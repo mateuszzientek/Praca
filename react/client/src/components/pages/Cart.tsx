@@ -18,7 +18,7 @@ import { ProductInterface } from "src/types";
 
 function Cart() {
   const { t } = useTranslation();
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const {
     quantityCart,
@@ -28,21 +28,20 @@ function Cart() {
     setDiscountName,
     setDiscountAmount,
   } = useContext(CartContext);
-  const { user, isUserLoggedIn, isUserDataLoaded } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const currentCode = localStorage.getItem("i18nextLng");
+
+  //////////Variables////////////
 
   const [shoes, setShoes] = useState<ProductInterface[]>([]);
   const [dataFetched, setDataFetched] = useState(true);
   const [errorServer, setErrorServer] = useState("");
   const [error, setError] = useState("");
-
   const [discountNameTemporary, setDiscountNameTemporary] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
   const [showDiscountDiv, setShowDiscountDiv] = useState(false);
-
   const discountValue = (totalPrice * discountAmount) / 100;
   const roundedDiscount = Math.round(discountValue * 10) / 10; // Zaokrąglenie do jednego miejsca po przecinku
-
   let finalDiscount;
   if (roundedDiscount % 1 === 0.5) {
     finalDiscount = Math.ceil(roundedDiscount); // Zaokrąglanie do góry, gdy wartość dziesiętna jest równa 0.5
@@ -50,6 +49,8 @@ function Cart() {
     finalDiscount = Math.floor(roundedDiscount); // Zaokrąglanie w dół, gdy wartość dziesiętna nie jest równa 0.5
   }
   const priceAfterDiscount = totalPrice - finalDiscount;
+
+  /////////Functions////////////
 
   const handleDiscountNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -80,54 +81,6 @@ function Cart() {
     });
     setTotalPrice(totalPrice);
   };
-
-  useEffect(() => {
-    calculateTotalPrice(shoes);
-  }, [shoes]);
-
-  useEffect(() => {
-    const userId = user ? user._id : "";
-
-    setDataFetched(false);
-
-    axios
-      .get(`/getShoesCart?userId=${userId}`)
-      .then(async (response) => {
-        setShoes(response.data.shoesWithCartSizes);
-
-        const fetchedShoes: any[] = response.data.shoesWithCartSizes || [];
-
-        const shoeImages = await Promise.all(
-          fetchedShoes.map(async (product) => {
-            const pathReference = ref(
-              storage,
-              `/mainPhoto/${product.shoe.image}.png`
-            );
-            const url = await getDownloadURL(pathReference);
-            return {
-              ...product,
-              imageUrl: url,
-            };
-          })
-        );
-
-        setShoes(shoeImages);
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error
-        ) {
-          setErrorServer(error.response.data.error);
-        } else {
-          console.log(error);
-        }
-      })
-      .finally(() => {
-        setDataFetched(true);
-      });
-  }, [user]);
 
   const handleDeleteCart = (cartId: string) => {
     setShoes((prevShoes) =>
@@ -181,6 +134,79 @@ function Cart() {
       });
   };
 
+  const handleDeleteDiscount = () => {
+    const userId = user?._id ? user?._id : "";
+
+    axios
+      .post("/deleteDiscount", { userId: userId })
+      .then((response) => {
+        setDiscountName("");
+        setDiscountAmount(0);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    calculateTotalPrice(shoes);
+  }, [shoes]);
+
+  useEffect(() => {
+    const userId = user ? user._id : "";
+
+    setDataFetched(false);
+
+    axios
+      .get(`/getShoesCart?userId=${userId}`)
+      .then(async (response) => {
+        setShoes(response.data.shoesWithCartSizes);
+
+        const fetchedShoes: any[] = response.data.shoesWithCartSizes || [];
+
+        const shoeImages = await Promise.all(
+          fetchedShoes.map(async (product) => {
+            const pathReference = ref(
+              storage,
+              `/mainPhoto/${product.shoe.image}.png`
+            );
+            const url = await getDownloadURL(pathReference);
+            return {
+              ...product,
+              imageUrl: url,
+            };
+          })
+        );
+
+        setShoes(shoeImages);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setErrorServer(error.response.data.error);
+        } else {
+          console.log(error);
+        }
+      })
+      .finally(() => {
+        setDataFetched(true);
+      });
+  }, [user]);
+
   useEffect(() => {
     const userId = user ? user._id : "";
 
@@ -209,28 +235,6 @@ function Cart() {
         setDataFetched(true);
       });
   }, []);
-
-  const handleDeleteDiscount = () => {
-    const userId = user?._id ? user?._id : "";
-
-    axios
-      .post("/deleteDiscount", { userId: userId })
-      .then((response) => {
-        setDiscountName("");
-        setDiscountAmount(0);
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error
-        ) {
-          setErrorServer(error.response.data.error);
-        } else {
-          console.log(error);
-        }
-      });
-  };
 
   return (
     <div className="bg-white dark:bg-black/80 pb-[8rem] xl:pb-[16rem] min-h-screen ">

@@ -5,15 +5,12 @@ interface LoginContextProps {
   setLoginSelected: Dispatch<SetStateAction<boolean>>;
 }
 
-
 interface ThemeContextProviderChildren {
   children: ReactNode;
 }
 
-// Tworzenie kontekstu
 const LoginContext = createContext<LoginContextProps>({} as LoginContextProps);
 
-// Komponent dostawcy (Provider)
 const LoginProvider: React.FC<ThemeContextProviderChildren> = ({ children }) => {
   const [isLoginSelected, setLoginSelected] = useState(true);
 

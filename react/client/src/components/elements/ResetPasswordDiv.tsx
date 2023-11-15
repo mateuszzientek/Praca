@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { ThemeContext } from './ThemeContext';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ interface ResetPasswordDivProps {
 
 function ResetPasswordDiv(props: ResetPasswordDivProps) {
 
-    const { theme, setTheme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
     const { t } = useTranslation()
 
     return (

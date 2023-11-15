@@ -1,6 +1,5 @@
 import mongoose, { Document, Model } from "mongoose";
 
-
 export interface CartInterface extends Document {
   userId?: mongoose.Types.ObjectId;
   productId: mongoose.Types.ObjectId

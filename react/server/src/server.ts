@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import session, { SessionData } from "express-session";
+import session from "express-session";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import i18next from "i18next";
@@ -145,7 +145,6 @@ mongoose
   });
 
 //---------------------routes----------------------------
-
 
 app.delete("/deleteExpiredCustomDesign", deleteExpiredCustomDesignHandler);
 app.delete("/deleteProject/:userId/:projectId",deleteProjectHandler);

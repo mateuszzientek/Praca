@@ -14,10 +14,17 @@ interface PatchesDivProps {
 }
 
 function PatchesDiv(props: PatchesDivProps) {
+
   const [patches, setPatches] = useState<Array<{ url: string; name: string }>>(
     []
   );
   const [isDataFetched, setIsDataFetched] = useState(false);
+
+  const handleClick = (patch: any) => {
+    props.setSideView(props.side);
+    props.setPatche(patch.name);
+    props.setShowDiv("");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,12 +54,6 @@ function PatchesDiv(props: PatchesDivProps) {
 
     fetchData();
   }, []);
-
-  const handleClick = (patch: any) => {
-    props.setSideView(props.side);
-    props.setPatche(patch.name);
-    props.setShowDiv("");
-  };
 
   return (
     <div className="bg-black/50 backdrop-blur-sm fixed w-full h-screen z-20 flex justify-center items-center min-h-screen overflow-y-auto">

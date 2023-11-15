@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-    AiOutlineCheck, AiOutlineClose
-} from "react-icons/ai";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 interface SwooshVisibility {
     isLeftSwooshVisible: boolean;
@@ -18,7 +16,6 @@ interface ToogleButtonSwoshProps {
 
 function ToogleButtonSwosh(props: ToogleButtonSwoshProps) {
     const handleClick = () => {
-        // Zdecyduj, który element obiektu swooshVisibility zaktualizować
         const newSwooshVisibility = { ...props.swooshVisibility };
 
         if (props.side === "left") {
@@ -27,7 +24,6 @@ function ToogleButtonSwosh(props: ToogleButtonSwoshProps) {
             newSwooshVisibility.isRightSwooshVisible = !props.isSwooshVisible;
         }
 
-        // Teraz możesz przekazać newSwooshVisibility jako nową wartość setIsSwooshVisible
         props.setIsSwooshVisible(newSwooshVisibility);
         props.setSideView(props.side);
     }

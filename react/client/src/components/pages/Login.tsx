@@ -3,15 +3,12 @@ import { LoginContext } from "../elements/LoginProvider";
 import { ThemeContext } from "../elements/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BsArrowLeft } from "react-icons/bs";
 import {
   AiOutlineEyeInvisible,
   AiOutlineEye,
   AiOutlineHome,
 } from "react-icons/ai";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-import zdjecie from "../../assets/images/pp.jpg";
+import zdjecie from "../../assets/images/login.jpg";
 import chrome from "../../assets/images/chrome.png";
 import axios from "axios";
 import validator from "validator";
@@ -26,19 +23,15 @@ import { CartContext } from "../elements/CartProvider";
 function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   const lastVisitedPath = localStorage.getItem("lastVisitedPath");
-
   const changeCart = localStorage.getItem("changeCart");
+  const { theme } = useContext(ThemeContext);
+  const { isLoginSelected, setLoginSelected } = useContext(LoginContext);
+  const { setUser, setIsUserLoggedIn } = useContext(UserContext);
 
-
-  useEffect(() => {
-    window.history.replaceState(null, "", "/");
-  }, []);
+  //////////Variables////////////
 
   const { setQuantityCart } = useContext(CartContext);
-  const { theme, setTheme } = useContext(ThemeContext);
-  const { isLoginSelected, setLoginSelected } = useContext(LoginContext);
   const [showPassword, setShowPassword] = useState(false);
   const [emailOffert, setEmailOffert] = useState(false);
   const [isUserSaved, setIsUserSaved] = useState(false);
@@ -55,7 +48,6 @@ function Login() {
     ErrorInterface[]
   >([]);
   const [errorsServer, setErrorsServer] = useState("");
-  const { setUser, setIsUserLoggedIn } = useContext(UserContext);
   const [isSubmittingReset, setIsSubmittingReset] = useState(false);
   const [showInfoReset, setShowInfoReset] = useState(false);
   const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
@@ -66,6 +58,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [resetEmail, setResetEmail] = useState("");
+
+  /////////Functions////////////
 
   const handleEmailOffertChange = () => {
     setEmailOffert(!emailOffert); // Odwróć wartość stanu przy każdej zmianie
@@ -418,6 +412,12 @@ function Login() {
     setErrorsServer("");
     setErrorsVadlidationServer([]);
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    window.history.replaceState(null, "", "/");
+  }, []);
 
   return (
     <>

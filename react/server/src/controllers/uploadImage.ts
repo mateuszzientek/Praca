@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import FavoriteShoes from "../schemas/favoriteShoes";
 import User from "../schemas/user";
 
 const uploadImageHandler = [

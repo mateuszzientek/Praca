@@ -30,16 +30,18 @@ import { ErrorInterface } from "src/types";
 import Cropper from "react-easy-crop";
 
 function Profile() {
+
+  const { t } = useTranslation();
+  const { user, isUserDataLoaded, fetchUserData } = useContext(UserContext);
+  const { theme } = useContext(ThemeContext);
+
+  //////////Variables////////////
+
   const inputRef = useRef(null);
   const [image, setImage] = useState<string | null>(null);
   const [croppedArea, setCroppedArea] = useState<Blob | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-
-  const { t } = useTranslation();
-  const { user, isUserLoggedIn, isUserDataLoaded, fetchUserData } =
-    useContext(UserContext);
-  const { theme, setTheme } = useContext(ThemeContext);
   const [showEditData, setShowEditData] = useState(false);
   const [showEditEmail, setShowEditEmail] = useState(false);
   const [showEditPassword, setShowEditPassword] = useState(false);
@@ -83,38 +85,8 @@ function Profile() {
     old: "",
     new: "",
   });
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
-  useEffect(() => {
-    if (image || showEditData || showEditEmail || showEditPassword) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [image, showEditData, showEditEmail, showEditPassword]);
-
-  useEffect(() => {
-    if (user?.dateOfBirth && isUserDataLoaded) {
-      const dateOfBirth = new Date(user.dateOfBirth);
-      const day = dateOfBirth.getDate().toString().padStart(2, "0");
-      const month = (dateOfBirth.getMonth() + 1).toString().padStart(2, "0");
-      const year = dateOfBirth.getFullYear().toString();
-
-      setDay(day);
-      setMonth(month);
-      setYear(year);
-    } else {
-      setDay("");
-      setMonth("");
-      setYear("");
-    }
-  }, [user]);
+  /////////Functions////////////
 
   const handleImageLoad = async () => {
     if (user && user.avatar) {
@@ -129,12 +101,6 @@ function Profile() {
       }
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      handleImageLoad();
-    }
-  }, [user]);
 
   const handleClickEditEmail = () => {
     setErrorsServer("");
@@ -575,6 +541,47 @@ function Profile() {
   const handleZoomChange = (event: any) => {
     setZoom(event.target.value);
   };
+
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    if (image || showEditData || showEditEmail || showEditPassword) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [image, showEditData, showEditEmail, showEditPassword]);
+
+  useEffect(() => {
+    if (user?.dateOfBirth && isUserDataLoaded) {
+      const dateOfBirth = new Date(user.dateOfBirth);
+      const day = dateOfBirth.getDate().toString().padStart(2, "0");
+      const month = (dateOfBirth.getMonth() + 1).toString().padStart(2, "0");
+      const year = dateOfBirth.getFullYear().toString();
+
+      setDay(day);
+      setMonth(month);
+      setYear(year);
+    } else {
+      setDay("");
+      setMonth("");
+      setYear("");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      handleImageLoad();
+    }
+  }, [user]);
 
   return (
     <>

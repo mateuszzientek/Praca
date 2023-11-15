@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import CustomShoeTemporary from "../schemas/customShoeTemporary";
 
-
 const deleteExpiredCustomDesignHandler = [
     async (req: Request, res: Response) => {
         const currentTime = new Date();

@@ -7,7 +7,6 @@ const AdminPanelRoute = () => {
 
     const { user, isUserLoggedIn } = useContext(UserContext);
 
-
     if (!isUserLoggedIn || user?.role !== "admin") {
         window.location.replace("/");
         return <LoadingAnimation />;

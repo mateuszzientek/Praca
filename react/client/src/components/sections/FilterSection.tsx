@@ -14,8 +14,7 @@ interface FilterSectionProps {
 function FilterSection(props: FilterSectionProps) {
     const currentCode = localStorage.getItem('i18nextLng')
     const { t } = useTranslation();
-    const { theme, setTheme } = useContext(ThemeContext);
-
+    const { theme } = useContext(ThemeContext);
     const {
         selectedBrand,
         setSelectedBrand,
@@ -23,20 +22,21 @@ function FilterSection(props: FilterSectionProps) {
         setSelectedCategory,
         selectedPrice,
         setSelectedPrice,
-        selectedMin,
         setSelectedMin,
-        selectedMax,
-        setSelectedMax,
         selectedSizes,
         setSelectedSizes,
         searchTerm,
         setSearchTerm } = useContext(FilterContext);
+
+    //////////Variables/////////////
 
     const sizes = Array.from({ length: 11 }, (_, index) => 36 + index);
     const categories = ['high', 'low', 'sport'];
     const brands = ['All', 'Nike', 'Adidas', 'New Balance'];
     const priceRanges = ['range1', 'range2', 'range3', 'range4'];
     const [currentMin, setCurrentMin] = useState("")
+
+    /////////Functions//////////
 
     const handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedBrand = event.target.value;
@@ -79,18 +79,6 @@ function FilterSection(props: FilterSectionProps) {
         }
     };
 
-    useEffect(() => {
-        if (props.showFilter) {
-            document.body.classList.add('overflow-hidden');
-        } else {
-            document.body.classList.remove('overflow-hidden');
-        }
-        // Clean up the effect
-        return () => {
-            document.body.classList.remove('overflow-hidden');
-        };
-    }, [props.showFilter]);
-
     const handleReset = () => {
         setSelectedCategory('')
         setSelectedPrice('')
@@ -109,6 +97,19 @@ function FilterSection(props: FilterSectionProps) {
         localStorage.removeItem("searchTerm");
         setSearchTerm("");
     };
+
+    /////////UseEffects///////////
+
+    useEffect(() => {
+        if (props.showFilter) {
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+        };
+    }, [props.showFilter]);
 
     return (
         <>

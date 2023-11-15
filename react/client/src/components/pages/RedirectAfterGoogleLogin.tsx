@@ -8,18 +8,19 @@ import { CartContext } from "../elements/CartProvider";
 import InfoDivBottom from "../elements/InfoDivBottom";
 
 const RedirectAfterGoogleLogin = () => {
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const { setQuantityCart } = useContext(CartContext);
 
+  //////////Variables////////////
+
   const changeCart = localStorage.getItem("changeCart");
   const lastVisitedPath = localStorage.getItem("lastVisitedPath") || "";
   const [errorServer, setErrorServer] = useState("");
 
-  useEffect(() => {
-    window.history.replaceState(null, "", "/");
-  }, []);
+  /////////Functions////////////
 
   const handleClick = () => {
     const userIdParam = user?._id || "";
@@ -63,6 +64,12 @@ const RedirectAfterGoogleLogin = () => {
       navigate(lastVisitedPath);
     }
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    window.history.replaceState(null, "", "/");
+  }, []);
 
   return (
     <>

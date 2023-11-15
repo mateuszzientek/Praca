@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../sections/Navbar";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { BiFilterAlt } from "react-icons/bi";
@@ -8,7 +8,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { ref, getDownloadURL } from "firebase/storage";
 import storage from "../../resources/firebase";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Pagination from "../elements/Pagination";
 import LoadingAnimationSmall from "../elements/LoadingAnimatonSmall";
 import InfoDivBottom from "../elements/InfoDivBottom";
@@ -24,9 +24,10 @@ interface Shoe extends ShoeInterface {
 }
 
 function Shop() {
-  const { user, isUserLoggedIn } = useContext(UserContext);
-  const { theme, setTheme } = useContext(ThemeContext);
 
+  const { pageNumber } = useParams();
+  const { user, isUserLoggedIn } = useContext(UserContext);
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const currentCode = localStorage.getItem("i18nextLng");
   const { t } = useTranslation();
@@ -53,15 +54,14 @@ function Shop() {
     setCurrentMin,
   } = useContext(FilterContext);
 
+  //////////Variables////////////
+
   const sizesNumber = Array.from({ length: 11 }, (_, index) => 36 + index);
   const [showFilter, setShowFilter] = useState(false);
   const categories = ["high", "low", "sport"];
   const brands = ["All", "Nike", "Adidas", "New Balance"];
   const priceRanges = ["range1", "range2", "range3", "range4"];
   const sortType = ["default", "newest", "priceLow", "priceHigh"];
-
-  const { pageNumber } = useParams();
-
   const currentPage = parseInt(pageNumber ?? "1");
 
   const getInitialPage = () => {
@@ -81,6 +81,8 @@ function Shop() {
   const [pages, setPages] = useState(1);
   const [showSort, setShowSort] = useState(false);
   const [favoriteShoesFetched, setFavoriteShoesFetched] = useState(false);
+
+  /////////Functions////////////
 
   const handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedBrand = event.target.value;
@@ -168,6 +170,75 @@ function Shop() {
   const handleClickFilter = () => {
     setShowFilter(!showFilter);
   };
+
+  const handleHeartClick = (shoe: Shoe) => {
+    if (!isUserLoggedIn) {
+      navigate("/login");
+      return;
+    }
+
+    if (!shoe.isHearted) {
+      axios
+        .post("/saveFavoriteShoe", { userId: user?._id, shoeId: shoe._id })
+        .then((response) => {
+          console.log("Ulubiony but został zapisany w bazie danych");
+        })
+        .catch((error) => {
+          console.error(
+            "Błąd podczas zapisywania ulubionego buta w bazie danych",
+            error
+          );
+        });
+    } else {
+      axios
+        .delete(`/removeFavoriteShoe/${user?._id}/${shoe._id}`)
+        .then((response) => {
+          console.log("Ulubiony but został usunięty z bazy danych");
+        })
+        .catch((error) => {
+          console.error(
+            "Błąd podczas usuwania ulubionego buta z bazy danych",
+            error
+          );
+        });
+    }
+
+    setShoes((prevShoes) => {
+      const updatedShoes = prevShoes.map((prevShoe) => {
+        if (prevShoe._id === shoe._id) {
+          return {
+            ...prevShoe,
+            isHearted: !prevShoe.isHearted,
+          };
+        }
+        return prevShoe;
+      });
+      return updatedShoes;
+    });
+  };
+
+  const handleReset = () => {
+    setSelectedCategory("");
+    setSelectedPrice("");
+    setSelectedMin("");
+    setCurrentMin("");
+    setSelectedMax("");
+    setCurrentMax("");
+    setSelectedSizes([]);
+  };
+
+  const formatSearchTerm = (term: string) => {
+    if (!term) return ""; // Return an empty string if searchTerm is empty
+
+    return term.charAt(0).toUpperCase() + term.slice(1);
+  };
+
+  const handleClickRemoveSearchTerm = () => {
+    localStorage.removeItem("searchTerm");
+    setSearchTerm("");
+  };
+
+  /////////UseEffects///////////
 
   useEffect(() => {
     const filters = {
@@ -278,73 +349,6 @@ function Shop() {
     searchTerm,
     user,
   ]);
-
-  const handleHeartClick = (shoe: Shoe) => {
-    if (!isUserLoggedIn) {
-      navigate("/login");
-      return;
-    }
-
-    if (!shoe.isHearted) {
-      axios
-        .post("/saveFavoriteShoe", { userId: user?._id, shoeId: shoe._id })
-        .then((response) => {
-          console.log("Ulubiony but został zapisany w bazie danych");
-        })
-        .catch((error) => {
-          console.error(
-            "Błąd podczas zapisywania ulubionego buta w bazie danych",
-            error
-          );
-        });
-    } else {
-      axios
-        .delete(`/removeFavoriteShoe/${user?._id}/${shoe._id}`)
-        .then((response) => {
-          console.log("Ulubiony but został usunięty z bazy danych");
-        })
-        .catch((error) => {
-          console.error(
-            "Błąd podczas usuwania ulubionego buta z bazy danych",
-            error
-          );
-        });
-    }
-
-    setShoes((prevShoes) => {
-      const updatedShoes = prevShoes.map((prevShoe) => {
-        if (prevShoe._id === shoe._id) {
-          return {
-            ...prevShoe,
-            isHearted: !prevShoe.isHearted,
-          };
-        }
-        return prevShoe;
-      });
-      return updatedShoes;
-    });
-  };
-
-  const handleReset = () => {
-    setSelectedCategory("");
-    setSelectedPrice("");
-    setSelectedMin("");
-    setCurrentMin("");
-    setSelectedMax("");
-    setCurrentMax("");
-    setSelectedSizes([]);
-  };
-
-  const formatSearchTerm = (term: string) => {
-    if (!term) return ""; // Return an empty string if searchTerm is empty
-
-    return term.charAt(0).toUpperCase() + term.slice(1);
-  };
-
-  const handleClickRemoveSearchTerm = () => {
-    localStorage.removeItem("searchTerm");
-    setSearchTerm("");
-  };
 
   return (
     <>

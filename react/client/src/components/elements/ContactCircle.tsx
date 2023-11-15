@@ -9,7 +9,7 @@ interface ContactCircleProps {
 }
 
 const ContactCircle: React.FC<ContactCircleProps> = (props) => {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     const contactCircleBackgrounds = document.querySelectorAll('.contactCircle-background');

@@ -6,7 +6,7 @@ interface BackgroundMainProps {
 }
 
 function BackgroundMain({ children }: BackgroundMainProps) {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   return (
     <div className={theme === 'dark' ? 'main-background-black' : 'main-background'}>

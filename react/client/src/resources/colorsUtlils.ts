@@ -315,7 +315,6 @@ export const changeColorToWhite = (
   setSelectedColors(updatedSelectedColors);
 };
 
-
 export const handleDeleteColor = (
   currentTextIndex: number,
   selectedColors: any,

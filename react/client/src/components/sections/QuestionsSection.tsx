@@ -5,11 +5,14 @@ import axios from "axios";
 import validator from "validator";
 import InfoDivBottom from "../elements/InfoDivBottom";
 import CircleSvg from "../elements/CircleSvg";
-import { AddressInterface, ErrorInterface } from "src/types";
+import { ErrorInterface } from "src/types";
 
 function QuestionsSection() {
-  const { theme, setTheme } = useContext(ThemeContext);
+
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
+
+  //////////Variables/////////////
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -22,6 +25,8 @@ function QuestionsSection() {
     ErrorInterface[]
   >([]);
   const [errorsServer, setErrorsServer] = useState("");
+
+  /////////Functions//////////
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -119,11 +124,10 @@ function QuestionsSection() {
 
   return (
     <div
-      className={`flex justify-center text-center h-[75rem] md:h-[50rem]   ${
-        theme === "dark"
-          ? "questions-background-black questions-background-mobile-black"
-          : "questions-background questions-background-mobile"
-      }`}
+      className={`flex justify-center text-center h-[75rem] md:h-[50rem]   ${theme === "dark"
+        ? "questions-background-black questions-background-mobile-black"
+        : "questions-background questions-background-mobile"
+        }`}
     >
       {showInfo && (
         <InfoDivBottom

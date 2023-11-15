@@ -13,12 +13,12 @@ body {
   overflow-x: hidden;
 }
 
-input[type="text"]:focus ~ .input-text-light,
+input[type="text"]:focus~.input-text-light,
 .input-text {
   @apply transform bg-white -translate-y-6 -translate-x-2;
 }
 
-input[type="text"]:focus ~ .input-text-dark,
+input[type="text"]:focus~.input-text-dark,
 .input-text {
   @apply transform bg-[#313131] -translate-y-6 -translate-x-2;
 }
@@ -36,11 +36,6 @@ input[type="text"]:focus ~ .input-text-dark,
 
 .main-background {
   background-image: url("./assets/images/background.jpg");
-  background-size: 100% 100%;
-}
-
-.contact-background {
-  background-image: url("./assets/images/uu.png");
   background-size: 100% 100%;
 }
 
@@ -85,22 +80,18 @@ input[type="text"]:focus ~ .input-text-dark,
 
 @media screen and (max-width: 767px) {
   .questions-background-mobile {
-    background-image: linear-gradient(
-        190deg,
+    background-image: linear-gradient(190deg,
         rgba(255, 255, 255, 0.9) 60%,
-        transparent 60.3%
-      ),
-      url("./assets/images/co.jpg");
+        transparent 60.3%),
+      url("./assets/images/vans_mobile.jpg");
     background-size: 100% 100%;
   }
 
   .questions-background-mobile-black {
-    background-image: linear-gradient(
-        190deg,
+    background-image: linear-gradient(190deg,
         rgba(47, 47, 47, 0.9) 60%,
-        transparent 60.3%
-      ),
-      url("./assets/images/co.jpg");
+        transparent 60.3%),
+      url("./assets/images/vans_mobile.jpg");
     background-size: 100% 100%;
   }
 
@@ -124,21 +115,17 @@ input[type="text"]:focus ~ .input-text-dark,
 
 @media screen and (min-width: 768px) {
   .questions-background-black {
-    background-image: linear-gradient(
-        100deg,
+    background-image: linear-gradient(100deg,
         rgba(47, 47, 47, 0.9) 56%,
-        transparent 56.3%
-      ),
+        transparent 56.3%),
       url("./assets/images/questionsBackground.jpg");
     background-size: 100% 100%;
   }
 
   .questions-background {
-    background-image: linear-gradient(
-        100deg,
+    background-image: linear-gradient(100deg,
         rgba(255, 255, 255, 0.9) 56%,
-        transparent 56.3%
-      ),
+        transparent 56.3%),
       url("./assets/images/questionsBackground.jpg");
     background-size: 100% 100%;
   }

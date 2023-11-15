@@ -16,7 +16,9 @@ interface GraphicsCropDivProps {
 }
 
 function GraphicsCropDiv(props: GraphicsCropDivProps) {
+
   const { t } = useTranslation();
+
   const buttonStyle =
     "border-2 border-black/80  rounded-full px-10 py-3 hover:bg-black/80 hover:text-white dark:border-white hover:dark:bg-[#363636]";
 

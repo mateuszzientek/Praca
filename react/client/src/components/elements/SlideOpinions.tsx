@@ -6,16 +6,15 @@ import { ThemeContext } from "./ThemeContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import comments from "../../resources/comments";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-// import required modules
 import { Pagination, Navigation, Autoplay } from "swiper";
 
 function SlideOpinions() {
-  const { theme, setTheme } = useContext(ThemeContext);
+
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     const cardElements = document.getElementsByClassName("card-opinions");

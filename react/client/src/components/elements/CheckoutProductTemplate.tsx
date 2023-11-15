@@ -4,7 +4,6 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { useTranslation } from "react-i18next";
 import { formatPrice } from 'src/resources/currencyUtils';
 
-
 interface CartProductTemplateProps {
     imageUrl: string
     name: string;
@@ -15,6 +14,7 @@ interface CartProductTemplateProps {
 }
 
 function CheckoutProductTemplate(props: CartProductTemplateProps) {
+
     const { t } = useTranslation();
 
     const shoePrice = props.price * props.cartQuantity

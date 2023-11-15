@@ -5,6 +5,13 @@ import { animateScroll as scroll } from 'react-scroll';
 function ButtonToUp() {
     const [backToTopButton, setbackToTopButton] = useState(false);
 
+    const scrollUp = () => {
+        scroll.scrollToTop({
+            smooth: true,
+            duration: 500
+        });
+    };
+
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 800) {
@@ -20,13 +27,6 @@ function ButtonToUp() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
-
-    const scrollUp = () => {
-        scroll.scrollToTop({
-            smooth: true,
-            duration: 500
-        });
-    };
 
     return (
         <>

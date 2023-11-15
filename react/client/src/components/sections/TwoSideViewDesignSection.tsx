@@ -37,8 +37,11 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
   } = useContext(CustomContext);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { t } = useTranslation();
+
+  //////////Variables/////////////
+
   const [imageUrlLeft, setImageUrlLeft] = useState("");
   const [imageUrlRight, setImageUrlRight] = useState("");
   const [isReady, setIsReady] = useState(false);
@@ -49,69 +52,16 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
   const sizes = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
   const currentCode = localStorage.getItem("i18nextLng");
   const [selectedSize, setSelectedSize] = useState("");
-
   const buttonStyle =
     "px-4  py-3 text-black  dark:text-white rounded-full border-2 border-black/60 dark:border-white/70 hover:bg-black/80 hover:text-white hover:dark:text-black hover:dark:bg-white ";
+
+  /////////Functions//////////
 
   const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedSize(event.target.value);
     setShowSelectSize(false);
     setShowCustomShoesOrder(true);
   };
-
-  useEffect(() => {
-    if (showDiv || showSelectSize) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    // Clean up the effect
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [showDiv, showSelectSize]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userStorageRef = ref(
-          storage,
-          `/designProject/${user?._id}/${props.project?.designName}`
-        );
-
-        const data = await listAll(userStorageRef);
-
-        if (data.items.length > 0) {
-          const userImages = data.items;
-          const leftImage = userImages.filter((item) =>
-            item.name.startsWith("left")
-          );
-          const rightImage = userImages.filter((item) =>
-            item.name.startsWith("right")
-          );
-
-          if (leftImage.length > 0) {
-            const leftImageRef = leftImage[0];
-            const leftImageURL = await getDownloadURL(leftImageRef);
-            setImageUrlLeft(leftImageURL);
-          }
-          if (rightImage.length > 0) {
-            const rightImageRef = rightImage[0];
-            const rightImageURL = await getDownloadURL(rightImageRef);
-            setImageUrlRight(rightImageURL);
-          }
-        }
-      } catch (error) {
-        const text = t("customization.text12");
-        props.setError(text);
-      }
-    };
-    fetchData();
-    setIsReady(true);
-    setTimeout(() => {
-      setIsLoading(false); // Wyłącz animację ładowania po 2 sekundach
-    }, 1000);
-  }, []);
 
   const handleDeleteProject = () => {
     axios
@@ -192,6 +142,62 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
     fetchData();
     navigate(`/customization/${props.project?.designName}`);
   };
+
+  /////////UseEffects///////////
+
+  useEffect(() => {
+    if (showDiv || showSelectSize) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showDiv, showSelectSize]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userStorageRef = ref(
+          storage,
+          `/designProject/${user?._id}/${props.project?.designName}`
+        );
+
+        const data = await listAll(userStorageRef);
+
+        if (data.items.length > 0) {
+          const userImages = data.items;
+          const leftImage = userImages.filter((item) =>
+            item.name.startsWith("left")
+          );
+          const rightImage = userImages.filter((item) =>
+            item.name.startsWith("right")
+          );
+
+          if (leftImage.length > 0) {
+            const leftImageRef = leftImage[0];
+            const leftImageURL = await getDownloadURL(leftImageRef);
+            setImageUrlLeft(leftImageURL);
+          }
+          if (rightImage.length > 0) {
+            const rightImageRef = rightImage[0];
+            const rightImageURL = await getDownloadURL(rightImageRef);
+            setImageUrlRight(rightImageURL);
+          }
+        }
+      } catch (error) {
+        const text = t("customization.text12");
+        props.setError(text);
+      }
+    };
+    fetchData();
+    setIsReady(true);
+    setTimeout(() => {
+      setIsLoading(false); // Wyłącz animację ładowania po 2 sekundach
+    }, 1000);
+  }, []);
 
   return (
     <>

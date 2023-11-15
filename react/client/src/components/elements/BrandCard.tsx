@@ -14,10 +14,10 @@ interface BrandCardProps {
 }
 
 function BrandCard(props: BrandCardProps) {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
-  const { selectedBrand, setSelectedBrand } = useContext(FilterContext);
+  const { setSelectedBrand } = useContext(FilterContext);
 
   const handleBrandClick = () => {
     setSelectedBrand(props.brandName);
@@ -26,9 +26,8 @@ function BrandCard(props: BrandCardProps) {
 
   return (
     <div
-      className={`h-[23rem] w-60 pc:h-[28rem] pc:w-72 md:mx-5 xl:mx-10 pc:mx-14 bg-white dark:bg-[#d5d5d5] rounded-3xl ${
-        theme === "dark" ? "shadow-card" : "shadow-button"
-      } mb-8 transform hover:scale-110 hover:transition ease-out duration-300`}
+      className={`h-[23rem] w-60 pc:h-[28rem] pc:w-72 md:mx-5 xl:mx-10 pc:mx-14 bg-white dark:bg-[#d5d5d5] rounded-3xl ${theme === "dark" ? "shadow-card" : "shadow-button"
+        } mb-8 transform hover:scale-110 hover:transition ease-out duration-300`}
     >
       <div className="h-[9rem] pc:h-[12rem] rounded-t-3xl shadow-xl  ">
         <LazyLoadImage

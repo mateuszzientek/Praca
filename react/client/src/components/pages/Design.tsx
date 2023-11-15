@@ -1,12 +1,9 @@
 import React from "react";
 import Navbar from "../sections/Navbar";
 import { IoColorFillOutline, IoTextOutline } from "react-icons/io5";
-import { TbShoe } from "react-icons/tb";
 import { AiOutlinePicture } from "react-icons/ai";
 import { FiSave } from "react-icons/fi";
 import nikeShoe from "../../assets/images/nikeShoe.png";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 

@@ -11,7 +11,8 @@ interface InputCheckoutProps {
 }
 
 function InputCheckout(props: InputCheckoutProps) {
-    const { theme, setTheme } = useContext(ThemeContext);
+
+    const { theme } = useContext(ThemeContext);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;

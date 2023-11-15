@@ -19,7 +19,9 @@ function ResetPassword() {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const { token } = useParams();
-    const { theme, setTheme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
+
+    //////////Variables////////////
 
     const [password, setPassword] = useState("")
     const [secPassword, setSecPassword] = useState("")
@@ -32,6 +34,7 @@ function ResetPassword() {
     const [showInfoDiv, setShowInfoDiv] = useState(false);
     const [isSubmittingButton, setIsSubmittingButton] = useState(false);
 
+    /////////Functions////////////
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
@@ -105,6 +108,8 @@ function ResetPassword() {
 
 
     };
+
+    /////////UseEffects///////////
 
     useEffect(() => {
         axios

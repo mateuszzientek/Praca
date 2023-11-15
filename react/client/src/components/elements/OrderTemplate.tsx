@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatPrice } from "src/resources/currencyUtils";
@@ -28,12 +28,14 @@ interface OrderTemplateProps {
 }
 
 function OrderTemplate(props: OrderTemplateProps) {
+
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const matchingShoes = props.shoes.filter((shoe) =>
     props.orderProducts.some((product) => product.shoeId === shoe._id)
   );
+
   const getStatusColor = () => {
     switch (props.status) {
       case "submitted":
