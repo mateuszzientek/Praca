@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
+import "flag-icons/css/flag-icons.min.css";
 import zdjecie from "../../assets/images/profile_avatar.png";
 import ToogleButton from "../elements/ToogleButton";
 import RoundIcon from "../elements/RoundIcon";
@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
   const [dropdown, setDropdown] = useState(false);
   const [isSecondDivVisible, setSecondDivVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const [errorsServer, setErrorsServer] = useState("");
+  const [errorsServer] = useState("");
   const [showSearchDiv, setShowSearchDiv] = useState(false);
 
   /////////Functions//////////
@@ -154,6 +154,18 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     navigate(`/shop`);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+  const handleKeyDownSecond = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+      setShowSearchDiv(!showSearchDiv);
+    }
+  };
+
   /////////UseEffects///////////
 
   useEffect(() => {
@@ -191,6 +203,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 placeholder={t("navbar.search") as string}
                 value={searchTerm}
                 onChange={handleInputChange}
+                onKeyPress={handleKeyDownSecond}
               />
 
               <button
@@ -247,7 +260,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
               onClick={() => navigate("/")}
               src={theme === "dark" ? logo2 : logo}
               alt="Logo firmy"
-              className="dark:h-20 h-16 w-48 -rotate-6 ml-20 mr-16 sm:ml-40 sm:mr-32 md:mx-0 cursor-pointer"
+              className="dark:h-20 h-16 w-48 -rotate-6 ml-16 mr-16 sm:ml-40 sm:mr-32 md:mx-0 cursor-pointer"
               effect="blur"
               placeholderSrc={theme === "dark" ? logo2 : logo}
             />
@@ -277,6 +290,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                 placeholder={t("navbar.search") as string}
                 value={searchTerm}
                 onChange={handleInputChange}
+                onKeyPress={handleKeyDown}
               />
               <button onClick={handleSearch} className="mr-2">
                 <AiOutlineSearch size={20} />
@@ -360,6 +374,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     </p>
                     <img
                       src={imageUrl ? imageUrl : zdjecie}
+                      alt="Avatar"
                       className="rounded-full w-[2rem] h-[2rem]"
                     />
                   </div>
@@ -618,6 +633,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                         </p>
                         <img
                           src={imageUrl ? imageUrl : zdjecie}
+                          alt="Avatar"
                           className="rounded-full w-[2rem] h-[2rem]"
                         />
                       </div>

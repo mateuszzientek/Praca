@@ -341,7 +341,6 @@ function Login() {
           surname: surname,
           password: password,
           email: email,
-          role: "user",
           email_offert: emailOffert,
         };
 
@@ -551,6 +550,7 @@ function Login() {
               )}
 
               <input
+                data-testid="inputEmail"
                 type="email"
                 value={email}
                 onBlur={handleBlur}

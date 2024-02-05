@@ -72,7 +72,7 @@ const addToCartHandler = [
         await cart.save();
       }
 
-      return res.status(200).json({ message: "Zapisano koszyk" });
+      return res.status(200).json({ message: req.t("navbar.home") });
     } catch (error) {
       console.error("Błąd podczas zapisywania koszyka", error);
       return res

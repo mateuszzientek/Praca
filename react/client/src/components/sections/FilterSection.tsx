@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { ThemeContext } from '../elements/ThemeContext';
 import { FilterContext } from '../elements/FilterProvider';
@@ -25,7 +25,12 @@ function FilterSection(props: FilterSectionProps) {
         setSelectedMin,
         selectedSizes,
         setSelectedSizes,
+        setCurrentMin,
         searchTerm,
+        currentMin,
+        currentMax,
+        setSelectedMax,
+        setCurrentMax,
         setSearchTerm } = useContext(FilterContext);
 
     //////////Variables/////////////
@@ -34,7 +39,6 @@ function FilterSection(props: FilterSectionProps) {
     const categories = ['high', 'low', 'sport'];
     const brands = ['All', 'Nike', 'Adidas', 'New Balance'];
     const priceRanges = ['range1', 'range2', 'range3', 'range4'];
-    const [currentMin, setCurrentMin] = useState("")
 
     /////////Functions//////////
 
@@ -51,10 +55,20 @@ function FilterSection(props: FilterSectionProps) {
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedPrice = event.target.value;
         setSelectedPrice(selectedPrice);
+        setSelectedMin("");
+        setSelectedMax("");
+        setCurrentMax("");
+        setCurrentMin("");
     };
 
     const handleMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCurrentMin(event.target.value);
+        setCurrentMin(event.target.value)
+        setSelectedPrice("");
+    };
+
+    const handleMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCurrentMax(event.target.value);
+        setSelectedPrice("");
     };
 
     const handleSizesChange = (event: React.ChangeEvent<HTMLInputElement>, size: string) => {
@@ -62,6 +76,24 @@ function FilterSection(props: FilterSectionProps) {
             setSelectedSizes((prevSizes) => [...prevSizes, size]);
         } else {
             setSelectedSizes((prevSizes) => prevSizes.filter((size_) => size_ !== size));
+        }
+    };
+
+    const handleMaxBlur = () => {
+        if (
+            currentMax &&
+            validator.isNumeric(currentMax) &&
+            parseInt(currentMax) > 0
+        ) {
+            if (currentCode === "pl") {
+                const selectedPrice = parseInt(currentMax);
+                const exchangeRatePLNToUSD = 1 / 4.08;
+                const priceUSD = selectedPrice * exchangeRatePLNToUSD;
+                const roundedPriceUSD = Math.ceil(priceUSD);
+                setSelectedMax(roundedPriceUSD.toString());
+            } else {
+                setSelectedMax(currentMax);
+            }
         }
     };
 
@@ -190,6 +222,7 @@ function FilterSection(props: FilterSectionProps) {
                     <div className='flex mt-4'>
                         <div className='flex flex-col items-center'>
                             <input
+                                data-testid={"minInput2"}
                                 className='w-[3.5rem] h-[2rem] border-2 border-black/20 rounded-md focus:outline-none text-center'
                                 placeholder='0'
                                 onChange={handleMinChange}
@@ -201,7 +234,13 @@ function FilterSection(props: FilterSectionProps) {
                         <div className='w-[1.5rem] h-[0.2rem] bg-black/20 mx-2 mt-4 dark:bg-white'></div>
 
                         <div className='flex flex-col items-center'>
-                            <input className='w-[3.5rem] h-[2rem] border-2 border-black/20 rounded-md focus:outline-none text-center' placeholder='0' />
+                            <input
+                                className='w-[3.5rem] h-[2rem] border-2 border-black/20 rounded-md focus:outline-none text-center'
+                                placeholder='0'
+                                onChange={handleMaxChange}
+                                onBlur={handleMaxBlur}
+                                value={currentMax}
+                            />
                             <p className='text-black/60 dark:text-white'>max</p>
                         </div>
 

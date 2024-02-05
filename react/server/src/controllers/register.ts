@@ -35,7 +35,7 @@ const registerHandler= [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, surname, password, email, role, email_offert } = req.body;
+    const { name, surname, password, email, email_offert } = req.body;
 
     // Haszowanie hasła
     bcrypt
@@ -46,11 +46,12 @@ const registerHandler= [
           surname: surname,
           password: hashedPassword,
           email: email,
-          role: role,
+          role: "user",
           email_offert: email_offert,
           newslatter: false,
           resetToken: null,
           resetTokenExpiration: null,
+          isGoogle: false
         });
 
         User.findOne({ email: email })

@@ -52,6 +52,7 @@ function AddressFormTemplate(props: AddressFormTemplateProps) {
     props.telephone ? props.telephone : ""
   );
   const [showCountryDiv, setShowCountryDiv] = useState(false);
+
   const [extra, setExtra] = useState(props.extra ? props.extra : "");
   const [country, setCountry] = useState(props.country ? props.country : "");
   const [errors, setErrors] = useState({

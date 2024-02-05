@@ -444,6 +444,7 @@ function Customization() {
                 </p>
 
                 <button
+                  data-testid={"button"}
                   onClick={() => {
                     setShowDesignPanel(true);
                   }}

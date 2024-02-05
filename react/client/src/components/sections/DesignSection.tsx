@@ -463,6 +463,7 @@ function DesignSection(props: DesignSectionProps) {
 
       setSelectedColorsText(updatedColors);
     }
+
   }, [sideText.rightText, sideText.leftText]);
 
   useEffect(() => {
@@ -605,7 +606,9 @@ function DesignSection(props: DesignSectionProps) {
         </div>
       )}
 
-      <div className=" min-h-screen bg-white dark:bg-[#3b3b3b]">
+      <div
+        data-testid={"designSection"}
+        className=" min-h-screen bg-white dark:bg-[#3b3b3b]">
         <div className="flex justify-center pt-6 px-10 lg:px-20  xl:px-0 xl:absolute top-10 2xl:top-4 left-10 z-10 space-x-10 2xl:space-x-[10rem]">
           <div className="flex justify-center space-x-20 xl:space-x-4">
             <button
@@ -661,6 +664,7 @@ function DesignSection(props: DesignSectionProps) {
               <div className="relative md:scale-[130%] xl:scale-[160%] 2xl:scale-[200%]">
                 <img
                   className="h-[17rem] rounded-xl"
+                  alt="Shoe"
                   src={renderImageSource()}
                 />
 
@@ -684,10 +688,12 @@ function DesignSection(props: DesignSectionProps) {
                                 ? imagesUrls.leftSideImageCroppedUrl
                                 : ""
                           }
+                          alt="Shoe"
                           className="h-[8rem]  absolute top-[4.7rem] left-[10.3rem] opacity-80"
                         />
                         <img
                           src={side_left}
+                          alt="Shoe"
                           className="h-[17rem] rounded-xl absolute top-0 left-0 "
                         />
                         {!imagesUrls.leftSideImageCroppedUrl &&
@@ -767,10 +773,12 @@ function DesignSection(props: DesignSectionProps) {
                                 ? imagesUrls.rightSideImageCroppedUrl
                                 : ""
                           }
+                          alt="Shoe"
                           className="h-[8rem] absolute top-[4.7rem] left-[1.7rem] opacity-80"
                         />
                         <img
                           src={side_right}
+                          alt="Shoe"
                           className="h-[17rem] rounded-xl absolute top-0 left-0 "
                         />
                         <TransformedImage
@@ -1081,6 +1089,7 @@ function DesignSection(props: DesignSectionProps) {
                               : ""
                         }
                         className="h-[5rem] rounded-lg"
+                        alt="Shoe"
                       />
                       <div
                         onClick={() => {
@@ -1136,6 +1145,7 @@ function DesignSection(props: DesignSectionProps) {
                               : ""
                         }
                         className="h-[5rem] rounded-lg"
+                        alt="Shoe"
                       />
                       <div
                         onClick={() => {

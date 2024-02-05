@@ -89,6 +89,7 @@ function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
 
                     <img
                         className="h-[17rem]  rounded-xl"
+                        alt="Shoe"
                         src={photos[currentIndex]}
                     />
 
@@ -97,10 +98,12 @@ function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
                             <>
                                 <img
                                     src={props.orderNumber ? imageUrlLeft : imagesUrls.leftSideImageCroppedUrl}
+                                    alt="Shoe"
                                     className="h-[8rem] absolute top-[4.7rem] left-[10.3rem] opacity-80"
                                 />
                                 <img
                                     src={side_left}
+                                    alt="Shoe"
                                     className="h-[17rem]  rounded-xl absolute top-0 left-0 "
                                 />
 
@@ -160,12 +163,13 @@ function PersonalizedShoesView(props: PersonalizedShoesViewProps) {
                         ) : (
                             <>
                                 <img
-
                                     src={props.orderNumber ? imageUrlRight : imagesUrls.rightSideImageCroppedUrl}
+                                    alt="Shoe"
                                     className="h-[8rem] absolute top-[4.7rem] left-[1.7rem]  opacity-80"
                                 />
                                 <img
                                     src={side_right}
+                                    alt="Shoe"
                                     className="h-[17rem]  rounded-xl absolute top-0 left-0 "
                                 />
 

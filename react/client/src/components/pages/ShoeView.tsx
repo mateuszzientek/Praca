@@ -123,6 +123,7 @@ function ShoeView() {
     axios
       .post("/addToCart", requestData)
       .then((response) => {
+        console.log(response)
         if (response.data.limit) {
           setShowQuantityMessage(false);
           const message = t("shoeView.text6");

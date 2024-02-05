@@ -12,6 +12,7 @@ interface User {
   dateOfBirth?: Date | null;
   gender?: string | null;
   avatar?: string | null;
+  isGoogle?: boolean;
 }
 
 interface UserContextProps {
@@ -53,7 +54,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           email_offert,
           gender,
           dateOfBirth,
-          avatar
+          avatar,
+          isGoogle
         } = response.data;
         if (_id && name && email && role) {
           const userData: User = {
@@ -67,6 +69,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
             dateOfBirth: dateOfBirth || null,
             gender: gender || null,
             avatar: avatar || null,
+            isGoogle: isGoogle
           };
           setUser(userData);
           setIsUserLoggedIn(true);

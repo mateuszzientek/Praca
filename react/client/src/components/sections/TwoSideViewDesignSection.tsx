@@ -155,6 +155,7 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
+
   }, [showDiv, showSelectSize]);
 
   useEffect(() => {
@@ -300,7 +301,7 @@ function TwoSideViewDesignSection(props: TwoSideViewDesignSectionProps) {
                 <div className="flex justify-center items-center lg:w-[20rem] lg:h-[15rem] xl:w-[25rem] xl:h-[20rem]  mt-6">
                   <div className="relative transform lg:scale-[120%] xl:scale-[150%] pc:scale-[200%]">
                     <CloudinaryContext cloudName="dlrhphkcb">
-                      <img className="h-[10rem]  rounded-xl" src={photos[0]} />
+                      <img className="h-[10rem]  rounded-xl" src={photos[0]} alt="Shoe" />
 
                       <img
                         src={imageUrlLeft}

@@ -4,7 +4,7 @@ import ShopInfo from "../elements/ShopInfo";
 import { ThemeContext } from "../elements/ThemeContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { TbTruckDelivery, TbCoins, TbTruckReturn } from "react-icons/tb";
+import { TbTruckDelivery, TbCoins } from "react-icons/tb";
 import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { BsArrowRightShort } from "react-icons/bs";
 import blazers from "../../assets/images/blazers.png";

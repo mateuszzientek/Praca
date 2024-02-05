@@ -78,10 +78,10 @@ function MyProjects() {
         setErrorsServer(text);
       })
       .finally(() => {
-        setIsDataFetched(true);
         setTimeout(() => {
           setIsLoading(false); // Wyłącz animację ładowania po 2 sekundach
         }, 1000);
+        setIsDataFetched(true);
       });
   }, []);
 
@@ -161,7 +161,7 @@ function MyProjects() {
                     </div>
                   </div>
                 )}
-                {projects?.projects.map((project, index) => (
+                {isLoading === false && projects?.projects.map((project, index) => (
                   // Tutaj powinna być logika renderowania projektów
                   <div
                     className="relative flex items-center py-4"

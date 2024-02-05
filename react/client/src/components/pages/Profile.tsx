@@ -73,7 +73,7 @@ function Profile() {
   const [selectedGender, setSelectedGender] = useState(user?.gender || "");
   const [imageUrl, setImageUrl] = useState(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState({
     name: "",
     surname: "",
@@ -583,6 +583,8 @@ function Profile() {
     }
   }, [user]);
 
+  console.log(user?.isGoogle)
+
   return (
     <>
       <div className="flex justify-center z-20">
@@ -1011,6 +1013,7 @@ function Profile() {
 
             <img
               src={theme === "dark" ? user_dark : user_light}
+              alt="Avatar"
               className="hidden lg:block h-[7rem] w-[7rem] absolute right-14 xl:right-0 bottom-0"
             />
           </div>
@@ -1030,6 +1033,7 @@ function Profile() {
             </p>
             <img
               src={previewUrl || imageUrl || avatar}
+              alt="Avatar"
               className="rounded-full w-[10rem] h-[10rem] mt-8"
             />
             <div className="flex items-center mt-6 space-x-2 ml-2">
@@ -1082,33 +1086,40 @@ function Profile() {
               </button>
             </div>
 
-            <p className="mt-12 text-3xl text-black dark:text-white ">
-              {t("profile.text9")}
-            </p>
-            <p className="mt-6 text-xl text-black font-bold  dark:text-white ">
-              E-mail
-            </p>
-            <p className="mt-6 text-xl text-black/80 dark:text-white/70">
-              {user && user.email && user.email.toUpperCase()}
-            </p>
-            <button
-              onClick={handleClickEditEmail}
-              className="mt-2 h-[2rem]  font-bold border-b-2 border-black/80 dark:border-white/80 dark:text-white/80 hover:bg-black/80 hover:text-white hover:dark:bg-white/80 hover:dark:text-black"
-            >
-              {t("profile.edit")}
-            </button>
-            <p className="mt-10 text-xl text-black font-bold  dark:text-white ">
-              {t("profile.password")}
-            </p>
-            <p className="pt-4 text-lg text-black/80  dark:text-white/70">
-              ********
-            </p>
-            <button
-              onClick={handleClickEditPassword}
-              className=" h-[2rem] font-bold border-b-2 border-black/80 dark:border-white/80 dark:text-white/80 hover:bg-black/80 hover:text-white hover:dark:bg-white/80 hover:dark:text-black"
-            >
-              {t("profile.edit")}
-            </button>
+            {user?.isGoogle === false && (
+              <>
+                <p className="mt-12 text-3xl text-black dark:text-white ">
+                  {t("profile.text9")}
+                </p>
+                <p className="mt-6 text-xl text-black font-bold  dark:text-white ">
+                  E-mail
+                </p>
+                <p className="mt-6 text-xl text-black/80 dark:text-white/70">
+                  {user && user.email && user.email.toUpperCase()}
+                </p>
+                <button
+                  onClick={handleClickEditEmail}
+                  className="mt-2 h-[2rem]  font-bold border-b-2 border-black/80 dark:border-white/80 dark:text-white/80 hover:bg-black/80 hover:text-white hover:dark:bg-white/80 hover:dark:text-black"
+                >
+                  {t("profile.edit")}
+                </button>
+                <p className="mt-10 text-xl text-black font-bold  dark:text-white ">
+                  {t("profile.password")}
+                </p>
+                <p className="pt-4 text-lg text-black/80  dark:text-white/70">
+                  ********
+                </p>
+
+                <button
+                  onClick={handleClickEditPassword}
+                  className=" h-[2rem] font-bold border-b-2 border-black/80 dark:border-white/80 dark:text-white/80 hover:bg-black/80 hover:text-white hover:dark:bg-white/80 hover:dark:text-black"
+                >
+                  {t("profile.edit")}
+                </button>
+              </>
+
+            )}
+
           </div>
         )}
       </div>

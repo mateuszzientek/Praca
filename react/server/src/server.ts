@@ -12,9 +12,6 @@ import Backend from "i18next-node-fs-backend";
 
 const path = require("path");
 
-const fs = require("fs");
-const { v4: uuidv4 } = require("uuid");
-
 dotenv.config();
 
 const app = express();
@@ -123,7 +120,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 48 * 60 * 60 * 1000, // 2 dni (48 godzin * 60 minut * 60 sekund * 1000 milisekund)
+      maxAge: 48 * 60 * 60 * 1000, 
     },
   })
 );
@@ -138,10 +135,10 @@ require("./resources/passportConfig")(passport);
 mongoose
   .connect(link_database!)
   .then(() => {
-    console.log("Połączono z bazą danych");
+    console.log("Connected to the database");
   })
   .catch((error: Error) => {
-    console.error("Błąd połączenia z bazą danych:", error);
+    console.error("Error connecting to the database:", error);
   });
 
 //---------------------routes----------------------------

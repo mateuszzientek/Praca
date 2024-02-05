@@ -75,13 +75,13 @@ function LeftViewDesignShoe(props: LeftViewDesignShoeProps) {
                         className="h-[10rem] rounded-xl"
                         src={photos[0]}
                     />
-
                     <img
                         src={imageUrl}
                         className="h-[4.7rem] absolute top-[2.8rem] left-[6rem] opacity-80"
                     />
                     <img
                         src={side_left}
+
                         className="h-[10rem] rounded-xl absolute top-0 left-0 "
                     />
 

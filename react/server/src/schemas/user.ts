@@ -13,6 +13,7 @@ export interface IUser extends Document {
   dateOfBirth?: Date;
   gender?: string;
   avatar?: string
+  isGoogle: boolean;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -28,6 +29,7 @@ const userSchema = new mongoose.Schema<IUser>({
   dateOfBirth: { type: Date },
   gender: { type: String },
   avatar: { type: String },
+  isGoogle: { type: Boolean, default: true },
 });
 
 const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
