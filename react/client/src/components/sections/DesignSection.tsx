@@ -389,6 +389,20 @@ function DesignSection(props: DesignSectionProps) {
 
       setCroppedImage(croppedImageFile);
 
+      const updatedColors = { ...selectedColors };
+
+      if (side === "left") {
+        updatedColors.selectedColorQuarter_1 = { rgb: { r: 255, g: 255, b: 255 } };
+        updatedColors.selectedColorHill_1 = { rgb: { r: 255, g: 255, b: 255 } };
+      }
+
+      if (side === "right") {
+        updatedColors.selectedColorQuarter_2 = { rgb: { r: 255, g: 255, b: 255 } };
+        updatedColors.selectedColorHeel_2 = { rgb: { r: 255, g: 255, b: 255 } };
+      }
+
+      setSelectedColors(updatedColors);
+
       setSideView(side);
       setImage("");
     } catch (error) {

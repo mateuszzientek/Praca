@@ -7,7 +7,8 @@ const getUsersHandler = [
         const pageSize = parseInt(req.query.limit as string || '11');
         
         try {
-          const query = User.find().lean();
+          let query = User.find().lean();
+          query = query.sort({ _id: -1 });
       
           const total = await User.countDocuments(query);
       

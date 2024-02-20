@@ -1074,7 +1074,12 @@ function Profile() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <p className="font-bold">{t("profile.gender")}: </p>
-                  <p>{user?.gender?.toUpperCase()}</p>
+
+                  <p>
+                    {user && user?.gender ? t(`profile.${user?.gender}`).toUpperCase() : ''}
+                  </p>
+
+
                 </div>
               </div>
 

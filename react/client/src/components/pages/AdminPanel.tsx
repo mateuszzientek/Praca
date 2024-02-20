@@ -314,7 +314,7 @@ function AdminPanel() {
   useEffect(() => {
     setIsDataFetched(false);
     axios
-      .get(`/getOrdersAdmin?page?page=${pageOrder}&sort=${selectedSort}`)
+      .get(`/getOrdersAdmin?page=${pageOrder}&sort=${selectedSort}`)
       .then(async (response) => {
         const fetchedShoes: any[] = response.data.shoes || [];
 

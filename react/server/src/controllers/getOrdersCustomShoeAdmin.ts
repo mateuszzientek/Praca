@@ -10,6 +10,7 @@ const getOrdersCustomShoeAdminHandler = [
         try {
           
           let query = OrderCustomProject.find().lean()
+          query = query.sort({ _id: -1 });
       
           if (sort && sort !== "all") {
             query = query.where('status').equals(sort);
