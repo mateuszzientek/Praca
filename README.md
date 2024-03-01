@@ -1,8 +1,6 @@
-<div align="center">
-  <h1>Online store with customization tools</h1>
-  <div style="display: flex; align-items: center; justify-content: center;">
+<div style="display: flex; align-items: center; justify-content: center;">
+    <h1 style="margin-right: 10px;">Online store with customization tools</h1>
     <img src="https://github.com/mateuszzientek/product-customization-store/blob/master/logo.png" width="200" alt="Logo" />
-  </div>
 </div>
 
 The System is an innovative web application that not only serves as an online shoe store specializing in footwear sales but also stands out with a unique customization feature. The primary focus is on individual user experiences, allowing them to create their own shoe designs.
