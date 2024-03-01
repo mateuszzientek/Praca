@@ -1,4 +1,4 @@
-# Online store with customization tools ![BUT](https://github.com/mateuszzientek/product-customization-store/assets/101110887/fb1f9376-0abc-4845-a60b-daf3c6abd298)
+# Online store with customization tools <img src="https://github.com/mateuszzientek/product-customization-store/blob/master/logo.png" width="200" height="400" />
 
 The System is an innovative web application that not only serves as an online shoe store specializing in footwear sales but also stands out with a unique customization feature. The primary focus is on individual user experiences, allowing them to create their own shoe designs.
 
