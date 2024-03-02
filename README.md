@@ -28,7 +28,8 @@ The System provides users with complete freedom to customize their footwear. Wit
 TypeScript | MongoDB | HTML5 | CSS | React.js | Express.js | Node.js | Tailwind | Firebase | Cloudinary | Photoshop
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](![fdsfds](https://github.com/mateuszzientek/product-customization-store/assets/101110887/5d03c2db-abcf-44c9-bb52-4ad930f507a5)
+) 
 
 
 ## Environment Variables
