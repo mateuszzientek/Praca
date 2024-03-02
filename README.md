@@ -29,9 +29,7 @@ TypeScript | MongoDB | HTML5 | CSS | React.js | Express.js | Node.js | Tailwind 
 
 ## Screenshots
 
-<img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/1536968b-1083-48a7-8912-999eb3d4ec75" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/1f70af46-e705-4e62-8b09-e682b0ca0252" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/cdf8a4c1-5882-49da-b449-614d939319a0" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/8b647b0b-d79d-4725-9e30-ab7b4b67891d" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/a600855e-da39-4b6f-ab19-a713677a7163" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/ea432cae-519e-4eb5-87b4-100523ff3a1f" width="300" />
-
-![fdsafdsa](https://github.com/mateuszzientek/product-customization-store/assets/101110887/485abfd9-bd18-4c00-bb1d-220de8360d8c)
+<img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/1536968b-1083-48a7-8912-999eb3d4ec75" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/1f70af46-e705-4e62-8b09-e682b0ca0252" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/cdf8a4c1-5882-49da-b449-614d939319a0" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/8b647b0b-d79d-4725-9e30-ab7b4b67891d" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/a600855e-da39-4b6f-ab19-a713677a7163" width="300" /> <img src="https://github.com/mateuszzientek/product-customization-store/assets/101110887/485abfd9-bd18-4c00-bb1d-220de8360d8c" width="300" />
 
 ## Environment Variables
 
