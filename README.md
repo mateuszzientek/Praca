@@ -46,3 +46,37 @@ To run this project, you will need to add the following environment variables to
 `GOOGLE_CLIENT_SECRET`- Client Password (Passport.js)
 
 `SECRET_KEY`- Unique session key
+
+## Deployment
+
+Navigate to the "server" directory
+
+```bash
+  cd server
+```
+Install the necessary dependencies for the server layer
+```bash
+  npm install
+```
+Create a .env file in the server folder, and add environment variables.
+```bash
+  touch .env
+```
+Navigate to the "client" directory
+```bash
+  cd client
+```
+Install the necessary dependencies for the client layer
+```bash
+  npm install
+```
+Start the server on the server-side (after navigating to the "server" directory) 
+```bash
+  npm run dev
+```
+Start the server on the client-side (after navigating to the "client" directory) 
+```bash
+  npm start
+```
+Enter http://localhost:3000 in your web browser (if the server's chosen port is 3000)
+
